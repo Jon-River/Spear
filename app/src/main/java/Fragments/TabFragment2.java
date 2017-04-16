@@ -9,34 +9,25 @@ import android.view.ViewGroup;
 
 import com.spear.android.R;
 
-
 /**
  * A simple {@link Fragment} subclass.
  */
-public class tab1Fragment extends Fragment{
+public class TabFragment2 extends Fragment {
 
 
-    public tab1Fragment() {
+
+    public TabFragment2() {
         // Required empty public constructor
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v =  inflater.inflate(R.layout.fragment_tab1, container, false);
-
-
+        View v = inflater.inflate(R.layout.fragment_tab2, container, false);
 
         return v;
     }
-
-
 
 
 

@@ -1,0 +1,118 @@
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:layout_margin="5dp"
+    android:elevation="3dp"
+    card_view:cardCornerRadius="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:scaleType="fitXY"
+            android:src="@mipmap/fish_white_tab" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.6"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+
+            <TextView
+                android:id="@+id/usernameTittle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/image"
+                android:layout_weight="0.5"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="15dp"
+                android:text="username"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/provinceTittle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/usernameTittle"
+                android:layout_weight="0.5"
+                android:paddingBottom="5dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="fishingzone"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.6"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+
+            <TextView
+                android:id="@+id/username"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/usernameTittle"
+                android:layout_weight="0.5"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="15dp"
+                android:text="PabloRojas"
+                android:textColor="#4c4c4c"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/province"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/username"
+                android:layout_weight="0.5"
+                android:paddingBottom="5dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="Madrid"
+                android:textSize="15dp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:rating="2.0"
+                android:stepSize="1.0" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>
+

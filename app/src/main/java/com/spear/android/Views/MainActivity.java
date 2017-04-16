@@ -19,18 +19,25 @@ import com.spear.android.R;
 
 import Adapters.ViewPagerAdapter;
 import Fragments.ProfileFragment;
-import Fragments.tab1Fragment;
+import Fragments.TabAlbumFragment;
+import Fragments.TabFragment;
+import Fragments.TabFragment2;
 
 public class MainActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private tab1Fragment tab1;
+    private TabAlbumFragment TabAlbumFragment;
     private FirebaseAuth firebaseAuth;
     private ProfileFragment profileFragment;
     private FragmentManager fm;
     private ActionBar actionBar;
     private InputMethodManager imm;
+    private int[] tabIcons = {
+            R.mipmap.fish_white_tab,
+            R.mipmap.fish_white_tab,
+            R.mipmap.fish_white_tab
+    };
 
 
     @Override
@@ -92,13 +99,25 @@ public class MainActivity extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
+
+
+
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        setupTabIcons();
 
         firebaseAuth = FirebaseAuth.getInstance();
         cambiarFragment(0);
     }
 
+
+    private void setupTabIcons() {
+        tabLayout.getTabAt(0).setIcon(tabIcons[0]);
+        tabLayout.getTabAt(1).setIcon(tabIcons[1]);
+        tabLayout.getTabAt(2).setIcon(tabIcons[2]);
+
+    }
     private void backSignOut() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
@@ -108,12 +127,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setupViewPager(ViewPager viewPager) {
-        tab1=new tab1Fragment();
+        TabAlbumFragment =new TabAlbumFragment();
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(tab1, "ONE");
-        adapter.addFragment(new tab1Fragment(), "TWO");
-        adapter.addFragment(new tab1Fragment(), "THREE");
-        adapter.addFragment(new tab1Fragment(), "FOUR");
+        adapter.addFragment(TabAlbumFragment, "TabAlbumFragment");
+        adapter.addFragment(new TabFragment(), "TWO");
+        adapter.addFragment(new TabFragment2(), "THREE");
+        //adapter.addFragment(new TabFragment(), "FOUR");
         viewPager.setAdapter(adapter);
     }
 

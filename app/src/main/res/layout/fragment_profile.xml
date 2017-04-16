@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:elevation="20dp"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@mipmap/fish_white_tab" />
 
     </LinearLayout>
 
@@ -33,26 +33,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.25"
-            android:background="@color/colorPrimary"
             android:orientation="horizontal"
-            android:weightSum="1"
             android:gravity="center_vertical|center_horizontal">
 
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.6"
-                android:text="Name"
-                android:textColor="@color/white" />
 
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/text_input_layout_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.4">
+                >
 
 
                 <android.support.design.widget.TextInputEditText
@@ -75,21 +65,14 @@
             android:gravity="center_vertical|center_horizontal"
             android:orientation="horizontal"
             android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:weightSum="1">
+            android:paddingRight="@dimen/activity_horizontal_margin">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.6"
-                android:text="Email"
-                android:textColor="@color/colorPrimary" />
+
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/text_input_layout_email"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.4">
+                android:layout_height="wrap_content">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/editTextEmail"

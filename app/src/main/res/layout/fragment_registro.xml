@@ -42,6 +42,20 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|center_vertical"
         android:id="@+id/editTextPasswordRegister"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:id="@+id/textViewProvince"
+        android:text="province" />
+    <Spinner
+        android:id="@+id/spinnerProvinces"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:entries="@array/provinces" />
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

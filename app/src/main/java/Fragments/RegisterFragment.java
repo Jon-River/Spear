@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.spear.android.R;
 import com.spear.android.Views.LoginActivity;
@@ -26,6 +27,7 @@ public class RegisterFragment extends Fragment {
     private EditText editTextUserRegister;
     private EditText editTextPasswordRegister;
     private EditText editTextEmailRegister;
+    private Spinner spinnerProvinces;
     private Button buttonRegister;
 
 
@@ -58,6 +60,7 @@ public class RegisterFragment extends Fragment {
         editTextPasswordRegister = (EditText) view.findViewById(R.id.editTextPasswordRegister);
         editTextEmailRegister = (EditText) view.findViewById(R.id.editTextEmailRegister);
         buttonRegister = (Button) view.findViewById(R.id.buttonRegister);
+        spinnerProvinces = (Spinner) view.findViewById(R.id.spinnerProvinces);
         editTextPasswordRegister.setText("usertest1");
         editTextUserRegister.setText("usertest1");
         editTextEmailRegister.setText("usertest1@spear.com");
@@ -67,7 +70,7 @@ public class RegisterFragment extends Fragment {
         buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                registerInteractorImp.registerUser(view, editTextUserRegister, editTextEmailRegister, editTextPasswordRegister);
+                registerInteractorImp.registerUser(view, editTextUserRegister, editTextEmailRegister, spinnerProvinces, editTextPasswordRegister);
             }
         });
     }
