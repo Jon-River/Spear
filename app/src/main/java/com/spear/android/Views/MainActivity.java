@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private TabAlbumFragment TabAlbumFragment;
+    private Fragments.TabAlbumFragment TabAlbumFragment;
     private FirebaseAuth firebaseAuth;
     private ProfileFragment profileFragment;
     private FragmentManager fm;

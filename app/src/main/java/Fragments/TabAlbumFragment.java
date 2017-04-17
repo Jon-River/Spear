@@ -92,9 +92,10 @@ public class TabAlbumFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         Intent dat = getActivity().getIntent();
-        Log.v("", "request " + requestCode +" result " + resultCode + " data " +data);
-        cameraManager.OnActivityResult(requestCode, resultCode, dat);
+        Log.v("", "request " + requestCode +" result " + resultCode + " data " +data+ " dat "+ dat);
+        cameraManager.OnActivityResult(requestCode, resultCode, data);
 
     }
 

@@ -1,6 +1,5 @@
 package Interactors;
 
-import Fragments.TabAlbumFragment;
 import Interfaces.AlbumInteractor;
 
 /**
@@ -9,9 +8,9 @@ import Interfaces.AlbumInteractor;
 
 public class AlbumInteractorImp implements AlbumInteractor {
 
-    TabAlbumFragment TabAlbumFragment;
+    Fragments.TabAlbumFragment TabAlbumFragment;
 
-    public AlbumInteractorImp(TabAlbumFragment tabAlbumFragment) {
+    public AlbumInteractorImp(Fragments.TabAlbumFragment tabAlbumFragment) {
         this.TabAlbumFragment = tabAlbumFragment;
     }
 }

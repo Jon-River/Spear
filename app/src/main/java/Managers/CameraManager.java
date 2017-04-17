@@ -1,5 +1,6 @@
 package Managers;
 
+import Fragments.TabAlbumFragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -8,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.widget.ImageView;
@@ -32,7 +32,7 @@ public class CameraManager {
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     String mCurrentPhotoPath;
     ImageView mImageView;
-    Fragment fragment;
+    TabAlbumFragment fragment;
 
 
     public CameraManager(Activity context, ImageView mImageView) {
@@ -40,7 +40,7 @@ public class CameraManager {
         this.mImageView = mImageView;
     }
 
-    public CameraManager(Activity context, Fragment fragment, ImageView mImageView) {
+    public CameraManager(Activity context, TabAlbumFragment fragment, ImageView mImageView) {
         this.context = context;
         this.mImageView = mImageView;
         this.fragment = fragment;
@@ -49,7 +49,7 @@ public class CameraManager {
     public CameraManager() {
     }
 
-    //    Here's a function that invokes an intent to capture a photo.
+
     public void dispatchTakePictureIntent() {
 
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -77,7 +77,7 @@ public class CameraManager {
     }
 
 
-    //    Get the Thumbnail
+
     public void OnActivityResult(int requestCode, int resultCode, Intent data) {
         Log.v("", "onactivityresult");
         if (resultCode != RESULT_CANCELED) {
