@@ -1,22 +1,17 @@
 package Managers;
 
-import Fragments.TabAlbumFragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;
-import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
+import Fragments.TabAlbumFragment;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -51,35 +46,14 @@ public class CameraManager {
 
 
     public void dispatchTakePictureIntent() {
-
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile((Activity) context,
-                        "com.example.android.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                fragment.getActivity().setResult(RESULT_OK, takePictureIntent);
-                //((Activity) context).finish();
-                fragment.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-                // ((Activity) context).startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-            }
+            fragment.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
 
 
-
     public void OnActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.v("", "onactivityresult");
         if (resultCode != RESULT_CANCELED) {
             if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
                 Bundle extras = data.getExtras();
@@ -87,31 +61,7 @@ public class CameraManager {
                 mImageView.setImageBitmap(imageBitmap);
             }
         }
-
-
     }
-
-
-    //    Save the Full-size Photo
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        Log.v("storageroute", "" + storageDir);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
-
-    //    With this method available to create a file for the photo, you can now create and invoke the Intent like this:
-    static final int REQUEST_TAKE_PHOTO = 1;
 
 
     //Add a photo to a gallery

@@ -4,6 +4,7 @@ package Fragments;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -45,6 +46,10 @@ public class TabAlbumFragment extends Fragment {
     private FloatingActionButton fabOpenCamera;
     private ImageView mImageView;
 
+    private static final int CAMERA_REQUEST = 1888;
+    private static int TAKE_PICTURE = 1;
+    private Uri imgUri;
+
 
     public TabAlbumFragment() {
         // Required empty public constructor
@@ -81,6 +86,7 @@ public class TabAlbumFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 cameraManager.dispatchTakePictureIntent();
+     //           takePhoto();
 
             }
         });
@@ -90,11 +96,24 @@ public class TabAlbumFragment extends Fragment {
         return v;
     }
 
+    private void takePhoto() {
+        Intent cameraIntent = new  Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(cameraIntent, CAMERA_REQUEST);
+
+    }
+
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+//            Bitmap picture = (Bitmap) data.getExtras().get("data");//this is your bitmap image and now you can do whatever you want with this
+//            mImageView.setImageBitmap(picture); //for example I put bmp in an ImageView
+//        }
+//    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Intent dat = getActivity().getIntent();
-        Log.v("", "request " + requestCode +" result " + resultCode + " data " +data+ " dat "+ dat);
         cameraManager.OnActivityResult(requestCode, resultCode, data);
 
     }
