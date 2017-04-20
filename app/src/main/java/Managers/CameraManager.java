@@ -1,6 +1,7 @@
 package Managers;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.widget.ImageView;
 
+import com.spear.android.R;
 import java.io.File;
 
 import Fragments.TabAlbumFragment;
@@ -26,18 +28,11 @@ public class CameraManager {
     private Activity context;
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     String mCurrentPhotoPath;
-    ImageView mImageView;
     TabAlbumFragment fragment;
 
 
-    public CameraManager(Activity context, ImageView mImageView) {
+    public CameraManager(Activity context, TabAlbumFragment fragment) {
         this.context = context;
-        this.mImageView = mImageView;
-    }
-
-    public CameraManager(Activity context, TabAlbumFragment fragment, ImageView mImageView) {
-        this.context = context;
-        this.mImageView = mImageView;
         this.fragment = fragment;
     }
 
@@ -53,12 +48,13 @@ public class CameraManager {
     }
 
 
-    public void OnActivityResult(int requestCode, int resultCode, Intent data) {
+    public void OnActivityResult(int requestCode, int resultCode, Intent data, ImageView imageView) {
+
         if (resultCode != RESULT_CANCELED) {
             if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
                 Bundle extras = data.getExtras();
                 Bitmap imageBitmap = (Bitmap) extras.get("data");
-                mImageView.setImageBitmap(imageBitmap);
+                imageView.setImageBitmap(imageBitmap);
             }
         }
     }
@@ -74,7 +70,7 @@ public class CameraManager {
     }
 
     //    Decode a Scaled Image
-    private void setPic() {
+  /*  private void setPic() {
         // Get the dimensions of the View
         int targetW = mImageView.getWidth();
         int targetH = mImageView.getHeight();
@@ -96,7 +92,7 @@ public class CameraManager {
 
         Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
         mImageView.setImageBitmap(bitmap);
-    }
+    }*/
 
 
 }
