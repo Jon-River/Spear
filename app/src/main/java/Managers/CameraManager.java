@@ -21,67 +21,84 @@ import Fragments.TabAlbumFragment;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
-
 /**
  * Created by Pablo on 16/4/17.
  */
 
 public class CameraManager {
 
-    private Activity context;
-    public static final int REQUEST_IMAGE_CAPTURE = 1;
-    String mCurrentPhotoPath;
-    TabAlbumFragment fragment;
+  private Activity context;
+  public static final int REQUEST_IMAGE_CAPTURE = 1;
+  String mCurrentPhotoPath;
+  TabAlbumFragment fragment;
 
+  public CameraManager(Activity context, TabAlbumFragment fragment) {
+    this.context = context;
+    this.fragment = fragment;
+  }
 
-    public CameraManager(Activity context, TabAlbumFragment fragment) {
-        this.context = context;
-        this.fragment = fragment;
+  public CameraManager() {
+  }
+
+  public void takePictureIntent() {
+    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
+      fragment.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+    }
+  }
+
+  public void openGalleryIntent() {
+    Intent openGalleryIntent = new Intent(Intent.ACTION_PICK,
+        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+    fragment.startActivityForResult(openGalleryIntent,REQUEST_IMAGE_CAPTURE );
+  }
+
+  public void OnActivityResult(int requestCode, int resultCode, Intent data, ImageView imageView) {
+
+    if (resultCode != RESULT_CANCELED) {
+      if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+        Bundle extras = data.getExtras();
+        Bitmap imageBitmap = (Bitmap) extras.get("data");
+
+        //Load image with glide
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        Glide.with(context).load(stream.toByteArray()).asBitmap().into(imageView);
+
+        //load image
+        //imageView.setImageBitmap(imageBitmap);
+      }
     }
 
-    public CameraManager() {
-    }
+   /* if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+      Uri selectedImage = data.getData();
+      String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
+      Cursor cursor = getContentResolver().query(selectedImage,
+          filePathColumn, null, null, null);
+      cursor.moveToFirst();
 
-    public void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
-            fragment.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        }
-    }
+      int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+      String picturePath = cursor.getString(columnIndex);
+      cursor.close();
 
+      ImageView imageView = (ImageView) findViewById(R.id.imgView);
+      imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
 
-    public void OnActivityResult(int requestCode, int resultCode, Intent data, ImageView imageView) {
+    }*/
 
-        if (resultCode != RESULT_CANCELED) {
-            if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-                Bundle extras = data.getExtras();
-                Bitmap imageBitmap = (Bitmap) extras.get("data");
+  }
 
-                //Load image with glide
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                Glide.with(context).load(stream.toByteArray())
-                    .asBitmap()
-                    .into(imageView);
+  //Add a photo to a gallery
+  private void galleryAddPic() {
+    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+    File f = new File(mCurrentPhotoPath);
+    Uri contentUri = Uri.fromFile(f);
+    mediaScanIntent.setData(contentUri);
+    context.sendBroadcast(mediaScanIntent);
+  }
 
-                //load image
-                //imageView.setImageBitmap(imageBitmap);
-            }
-        }
-    }
-
-
-    //Add a photo to a gallery
-    private void galleryAddPic() {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(mCurrentPhotoPath);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        context.sendBroadcast(mediaScanIntent);
-    }
-
-    //    Decode a Scaled Image
+  //    Decode a Scaled Image
   /*  private void setPic() {
         // Get the dimensions of the View
         int targetW = mImageView.getWidth();
@@ -105,6 +122,4 @@ public class CameraManager {
         Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
         mImageView.setImageBitmap(bitmap);
     }*/
-
-
 }

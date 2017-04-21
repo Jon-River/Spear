@@ -83,10 +83,17 @@ public class TabAlbumFragment extends Fragment {
         final Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.open_camera_dialog);
         Button btnOpenCamera = (Button) dialog.findViewById(R.id.btnOpenCamera);
-        // if button is clicked, close the custom dialog
         btnOpenCamera.setOnClickListener(new View.OnClickListener() {
           @Override public void onClick(View v) {
-            cameraManager.dispatchTakePictureIntent();
+            cameraManager.takePictureIntent();
+            dialog.dismiss();
+          }
+        });
+
+        Button btnOpenGallery = (Button) dialog.findViewById(R.id.btnOpenGallery);
+        btnOpenGallery.setOnClickListener(new View.OnClickListener() {
+          @Override public void onClick(View v) {
+            cameraManager.openGalleryIntent();
             dialog.dismiss();
           }
         });
