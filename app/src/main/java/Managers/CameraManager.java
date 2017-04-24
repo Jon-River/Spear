@@ -1,5 +1,6 @@
 package Managers;
 
+import Objects.ImageInfo;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -48,15 +49,19 @@ public class CameraManager {
   private String mCurrentPhotoPath;
   private TabAlbumFragment fragment;
   private StorageReference storageReference;
+  private FirebaseAuth firebaseAuth;
+  private DatabaseReference databaseReference;
+
 
   public CameraManager(Activity context, TabAlbumFragment fragment) {
     this.context = context;
     this.fragment = fragment;
     storageReference = FirebaseStorage.getInstance().getReference();
+    firebaseAuth = FirebaseAuth.getInstance();
+    databaseReference = FirebaseDatabase.getInstance().getReference();
+
   }
 
-  public CameraManager() {
-  }
 
   public void takePictureIntent() {
     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -83,7 +88,6 @@ public class CameraManager {
         imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         Glide.with(context).load(stream.toByteArray()).asBitmap().into(imageView);
       } else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-
         try {
           imageView.setImageBitmap(
               MediaStore.Images.Media.getBitmap(context.getContentResolver(), data.getData()));
@@ -112,7 +116,10 @@ public class CameraManager {
     final ProgressDialog progress = new ProgressDialog(context);
     progress.setMessage("Uploading image");
     progress.show();
-    StorageReference storageRef = storageReference.child("Images").child(uri.getLastPathSegment());
+    progress.setContentView(R.layout.custom_progress_dialog);
+    StorageReference storageRef = storageReference.child("Images").child(firebaseAuth.getCurrentUser().getUid()).child(uri.getLastPathSegment());
+    ImageInfo imageInfo = new ImageInfo(uri.getLastPathSegment(),1);
+    databaseReference.child("images").child(firebaseAuth.getCurrentUser().getUid()).push().setValue(imageInfo);
     storageRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
       @Override public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
           progress.dismiss();
