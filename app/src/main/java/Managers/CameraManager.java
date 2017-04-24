@@ -3,11 +3,13 @@ package Managers;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -17,6 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 import Fragments.TabAlbumFragment;
+import java.io.IOException;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -28,7 +31,9 @@ import static android.app.Activity.RESULT_OK;
 public class CameraManager {
 
   private Activity context;
-  public static final int REQUEST_IMAGE_CAPTURE = 1;
+  public static final int REQUEST_IMAGE_CAPTURE = 1111;
+  public static final int RESULT_LOAD_IMAGE = 2222;
+
   String mCurrentPhotoPath;
   TabAlbumFragment fragment;
 
@@ -50,7 +55,7 @@ public class CameraManager {
   public void openGalleryIntent() {
     Intent openGalleryIntent = new Intent(Intent.ACTION_PICK,
         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-    fragment.startActivityForResult(openGalleryIntent,REQUEST_IMAGE_CAPTURE );
+    fragment.startActivityForResult(openGalleryIntent,RESULT_LOAD_IMAGE  );
   }
 
   public void OnActivityResult(int requestCode, int resultCode, Intent data, ImageView imageView) {
@@ -65,27 +70,20 @@ public class CameraManager {
         imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         Glide.with(context).load(stream.toByteArray()).asBitmap().into(imageView);
 
-        //load image
-        //imageView.setImageBitmap(imageBitmap);
+      }else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data){
+
+
+        try{
+          imageView.setImageBitmap(MediaStore.Images.Media.getBitmap(context.getContentResolver(), data.getData()));
+        }catch (IOException ex){
+          Log.v("IOException",""+ ex.getMessage());
+        }
+
+       /* ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        Glide.with(context).load(stream.toByteArray()).asBitmap().into(imageView);*/
       }
     }
-
-   /* if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-      Uri selectedImage = data.getData();
-      String[] filePathColumn = { MediaStore.Images.Media.DATA };
-
-      Cursor cursor = getContentResolver().query(selectedImage,
-          filePathColumn, null, null, null);
-      cursor.moveToFirst();
-
-      int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-      String picturePath = cursor.getString(columnIndex);
-      cursor.close();
-
-      ImageView imageView = (ImageView) findViewById(R.id.imgView);
-      imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-
-    }*/
 
   }
 
