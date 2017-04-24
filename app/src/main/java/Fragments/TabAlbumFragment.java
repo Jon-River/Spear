@@ -106,14 +106,11 @@ public class TabAlbumFragment extends Fragment {
     return v;
   }
 
-  @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+  @Override public void onActivityResult(int requestCode, int resultCode, final Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     final Dialog dialogView = new Dialog(getContext());
     dialogView.setContentView(R.layout.result_camera_dialog);
-
-
     mImageView = (ImageView) dialogView.findViewById(R.id.imageResultDialog);
-
     Display display = getActivity().getWindowManager().getDefaultDisplay();
     int width = ((display.getWidth()*8)/10);
     int height = ((display.getHeight()*10)/10);
@@ -121,7 +118,14 @@ public class TabAlbumFragment extends Fragment {
     mImageView.setLayoutParams(parms);
     dialogView.show();
     cameraManager.OnActivityResult(requestCode, resultCode, data, mImageView);
+    Button btnUploadImage = (Button) dialogView.findViewById(R.id.btnUploadPhoto);
+    btnUploadImage.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        cameraManager.pushToFirebase(data);
+      }
+    });
   }
+
 
   private void prepareAlbums() {
     int[] covers = new int[] {

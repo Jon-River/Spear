@@ -2,18 +2,29 @@ package Managers;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.SyncStateContract;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.spear.android.R;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -30,16 +41,18 @@ import static android.app.Activity.RESULT_OK;
 
 public class CameraManager {
 
-  private Activity context;
   public static final int REQUEST_IMAGE_CAPTURE = 1111;
   public static final int RESULT_LOAD_IMAGE = 2222;
 
-  String mCurrentPhotoPath;
-  TabAlbumFragment fragment;
+  private Activity context;
+  private String mCurrentPhotoPath;
+  private TabAlbumFragment fragment;
+  private StorageReference storageReference;
 
   public CameraManager(Activity context, TabAlbumFragment fragment) {
     this.context = context;
     this.fragment = fragment;
+    storageReference = FirebaseStorage.getInstance().getReference();
   }
 
   public CameraManager() {
@@ -55,7 +68,7 @@ public class CameraManager {
   public void openGalleryIntent() {
     Intent openGalleryIntent = new Intent(Intent.ACTION_PICK,
         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-    fragment.startActivityForResult(openGalleryIntent,RESULT_LOAD_IMAGE  );
+    fragment.startActivityForResult(openGalleryIntent, RESULT_LOAD_IMAGE);
   }
 
   public void OnActivityResult(int requestCode, int resultCode, Intent data, ImageView imageView) {
@@ -69,14 +82,13 @@ public class CameraManager {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         Glide.with(context).load(stream.toByteArray()).asBitmap().into(imageView);
+      } else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
 
-      }else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data){
-
-
-        try{
-          imageView.setImageBitmap(MediaStore.Images.Media.getBitmap(context.getContentResolver(), data.getData()));
-        }catch (IOException ex){
-          Log.v("IOException",""+ ex.getMessage());
+        try {
+          imageView.setImageBitmap(
+              MediaStore.Images.Media.getBitmap(context.getContentResolver(), data.getData()));
+        } catch (IOException ex) {
+          Log.v("IOException", "" + ex.getMessage());
         }
 
        /* ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -84,7 +96,6 @@ public class CameraManager {
         Glide.with(context).load(stream.toByteArray()).asBitmap().into(imageView);*/
       }
     }
-
   }
 
   //Add a photo to a gallery
@@ -94,6 +105,19 @@ public class CameraManager {
     Uri contentUri = Uri.fromFile(f);
     mediaScanIntent.setData(contentUri);
     context.sendBroadcast(mediaScanIntent);
+  }
+
+  public void pushToFirebase(Intent data) {
+    Uri uri = data.getData();
+    final ProgressDialog progress = new ProgressDialog(context);
+    progress.setMessage("Uploading image");
+    progress.show();
+    StorageReference storageRef = storageReference.child("Images").child(uri.getLastPathSegment());
+    storageRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+      @Override public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+          progress.dismiss();
+      }
+    });
   }
 
   //    Decode a Scaled Image
