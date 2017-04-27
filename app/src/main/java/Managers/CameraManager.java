@@ -36,8 +36,8 @@ import static android.app.Activity.RESULT_OK;
 
 public class CameraManager {
 
-  public static final int REQUEST_IMAGE_CAPTURE = 1111;
-  public static final int RESULT_LOAD_IMAGE = 2222;
+  public static final int REQUEST_CAMERA_CAPTURE = 1111;
+  public static final int REQUEST_GALLERY_CAPTURE = 2222;
 
   private Activity context;
   private String mCurrentPhotoPath;
@@ -45,6 +45,7 @@ public class CameraManager {
   private StorageReference storageReference;
   private FirebaseAuth firebaseAuth;
   private DatabaseReference databaseReference;
+  private Intent dataIntent;
 
 
   public CameraManager(Activity context, TabAlbumFragment fragment) {
@@ -59,21 +60,22 @@ public class CameraManager {
 
   public void takePictureIntent() {
     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,"data");
     if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
-      fragment.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+      fragment.startActivityForResult(takePictureIntent, REQUEST_CAMERA_CAPTURE);
     }
   }
 
   public void openGalleryIntent() {
     Intent openGalleryIntent = new Intent(Intent.ACTION_PICK,
         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-    fragment.startActivityForResult(openGalleryIntent, RESULT_LOAD_IMAGE);
+    fragment.startActivityForResult(openGalleryIntent, REQUEST_GALLERY_CAPTURE);
   }
 
   public void OnActivityResult(int requestCode, int resultCode, Intent data, ImageView imageView) {
-
+    dataIntent = data;
     if (resultCode != RESULT_CANCELED) {
-      if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+      if (requestCode == REQUEST_CAMERA_CAPTURE && resultCode == RESULT_OK) {
         Bundle extras = data.getExtras();
         Bitmap imageBitmap = (Bitmap) extras.get("data");
 
@@ -81,7 +83,8 @@ public class CameraManager {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         Glide.with(context).load(stream.toByteArray()).asBitmap().into(imageView);
-      } else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+
+      } else if (requestCode == REQUEST_GALLERY_CAPTURE && resultCode == RESULT_OK && null != data) {
         try {
           imageView.setImageBitmap(
               MediaStore.Images.Media.getBitmap(context.getContentResolver(), data.getData()));
@@ -105,22 +108,57 @@ public class CameraManager {
     context.sendBroadcast(mediaScanIntent);
   }
 
-  public void pushToFirebase(Intent data, String comentary) {
-    Uri uri = data.getData();
+  public void pushToFirebase(int requestCode, int resultCode, String comentary) {
+
     final ProgressDialog progress = new ProgressDialog(context);
     progress.setMessage("Uploading image");
     progress.show();
     progress.setContentView(R.layout.custom_progress_dialog);
-    StorageReference storageRef = storageReference.child("Images").child(firebaseAuth.getCurrentUser().getUid()).child(uri.getLastPathSegment());
 
-    ImageInfo imageInfo = new ImageInfo(uri.getLastPathSegment(),0, 0,comentary);
-    databaseReference.child("images").child(firebaseAuth.getCurrentUser().getUid()).push().setValue(imageInfo);
-    storageRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-      @Override public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-          progress.dismiss();
+
+
+    if (resultCode != RESULT_CANCELED) {
+
+      if (requestCode == REQUEST_CAMERA_CAPTURE && resultCode == RESULT_OK) {
+        Bundle extras = dataIntent.getExtras();
+        Bitmap imageBitmap = (Bitmap) extras.get("data");
+
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), imageBitmap, "Title", null);
+        Uri uri = Uri.parse(path);
+        StorageReference storageRef = storageReference.child("Images").child(firebaseAuth.getCurrentUser().getUid()).child(uri.getLastPathSegment());
+
+        ImageInfo imageInfo = new ImageInfo(uri.getLastPathSegment(),0, 0,comentary);
+        databaseReference.child("images").child(firebaseAuth.getCurrentUser().getUid()).push().setValue(imageInfo);
+        storageRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+          @Override public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+            progress.dismiss();
+          }
+        });
+
+
+      } else if (requestCode == REQUEST_GALLERY_CAPTURE && resultCode == RESULT_OK) {
+        Uri uri = dataIntent.getData();
+        StorageReference storageRef = storageReference.child("Images").child(firebaseAuth.getCurrentUser().getUid()).child(uri.getLastPathSegment());
+
+        ImageInfo imageInfo = new ImageInfo(uri.getLastPathSegment(),0, 0,comentary);
+        databaseReference.child("images").child(firebaseAuth.getCurrentUser().getUid()).push().setValue(imageInfo);
+        storageRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+          @Override public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+            progress.dismiss();
+          }
+        });
       }
-    });
+
+
+    }
+
+
+
   }
+
+
 
   //    Decode a Scaled Image
   /*  private void setPic() {
