@@ -12,11 +12,19 @@ public class ImageInfo {
   private String comentary;
 
 
-  public ImageInfo(String imgPath, int rating, int hidden,String comentrary) {
+  public ImageInfo(String imgPath, int rating, int hidden,String comentary) {
     this.imgPath = imgPath;
     this.rating = rating;
     this.hidden = hidden;
-    this.comentary = comentrary;
+    this.comentary = comentary;
+  }
+
+  public String getComentary() {
+    return comentary;
+  }
+
+  public void setComentary(String comentary) {
+    this.comentary = comentary;
   }
 
   public int getHidden() {

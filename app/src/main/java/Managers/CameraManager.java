@@ -105,14 +105,15 @@ public class CameraManager {
     context.sendBroadcast(mediaScanIntent);
   }
 
-  public void pushToFirebase(Intent data) {
+  public void pushToFirebase(Intent data, String comentary) {
     Uri uri = data.getData();
     final ProgressDialog progress = new ProgressDialog(context);
     progress.setMessage("Uploading image");
     progress.show();
     progress.setContentView(R.layout.custom_progress_dialog);
     StorageReference storageRef = storageReference.child("Images").child(firebaseAuth.getCurrentUser().getUid()).child(uri.getLastPathSegment());
-    ImageInfo imageInfo = new ImageInfo(uri.getLastPathSegment(),0, 0,"");
+
+    ImageInfo imageInfo = new ImageInfo(uri.getLastPathSegment(),0, 0,comentary);
     databaseReference.child("images").child(firebaseAuth.getCurrentUser().getUid()).push().setValue(imageInfo);
     storageRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
       @Override public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

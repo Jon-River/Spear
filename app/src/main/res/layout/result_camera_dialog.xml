@@ -36,6 +36,7 @@
       android:layout_weight="0.10"
       android:ems="10"
       android:inputType="textMultiLine"
+      android:maxLength="40"
       />
 
 

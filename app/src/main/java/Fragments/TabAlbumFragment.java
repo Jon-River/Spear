@@ -105,11 +105,13 @@ public class TabAlbumFragment extends Fragment implements View.OnClickListener {
         LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width, height);
         mImageView.setLayoutParams(parms);
         btnUploadImage = (Button) dialogCameraView.findViewById(R.id.btnUploadPhoto);
-
+        editTextComentary = (EditText) dialogCameraView.findViewById(R.id.editTextComentary);
         btnUploadImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cameraManager.pushToFirebase(intent);
+                String comentary = editTextComentary.getText().toString();
+                cameraManager.pushToFirebase(intent, comentary );
+                dialogCameraView.dismiss();
             }
         });
 
@@ -158,8 +160,7 @@ public class TabAlbumFragment extends Fragment implements View.OnClickListener {
         dialogButtons = new Dialog(getContext());
         dialogButtons.setContentView(R.layout.open_camera_dialog);
         btnOpenCamera = (Button) dialogButtons.findViewById(R.id.btnOpenCamera);
-        btnOpenGallery = (Button) dialogButtons.findViewById(R.id.btnOpenCamera);
-        editTextComentary = (EditText) dialogButtons.findViewById(R.id.editTextComentary);
+        btnOpenGallery = (Button) dialogButtons.findViewById(R.id.btnOpenGallery);
         btnOpenCamera.setOnClickListener(this);
         btnOpenGallery.setOnClickListener(this);
 
