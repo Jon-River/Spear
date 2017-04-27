@@ -1,24 +1,16 @@
 package Managers;
 
-import Objects.ImageInfo;
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.SyncStateContract;
-import android.util.Base64;
 import android.util.Log;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -27,11 +19,13 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.spear.android.R;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 
 import Fragments.TabAlbumFragment;
-import java.io.IOException;
+import Objects.ImageInfo;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -118,7 +112,7 @@ public class CameraManager {
     progress.show();
     progress.setContentView(R.layout.custom_progress_dialog);
     StorageReference storageRef = storageReference.child("Images").child(firebaseAuth.getCurrentUser().getUid()).child(uri.getLastPathSegment());
-    ImageInfo imageInfo = new ImageInfo(uri.getLastPathSegment(),1);
+    ImageInfo imageInfo = new ImageInfo(uri.getLastPathSegment(),0, 0,"");
     databaseReference.child("images").child(firebaseAuth.getCurrentUser().getUid()).push().setValue(imageInfo);
     storageRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
       @Override public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
