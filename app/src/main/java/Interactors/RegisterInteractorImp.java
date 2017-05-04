@@ -60,14 +60,14 @@ public class RegisterInteractorImp implements RegisterInteractor {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()){
                         FirebaseUser user = task.getResult().getUser();
-
-                        UserInfo userData = new UserInfo(userString, emailString, user.getUid(),fishzoneString );
-                        databaseReference.child("users").push().setValue(userData);
+                        UserInfo userData = new UserInfo(userString, emailString,fishzoneString );
+                        databaseReference.child("users").child(user.getUid()).push().setValue(userData);
                         dialog.dismiss();
                         registerFragment.openFragementLogin();
                     }else{
                         dialog.dismiss();
-                        Toast.makeText(view.getContext(), "Error de registro", Toast.LENGTH_SHORT).show();
+
+                        Toast.makeText(view.getContext(), "Error de registro", Toast.LENGTH_LONG).show();
 
                     }
                 }

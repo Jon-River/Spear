@@ -23,6 +23,9 @@ import com.spear.android.R;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import Fragments.TabAlbumFragment;
 import Objects.ImageInfo;
@@ -137,10 +140,16 @@ public class CameraManager {
               public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 url = taskSnapshot.getDownloadUrl().toString();
                 imageInfo = new ImageInfo(uri.getLastPathSegment(), 0, 0, comentary, url);
-                databaseReference.child("images")
-                    .child(firebaseAuth.getCurrentUser().getUid())
-                    .push()
-                    .setValue(imageInfo);
+                databaseReference.child("users")
+                        .child(firebaseAuth.getCurrentUser().getUid()).child("imageinfo")
+                        .push()
+                        .setValue(imageInfo);
+                ArrayList<String> urlArray = new ArrayList<String>();
+                urlArray.add(url);
+                Map<String, Object> childUpdates = new HashMap<>();
+                childUpdates.put("/user-images/" + firebaseAuth.getCurrentUser().getUid() + "/" , url);
+                databaseReference.updateChildren(childUpdates);
+                //databaseReference.child("images").child(firebaseAuth.getCurrentUser().getUid()).push().setValue(urlArray);
                 progress.dismiss();
               }
             });
@@ -156,10 +165,16 @@ public class CameraManager {
               public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 url = taskSnapshot.getDownloadUrl().toString();
                 imageInfo = new ImageInfo(uri.getLastPathSegment(), 0, 0, comentary, url);
-                databaseReference.child("images")
-                    .child(firebaseAuth.getCurrentUser().getUid())
-                    .push()
-                    .setValue(imageInfo);
+                databaseReference.child("users")
+                        .child(firebaseAuth.getCurrentUser().getUid()).child("imageinfo")
+                        .push()
+                        .setValue(imageInfo);
+                ArrayList<String> urlArray = new ArrayList<String>();
+                urlArray.add(url);
+                Map<String, Object> childUpdates = new HashMap<>();
+                childUpdates.put("/user-images/" + firebaseAuth.getCurrentUser().getUid() + "/" , url);
+                databaseReference.updateChildren(childUpdates);
+                //databaseReference.child("images").child(firebaseAuth.getCurrentUser().getUid()).push().setValue(urlArray);
                 progress.dismiss();
               }
             });

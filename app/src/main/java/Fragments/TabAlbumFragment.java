@@ -1,10 +1,5 @@
 package Fragments;
 
-import Adapters.AlbumAdapter;
-import Interactors.AlbumInteractorImp;
-import Interfaces.AlbumInteractor;
-import Managers.CameraManager;
-import Objects.CardImage;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
@@ -30,10 +25,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import com.google.firebase.storage.StorageReference;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.spear.android.R;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import Adapters.AlbumAdapter;
+import Interactors.AlbumInteractorImp;
+import Interfaces.AlbumInteractor;
+import Managers.CameraManager;
+import Objects.CardImage;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,7 +61,7 @@ public class TabAlbumFragment extends Fragment implements View.OnClickListener {
     private static final int CAMERA_REQUEST = 1888;
     private static int TAKE_PICTURE = 1;
 
-    private StorageReference storageReference;
+    private DatabaseReference databaseReference;
 
     private Uri url;
 
@@ -176,7 +180,7 @@ public class TabAlbumFragment extends Fragment implements View.OnClickListener {
 
     private void prepareAlbums() {
        // storageReference = FirebaseStorage.getInstance().getReference().child("Images").child(FirebaseAuth.getInstance().getCurrentUser().toString());
-
+    databaseReference = FirebaseDatabase.getInstance().getReference().child("images");
 
         int[] covers = new int[]{
                 R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher,

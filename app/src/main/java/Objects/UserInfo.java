@@ -8,17 +8,15 @@ public class UserInfo {
 
     public String name;
     public String email;
-    public String uid;
     public String province;
 
     public UserInfo() {
 
     }
 
-    public UserInfo(String name, String email, String uid, String province) {
+    public UserInfo(String name, String email, String province) {
         this.name = name;
         this.email = email;
-        this.uid = uid;
         this.province = province;
 
     }
