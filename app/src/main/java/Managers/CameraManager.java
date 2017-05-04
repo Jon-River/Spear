@@ -46,7 +46,8 @@ public class CameraManager {
   private FirebaseAuth firebaseAuth;
   private DatabaseReference databaseReference;
   private Intent dataIntent;
-
+  private ImageInfo imageInfo;
+  private String url;
 
   public CameraManager(Activity context, TabAlbumFragment fragment) {
     this.context = context;
@@ -54,13 +55,11 @@ public class CameraManager {
     storageReference = FirebaseStorage.getInstance().getReference();
     firebaseAuth = FirebaseAuth.getInstance();
     databaseReference = FirebaseDatabase.getInstance().getReference();
-
   }
-
 
   public void takePictureIntent() {
     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,"data");
+    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, "data");
     if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
       fragment.startActivityForResult(takePictureIntent, REQUEST_CAMERA_CAPTURE);
     }
@@ -83,8 +82,9 @@ public class CameraManager {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         Glide.with(context).load(stream.toByteArray()).asBitmap().into(imageView);
-
-      } else if (requestCode == REQUEST_GALLERY_CAPTURE && resultCode == RESULT_OK && null != data) {
+      } else if (requestCode == REQUEST_GALLERY_CAPTURE
+          && resultCode == RESULT_OK
+          && null != data) {
         try {
           imageView.setImageBitmap(
               MediaStore.Images.Media.getBitmap(context.getContentResolver(), data.getData()));
@@ -108,14 +108,12 @@ public class CameraManager {
     context.sendBroadcast(mediaScanIntent);
   }
 
-  public void pushToFirebase(int requestCode, int resultCode, String comentary) {
+  public void pushToFirebase(int requestCode, int resultCode, final String comentary) {
 
     final ProgressDialog progress = new ProgressDialog(context);
     progress.setMessage("Uploading image");
     progress.show();
     progress.setContentView(R.layout.custom_progress_dialog);
-
-
 
     if (resultCode != RESULT_CANCELED) {
 
@@ -125,40 +123,49 @@ public class CameraManager {
 
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), imageBitmap, "Title", null);
-        Uri uri = Uri.parse(path);
-        StorageReference storageRef = storageReference.child("Images").child(firebaseAuth.getCurrentUser().getUid()).child(uri.getLastPathSegment());
+        String path =
+            MediaStore.Images.Media.insertImage(context.getContentResolver(), imageBitmap, "Title",
+                null);
+        final Uri uri = Uri.parse(path);
+        StorageReference storageRef = storageReference.child("Images")
+            .child(firebaseAuth.getCurrentUser().getUid())
+            .child(uri.getLastPathSegment());
 
-        ImageInfo imageInfo = new ImageInfo(uri.getLastPathSegment(),0, 0,comentary);
-        databaseReference.child("images").child(firebaseAuth.getCurrentUser().getUid()).push().setValue(imageInfo);
-        storageRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-          @Override public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-            progress.dismiss();
-          }
-        });
-
-
+        storageRef.putFile(uri)
+            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+              @SuppressWarnings("VisibleForTests") @Override
+              public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                url = taskSnapshot.getDownloadUrl().toString();
+                imageInfo = new ImageInfo(uri.getLastPathSegment(), 0, 0, comentary, url);
+                databaseReference.child("images")
+                    .child(firebaseAuth.getCurrentUser().getUid())
+                    .push()
+                    .setValue(imageInfo);
+                progress.dismiss();
+              }
+            });
       } else if (requestCode == REQUEST_GALLERY_CAPTURE && resultCode == RESULT_OK) {
-        Uri uri = dataIntent.getData();
-        StorageReference storageRef = storageReference.child("Images").child(firebaseAuth.getCurrentUser().getUid()).child(uri.getLastPathSegment());
+        final Uri uri = dataIntent.getData();
+        StorageReference storageRef = storageReference.child("Images")
+            .child(firebaseAuth.getCurrentUser().getUid())
+            .child(uri.getLastPathSegment());
 
-        ImageInfo imageInfo = new ImageInfo(uri.getLastPathSegment(),0, 0,comentary);
-        databaseReference.child("images").child(firebaseAuth.getCurrentUser().getUid()).push().setValue(imageInfo);
-        storageRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-          @Override public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-            progress.dismiss();
-          }
-        });
+        storageRef.putFile(uri)
+            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+              @SuppressWarnings("VisibleForTests") @Override
+              public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                url = taskSnapshot.getDownloadUrl().toString();
+                imageInfo = new ImageInfo(uri.getLastPathSegment(), 0, 0, comentary, url);
+                databaseReference.child("images")
+                    .child(firebaseAuth.getCurrentUser().getUid())
+                    .push()
+                    .setValue(imageInfo);
+                progress.dismiss();
+              }
+            });
       }
-
-
     }
-
-
-
   }
-
-
 
   //    Decode a Scaled Image
   /*  private void setPic() {

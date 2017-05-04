@@ -1,5 +1,10 @@
 package Fragments;
 
+import Adapters.AlbumAdapter;
+import Interactors.AlbumInteractorImp;
+import Interfaces.AlbumInteractor;
+import Managers.CameraManager;
+import Objects.CardImage;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
@@ -7,6 +12,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -24,17 +30,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
+import com.google.firebase.storage.StorageReference;
 import com.spear.android.R;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import Adapters.AlbumAdapter;
-import Interactors.AlbumInteractorImp;
-import Interfaces.AlbumInteractor;
-import Managers.CameraManager;
-import Objects.CardImage;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,6 +56,10 @@ public class TabAlbumFragment extends Fragment implements View.OnClickListener {
     private Dialog dialogButtons, dialogCameraView;
     private static final int CAMERA_REQUEST = 1888;
     private static int TAKE_PICTURE = 1;
+
+    private StorageReference storageReference;
+
+    private Uri url;
 
 
     public TabAlbumFragment() {
@@ -172,6 +175,9 @@ public class TabAlbumFragment extends Fragment implements View.OnClickListener {
     }
 
     private void prepareAlbums() {
+       // storageReference = FirebaseStorage.getInstance().getReference().child("Images").child(FirebaseAuth.getInstance().getCurrentUser().toString());
+
+
         int[] covers = new int[]{
                 R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher,
                 R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher,
@@ -219,6 +225,7 @@ public class TabAlbumFragment extends Fragment implements View.OnClickListener {
         mImageView.setLayoutParams(parms);
         btnUploadImage = (Button) dialogCameraView.findViewById(R.id.btnUploadPhoto);
         editTextComentary = (EditText) dialogCameraView.findViewById(R.id.editTextComentary);
+
 
 
     }

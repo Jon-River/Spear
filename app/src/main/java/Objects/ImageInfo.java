@@ -10,9 +10,17 @@ public class ImageInfo {
   private int rating;
   private int hidden;
   private String comentary;
+  private String uri;
 
+  public ImageInfo(String imgPath, int rating, int hidden, String comentary, String uri) {
+    this.imgPath = imgPath;
+    this.rating = rating;
+    this.hidden = hidden;
+    this.comentary = comentary;
+    this.uri = uri;
+  }
 
-  public ImageInfo(String imgPath, int rating, int hidden,String comentary) {
+  public ImageInfo(String imgPath, int rating, int hidden, String comentary) {
     this.imgPath = imgPath;
     this.rating = rating;
     this.hidden = hidden;
@@ -49,5 +57,13 @@ public class ImageInfo {
 
   public void setRating(int rating) {
     this.rating = rating;
+  }
+
+  public String getUri() {
+    return uri;
+  }
+
+  public void setUri(String uri) {
+    this.uri = uri;
   }
 }
