@@ -62,7 +62,7 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
         holder.ratingBar.setRating(album.getRating());
 
         // loading album cover using Glide library
-        Glide.with(mContext).load(album.getImageresource()).into(holder.image);
+        Glide.with(mContext).load(album.getUrlString()).into(holder.image);
 
 
     }

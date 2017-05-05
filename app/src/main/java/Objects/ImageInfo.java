@@ -8,22 +8,22 @@ public class ImageInfo {
 
   private String imgPath;
   private int rating;
-  private int hidden;
+  private long timeStamp;
   private String comentary;
   private String uri;
 
-  public ImageInfo(String imgPath, int rating, int hidden, String comentary, String uri) {
+  public ImageInfo(String imgPath, int rating, long timeStamp, String comentary, String uri) {
     this.imgPath = imgPath;
     this.rating = rating;
-    this.hidden = hidden;
+    this.timeStamp = timeStamp;
     this.comentary = comentary;
     this.uri = uri;
   }
 
-  public ImageInfo(String imgPath, int rating, int hidden, String comentary) {
+  public ImageInfo(String imgPath, int rating, long timeStamp, String comentary) {
     this.imgPath = imgPath;
     this.rating = rating;
-    this.hidden = hidden;
+    this.timeStamp = timeStamp;
     this.comentary = comentary;
   }
 
@@ -35,12 +35,12 @@ public class ImageInfo {
     this.comentary = comentary;
   }
 
-  public int getHidden() {
-    return hidden;
+  public long getTimeStamp() {
+    return timeStamp;
   }
 
-  public void setHidden(int hidden) {
-    this.hidden = hidden;
+  public void setTimeStamp(long timeStamp) {
+    this.timeStamp = timeStamp;
   }
 
   public String getImgPath() {

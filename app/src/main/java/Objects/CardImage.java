@@ -1,7 +1,5 @@
 package Objects;
 
-import android.net.Uri;
-
 /**
  * Created by Pablo on 10/4/17.
  */
@@ -10,27 +8,28 @@ public class CardImage {
 
   private String username;
   private int rating;
-  private int imageresource;
+  private String urlString;
   private String province;
-  private Uri uri;
+  private int imgRes;
 
 
-  public CardImage(String username, int rating, int imageresource, String province ) {
+  public CardImage(String username, int rating, String urlString, String province ) {
     this.username = username;
     this.rating = rating;
-    this.imageresource = imageresource;
+    this.urlString = urlString;
+    this.province = province;
+
+  }
+  public CardImage(String username, int rating, int imgres, String province ) {
+    this.username = username;
+    this.rating = rating;
+    this.imgRes = imgres;
     this.province = province;
 
   }
 
 
-  public CardImage(String username, int rating, int imageresource, String province, Uri uri) {
-    this.username = username;
-    this.rating = rating;
-    this.imageresource = imageresource;
-    this.province = province;
-    this.uri = uri;
-  }
+
 
   public CardImage() {
 
@@ -52,12 +51,12 @@ public class CardImage {
     this.rating = rating;
   }
 
-  public int getImageresource() {
-    return imageresource;
+  public String getUrlString() {
+    return urlString;
   }
 
-  public void setImageresource(int imageresource) {
-    this.imageresource = imageresource;
+  public void setUrlString(String urlString) {
+    this.urlString = urlString;
   }
 
   public String getProvince() {
@@ -68,5 +67,11 @@ public class CardImage {
     this.province = province;
   }
 
+  public int getImgRes() {
+    return imgRes;
+  }
 
+  public void setImgRes(int imgRes) {
+    this.imgRes = imgRes;
+  }
 }
