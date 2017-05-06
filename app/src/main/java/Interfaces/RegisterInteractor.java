@@ -5,7 +5,7 @@ package Interfaces;
  */
 
 public interface RegisterInteractor {
-    void registerUser(final String user, final String mail, final String password);
+    void registerUser(final String user, final String mail, final String password, final String province);
 
     interface OnRegisterCallback {
         void onSuccess();

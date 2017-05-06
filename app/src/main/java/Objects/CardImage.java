@@ -7,20 +7,24 @@ package Objects;
 public class CardImage {
 
   private String username;
-  private int rating;
+  private float rating;
   private String urlString;
   private String province;
   private int imgRes;
+  private long timeStamp;
+  private int votes;
 
 
-  public CardImage(String username, int rating, String urlString, String province ) {
+  public CardImage(String username, float rating, String urlString, String province, long timeStamp, int votes) {
     this.username = username;
     this.rating = rating;
     this.urlString = urlString;
     this.province = province;
+    this.timeStamp =  timeStamp;
+    this.votes = votes;
 
   }
-  public CardImage(String username, int rating, int imgres, String province ) {
+  public CardImage(String username, float rating, int imgres, String province) {
     this.username = username;
     this.rating = rating;
     this.imgRes = imgres;
@@ -35,6 +39,22 @@ public class CardImage {
 
   }
 
+  public int getVotes() {
+    return votes;
+  }
+
+  public void setVotes(int votes) {
+    this.votes = votes;
+  }
+
+  public long getTimeStamp() {
+    return timeStamp;
+  }
+
+  public void setTimeStamp(long timeStamp) {
+    this.timeStamp = timeStamp;
+  }
+
   public String getUsername() {
     return username;
   }
@@ -43,11 +63,11 @@ public class CardImage {
     this.username = username;
   }
 
-  public int getRating() {
+  public float getRating() {
     return rating;
   }
 
-  public void setRating(int rating) {
+  public void setRating(float rating) {
     this.rating = rating;
   }
 

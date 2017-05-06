@@ -58,7 +58,7 @@ public class RegisterFragment extends Fragment implements RegisterView {
       @Override public void onClick(View view) {
         registerPresenter.registerUser(editTextUserRegister.getText().toString(),
             editTextEmailRegister.getText().toString(),
-            editTextPasswordRegister.getText().toString());
+            editTextPasswordRegister.getText().toString(), spinnerProvinces.getSelectedItem().toString());
       }
     });
   }

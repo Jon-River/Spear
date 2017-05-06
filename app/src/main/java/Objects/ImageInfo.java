@@ -1,30 +1,60 @@
 package Objects;
 
+import com.google.firebase.database.IgnoreExtraProperties;
+
 /**
  * Created by pablo.rojas on 24/4/17.
  */
-
+@IgnoreExtraProperties
 public class ImageInfo {
 
-  private String imgPath;
-  private int rating;
+  private String usermail;
+  private float rating;
+  private int voted;
   private long timeStamp;
   private String comentary;
-  private String uri;
+  private String url;
+  private String province;
+  private String name;
 
-  public ImageInfo(String imgPath, int rating, long timeStamp, String comentary, String uri) {
-    this.imgPath = imgPath;
-    this.rating = rating;
-    this.timeStamp = timeStamp;
-    this.comentary = comentary;
-    this.uri = uri;
+
+  public ImageInfo() {
+
   }
 
-  public ImageInfo(String imgPath, int rating, long timeStamp, String comentary) {
-    this.imgPath = imgPath;
+  public ImageInfo(String usermail, float rating, long timeStamp, String comentary, String url, int voted, String province, String name) {
+    this.usermail = usermail;
     this.rating = rating;
     this.timeStamp = timeStamp;
     this.comentary = comentary;
+    this.url = url;
+    this.voted = voted;
+    this.province = province;
+    this.name = name;
+  }
+
+  public String getProvince() {
+    return province;
+  }
+
+  public void setProvince(String province) {
+    this.province = province;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public int getVoted() {
+    return voted;
+  }
+
+  public void setVoted(int voted) {
+    this.voted = voted;
   }
 
   public String getComentary() {
@@ -43,27 +73,27 @@ public class ImageInfo {
     this.timeStamp = timeStamp;
   }
 
-  public String getImgPath() {
-    return imgPath;
+  public String getUsermail() {
+    return usermail;
   }
 
-  public void setImgPath(String imgPath) {
-    this.imgPath = imgPath;
+  public void setUsermail(String usermail) {
+    this.usermail = usermail;
   }
 
-  public int getRating() {
+  public float getRating() {
     return rating;
   }
 
-  public void setRating(int rating) {
+  public void setRating(float rating) {
     this.rating = rating;
   }
 
-  public String getUri() {
-    return uri;
+  public String getUrl() {
+    return url;
   }
 
-  public void setUri(String uri) {
-    this.uri = uri;
+  public void setUrl(String url) {
+    this.url = url;
   }
 }

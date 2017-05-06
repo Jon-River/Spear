@@ -5,15 +5,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.spear.android.R;
 
 import java.util.List;
 
+import Fragments.TabAlbumFragment;
 import Objects.CardImage;
 
 /**
@@ -22,26 +25,53 @@ import Objects.CardImage;
 
 public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder> {
 
-private Context mContext;
-private List<CardImage> albumList;
+    private Context mContext;
+    private List<CardImage> albumList;
+    private TabAlbumFragment tabAlbumFragment;
+    public long timeStamp;
 
-public class MyViewHolder extends RecyclerView.ViewHolder {
 
-    public TextView title, province;
-    public RatingBar ratingBar;
-    public ImageView image;
 
-    public MyViewHolder(View view) {
-        super(view);
-        title = (TextView) view.findViewById(R.id.username);
-        province = (TextView) view.findViewById(R.id.province);
-        image = (ImageView) view.findViewById(R.id.image);
-        ratingBar = (RatingBar) view.findViewById(R.id.ratingBar);
+
+    public class MyViewHolder extends RecyclerView.ViewHolder implements  View.OnClickListener {
+
+        public TextView name, province;
+        public RatingBar ratingBar;
+        public ImageView image;
+        public Button btnSubmitRating;
+        public int votes;
+
+        public MyViewHolder(View view) {
+            super(view);
+            name = (TextView) view.findViewById(R.id.username);
+            province = (TextView) view.findViewById(R.id.province);
+            image = (ImageView) view.findViewById(R.id.image);
+            ratingBar = (RatingBar) view.findViewById(R.id.ratingBar);
+            btnSubmitRating = (Button) view.findViewById(R.id.btnSubmitRating);
+            btnSubmitRating.setOnClickListener(this);
+
+            //ratingBar.setOnTouchListener(this);
+
+        }
+
+
+        @Override
+        public void onClick(View view) {
+
+            if (view.getId()== R.id.btnSubmitRating){
+                Toast.makeText(mContext, "rating" + name.getText().toString()+  " "+ timeStamp, Toast.LENGTH_SHORT).show();
+                final float rating1 = ratingBar.getRating();
+                tabAlbumFragment.pushRatingFirebase(timeStamp,rating1);
+            }
+
+
+
+        }
     }
-}
 
 
-    public AlbumAdapter(Context mContext, List<CardImage> albumList) {
+    public AlbumAdapter(TabAlbumFragment tabAlbumFragment, Context mContext, List<CardImage> albumList) {
+        this.tabAlbumFragment = tabAlbumFragment;
         this.mContext = mContext;
         this.albumList = albumList;
     }
@@ -57,10 +87,12 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         CardImage album = albumList.get(position);
-        holder.title.setText(album.getUsername());
+        holder.name.setText(album.getUsername());
         holder.province.setText(album.getProvince());
-        holder.ratingBar.setRating(album.getRating());
-
+        holder.votes =  album.getVotes();
+        float rating = album.getRating() / holder.votes;
+        holder.ratingBar.setRating(rating);
+        timeStamp = album.getTimeStamp();
         // loading album cover using Glide library
         Glide.with(mContext).load(album.getUrlString()).into(holder.image);
 

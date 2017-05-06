@@ -16,9 +16,9 @@ public class RegisterPresenter {
     this.registerInteractor = new RegisterInteractorImp(onRegisterCallback);
   }
 
-  public void registerUser(String user, String mail, String password) {
+  public void registerUser(String user, String mail, String password, String province) {
     view.showLoading();
-    registerInteractor.registerUser(user, mail, password);
+    registerInteractor.registerUser(user, mail, password, province);
   }
 
   private final RegisterInteractor.OnRegisterCallback onRegisterCallback =
