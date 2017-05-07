@@ -1,4 +1,4 @@
-package com.spear.android.Views;
+package com.spear.android.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +10,7 @@ import android.view.View;
 import com.google.firebase.auth.FirebaseAuth;
 import com.spear.android.R;
 
-import Fragments.LoginFragment;
+import Fragments.login.LoginFragment;
 import Fragments.register.RegisterFragment;
 
 public class LoginActivity extends AppCompatActivity {

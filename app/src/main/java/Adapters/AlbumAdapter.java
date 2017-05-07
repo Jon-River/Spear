@@ -16,8 +16,8 @@ import com.spear.android.R;
 
 import java.util.List;
 
-import Fragments.TabAlbumFragment;
-import Objects.CardImage;
+import Fragments.album.AlbumFragment;
+import objects.CardImage;
 
 /**
  * Created by Pablo on 7/4/17.
@@ -27,7 +27,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
 
     private Context mContext;
     private List<CardImage> albumList;
-    private TabAlbumFragment tabAlbumFragment;
+    private AlbumFragment albumFragment;
     public long timeStamp;
 
 
@@ -61,7 +61,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
             if (view.getId()== R.id.btnSubmitRating){
                 Toast.makeText(mContext, "rating" + name.getText().toString()+  " "+ timeStamp, Toast.LENGTH_SHORT).show();
                 final float rating1 = ratingBar.getRating();
-                tabAlbumFragment.pushRatingFirebase(timeStamp,rating1);
+                albumFragment.pushRatingFirebase(timeStamp,rating1);
             }
 
 
@@ -70,8 +70,8 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
     }
 
 
-    public AlbumAdapter(TabAlbumFragment tabAlbumFragment, Context mContext, List<CardImage> albumList) {
-        this.tabAlbumFragment = tabAlbumFragment;
+    public AlbumAdapter(AlbumFragment albumFragment, Context mContext, List<CardImage> albumList) {
+        this.albumFragment = albumFragment;
         this.mContext = mContext;
         this.albumList = albumList;
     }

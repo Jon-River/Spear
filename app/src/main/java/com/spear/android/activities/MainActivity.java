@@ -1,4 +1,4 @@
-package com.spear.android.Views;
+package com.spear.android.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,7 +19,7 @@ import com.spear.android.R;
 
 import Adapters.ViewPagerAdapter;
 import Fragments.ProfileFragment;
-import Fragments.TabAlbumFragment;
+import Fragments.album.AlbumFragment;
 import Fragments.TabFragment;
 import Fragments.TabFragment2;
 
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private Fragments.TabAlbumFragment TabAlbumFragment;
+    private AlbumFragment AlbumFragment;
     private FirebaseAuth firebaseAuth;
     private ProfileFragment profileFragment;
     private FragmentManager fm;
@@ -127,9 +127,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setupViewPager(ViewPager viewPager) {
-        TabAlbumFragment =new TabAlbumFragment();
+        AlbumFragment =new AlbumFragment();
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(TabAlbumFragment, "TabAlbumFragment");
+        adapter.addFragment(AlbumFragment, "AlbumFragment");
         adapter.addFragment(new TabFragment(), "TWO");
         adapter.addFragment(new TabFragment2(), "THREE");
         //adapter.addFragment(new TabFragment(), "FOUR");

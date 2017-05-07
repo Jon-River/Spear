@@ -9,13 +9,13 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
-    tools:context="com.spear.android.Views.LoginActivity"
+    tools:context="com.spear.android.activities.LoginActivity"
     android:weightSum="2">
 
     <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="Fragments.LoginFragment"
+        android:name="Fragments.login.LoginFragment"
         android:id="@+id/fragmentLogin"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"

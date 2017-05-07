@@ -1,4 +1,4 @@
-package Interfaces;
+package Interactors.register;
 
 /**
  * Created by Pablo on 24/3/17.

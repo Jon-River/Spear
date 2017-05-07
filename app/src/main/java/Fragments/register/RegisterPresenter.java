@@ -1,7 +1,7 @@
 package Fragments.register;
 
-import Interactors.RegisterInteractorImp;
-import Interfaces.RegisterInteractor;
+import Interactors.register.RegisterInteractorImp;
+import Interactors.register.RegisterInteractor;
 
 /**
  * Created by pablo.rojas on 5/5/17.
@@ -32,5 +32,6 @@ public class RegisterPresenter {
           view.hideLoading();
           view.showError("error");
         }
+
       };
 }

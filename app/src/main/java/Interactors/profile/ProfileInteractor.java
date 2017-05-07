@@ -1,4 +1,4 @@
-package Interfaces;
+package Interactors.profile;
 
 /**
  * Created by Pablo on 31/3/17.

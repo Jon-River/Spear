@@ -1,4 +1,4 @@
-package Managers;
+package managers;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -34,9 +34,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import Fragments.TabAlbumFragment;
-import Objects.ImageInfo;
-import Objects.UserInfo;
+import Fragments.album.AlbumFragment;
+import objects.ImageInfo;
+import objects.UserInfo;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -52,7 +52,7 @@ public class CameraManager {
 
     private Activity context;
     private String mCurrentPhotoPath;
-    private TabAlbumFragment fragment;
+    private AlbumFragment fragment;
     private StorageReference storageReference;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
@@ -63,7 +63,7 @@ public class CameraManager {
     private String name;
 
 
-    public CameraManager(Activity context, TabAlbumFragment fragment) {
+    public CameraManager(Activity context, AlbumFragment fragment) {
         this.context = context;
         this.fragment = fragment;
         storageReference = FirebaseStorage.getInstance().getReference();

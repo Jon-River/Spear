@@ -1,6 +1,5 @@
 package Fragments.register;
 
-import Interfaces.RegisterInteractor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,15 +8,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+
 import com.spear.android.R;
-import com.spear.android.Views.LoginActivity;
+import com.spear.android.activities.LoginActivity;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class RegisterFragment extends Fragment implements RegisterView {
 
-  private RegisterInteractor registerInteractorImp;
+
   public LoginActivity viewLogin;
   private EditText editTextUserRegister;
   private EditText editTextPasswordRegister;

@@ -1,7 +1,6 @@
-package Interactors;
+package Interactors.profile;
 
 import Fragments.ProfileFragment;
-import Interfaces.ProfileInteractor;
 
 /**
  * Created by Pablo on 31/3/17.

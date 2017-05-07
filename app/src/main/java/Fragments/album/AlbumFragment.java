@@ -1,12 +1,10 @@
-package Fragments;
+package Fragments.album;
 
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -17,7 +15,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,12 +39,12 @@ import java.util.List;
 import java.util.Map;
 
 import Adapters.AlbumAdapter;
-import Interactors.AlbumInteractorImp;
-import Interfaces.AlbumInteractor;
-import Managers.CameraManager;
-import Objects.CardImage;
-import Objects.ImageInfo;
-import Objects.UserInfo;
+import Interactors.album.AlbumInteractor;
+import Interactors.album.AlbumInteractorImp;
+import managers.CameraManager;
+import objects.CardImage;
+import objects.ImageInfo;
+import objects.UserInfo;
 
 import static com.google.android.gms.internal.zzt.TAG;
 
@@ -55,7 +52,7 @@ import static com.google.android.gms.internal.zzt.TAG;
  * A simple {@link Fragment} subclass.
  */
 
-public class TabAlbumFragment extends Fragment implements View.OnClickListener {
+public class AlbumFragment extends Fragment implements View.OnClickListener {
 
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 111;
     private AlbumInteractor albumInteractor;
@@ -77,7 +74,7 @@ public class TabAlbumFragment extends Fragment implements View.OnClickListener {
     private Uri url;
     private RatingBar ratingBar;
 
-    public TabAlbumFragment() {
+    public AlbumFragment() {
         // Required empty public constructor
         albumInteractor = new AlbumInteractorImp(this);
     }
@@ -281,7 +278,7 @@ public class TabAlbumFragment extends Fragment implements View.OnClickListener {
         editTextComentary = (EditText) dialogCameraView.findViewById(R.id.editTextComentary);
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
-        
+
 
     }
 
@@ -290,16 +287,15 @@ public class TabAlbumFragment extends Fragment implements View.OnClickListener {
         databaseReference.getRoot().child("images").child(String.valueOf(timeStamp)).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                ImageInfo image = (ImageInfo) dataSnapshot.getValue(ImageInfo.class);
-                long time = image.getTimeStamp();
+                ImageInfo image = dataSnapshot.getValue(ImageInfo.class);
+                //long time = image.getTimeStamp();
                 float currentRating = image.getRating();
                 int votes = image.getVoted();
                 votes= votes+1;
                 currentRating =currentRating + rating;
-                float newRating = currentRating / votes;
                 image.setRating(currentRating);
                 image.setVoted(votes);
-                Map <String, Object> map = new HashMap<String, Object>();
+                Map <String, Object> map = new HashMap<>();
                 map.put(String.valueOf(timeStamp),image);
                 databaseReference.child("images").updateChildren(map);
             }
@@ -309,64 +305,9 @@ public class TabAlbumFragment extends Fragment implements View.OnClickListener {
 
             }
         });
-//        Toast.makeText(getContext(), "timestamp"+ timeStamp, Toast.LENGTH_SHORT).show();
+
     }
 
 
-    //region "Card decoration"
-
-    /**
-     * RecyclerView item decoration - give equal margin around grid item
-     */
-    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
-
-        private int spanCount;
-        private int spacing;
-        private boolean includeEdge;
-
-        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
-            this.spanCount = spanCount;
-            this.spacing = spacing;
-            this.includeEdge = includeEdge;
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
-                                   RecyclerView.State state) {
-            int position = parent.getChildAdapterPosition(view); // item position
-            int column = position % spanCount; // item column
-
-            if (includeEdge) {
-                outRect.left = spacing
-                        - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
-                outRect.right =
-                        (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
-
-                if (position < spanCount) { // top edge
-                    outRect.top = spacing;
-                }
-                outRect.bottom = spacing; // item bottom
-            } else {
-                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
-                outRect.right = spacing
-                        - (column + 1) * spacing
-                        / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
-                if (position >= spanCount) {
-                    outRect.top = spacing; // item top
-                }
-            }
-        }
-    }
-
-    /**
-     * Converting dp to pixel
-     */
-    private int dpToPx(int dp) {
-        Resources r = getResources();
-        return Math.round(
-                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
-    }
-
-    //endregion
 }
 

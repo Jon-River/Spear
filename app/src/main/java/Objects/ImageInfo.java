@@ -1,4 +1,4 @@
-package Objects;
+package objects;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 

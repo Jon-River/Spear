@@ -1,4 +1,4 @@
-package Interactors;
+package Interactors.register;
 
 import android.support.annotation.NonNull;
 
@@ -10,8 +10,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import Interfaces.RegisterInteractor;
-import Objects.UserInfo;
+import objects.UserInfo;
 
 /**
  * Created by Pablo on 24/3/17.

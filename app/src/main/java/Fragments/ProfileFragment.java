@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 
 import com.spear.android.R;
 
-import Interactors.ProfileInteractorImp;
-import Interfaces.ProfileInteractor;
+import Interactors.profile.ProfileInteractorImp;
+import Interactors.profile.ProfileInteractor;
 
 /**
  * A simple {@link Fragment} subclass.
