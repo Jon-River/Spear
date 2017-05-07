@@ -1,6 +1,5 @@
 package managers;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -12,8 +11,8 @@ import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.widget.ImageView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,7 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import Fragments.album.AlbumFragment;
+import Interactors.album.AlbumInteractor;
 import objects.ImageInfo;
 import objects.UserInfo;
 
@@ -50,9 +49,6 @@ public class CameraManager {
     public static final int REQUEST_CAMERA_CAPTURE = 1111;
     public static final int REQUEST_GALLERY_CAPTURE = 2222;
 
-    private Activity context;
-    private String mCurrentPhotoPath;
-    private AlbumFragment fragment;
     private StorageReference storageReference;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
@@ -61,11 +57,13 @@ public class CameraManager {
     private String url;
     private String province;
     private String name;
+    private AlbumInteractor.OnCameraCapture onCameraCapture;
+    private FragmentActivity activity;
 
 
-    public CameraManager(Activity context, AlbumFragment fragment) {
-        this.context = context;
-        this.fragment = fragment;
+    public CameraManager(FragmentActivity activity, AlbumInteractor.OnCameraCapture onCameraCapture) {
+        this.activity = activity;
+        this.onCameraCapture = onCameraCapture;
         storageReference = FirebaseStorage.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -75,31 +73,33 @@ public class CameraManager {
     public void takePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, "data");
-        if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
-            fragment.startActivityForResult(takePictureIntent, REQUEST_CAMERA_CAPTURE);
+        if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
+            onCameraCapture.startActivityForResult(takePictureIntent, REQUEST_CAMERA_CAPTURE);
+            //fragment.startActivityForResult(takePictureIntent, REQUEST_CAMERA_CAPTURE);
         }
     }
 
     public void openGalleryIntent() {
         Intent openGalleryIntent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        fragment.startActivityForResult(openGalleryIntent, REQUEST_GALLERY_CAPTURE);
+        onCameraCapture.startActivityForResult(openGalleryIntent, REQUEST_GALLERY_CAPTURE);
+        //fragment.startActivityForResult(openGalleryIntent, REQUEST_GALLERY_CAPTURE);
     }
 
-    public void OnActivityResult(int requestCode, int resultCode, Intent data, ImageView imageView) {
+    public void OnActivityResult(int requestCode, int resultCode, Intent data) {
 
         dataIntent = data;
         if (resultCode != RESULT_CANCELED) {
             if (requestCode == REQUEST_CAMERA_CAPTURE && resultCode == RESULT_OK) {
                 Bundle extras = data.getExtras();
                 Bitmap imageBitmap = (Bitmap) extras.get("data");
-                imageView.setImageBitmap(imageBitmap);
+                onCameraCapture.onSuccess(imageBitmap);
             } else if (requestCode == REQUEST_GALLERY_CAPTURE
                     && resultCode == RESULT_OK
                     && null != data) {
                 try {
-                    imageView.setImageBitmap(
-                            MediaStore.Images.Media.getBitmap(context.getContentResolver(), data.getData()));
+                    onCameraCapture.onSuccess(MediaStore.Images.Media.getBitmap(activity.getContentResolver(), data.getData()));
+
                 } catch (IOException ex) {
                     Log.v("IOException", "" + ex.getMessage());
                 }
@@ -127,18 +127,10 @@ public class CameraManager {
         });
     }
 
-    //Add a photo to a gallery
-    private void galleryAddPic() {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(mCurrentPhotoPath);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        context.sendBroadcast(mediaScanIntent);
-    }
 
     public void pushToFirebase(int requestCode, int resultCode, final String comentary) {
 
-        final ProgressDialog progress = new ProgressDialog(context);
+        final ProgressDialog progress = new ProgressDialog(activity);
         progress.setMessage("Uploading image");
         progress.show();
         progress.setContentView(R.layout.custom_progress_dialog);
@@ -152,7 +144,7 @@ public class CameraManager {
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
                 String path =
-                        MediaStore.Images.Media.insertImage(context.getContentResolver(), imageBitmap, "Title",
+                        MediaStore.Images.Media.insertImage(activity.getContentResolver(), imageBitmap, "Title",
                                 null);
                 final Uri uri = Uri.parse(path);
                 StorageReference storageRef = storageReference.child("Images")

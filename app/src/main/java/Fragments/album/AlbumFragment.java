@@ -1,16 +1,14 @@
 package Fragments.album;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,9 +37,6 @@ import java.util.List;
 import java.util.Map;
 
 import Adapters.AlbumAdapter;
-import Interactors.album.AlbumInteractor;
-import Interactors.album.AlbumInteractorImp;
-import managers.CameraManager;
 import objects.CardImage;
 import objects.ImageInfo;
 import objects.UserInfo;
@@ -52,15 +47,15 @@ import static com.google.android.gms.internal.zzt.TAG;
  * A simple {@link Fragment} subclass.
  */
 
-public class AlbumFragment extends Fragment implements View.OnClickListener {
+public class AlbumFragment extends Fragment implements View.OnClickListener, AlbumView {
 
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 111;
-    private AlbumInteractor albumInteractor;
+    private AlbumPresenter albumPresenter;
 
     private RecyclerView recyclerView;
     private AlbumAdapter adapter;
     private List<CardImage> cardList;
-    private CameraManager cameraManager;
+
     private FloatingActionButton fabOpenCamera;
     private ImageView mImageView;
     private EditText editTextComentary;
@@ -76,7 +71,7 @@ public class AlbumFragment extends Fragment implements View.OnClickListener {
 
     public AlbumFragment() {
         // Required empty public constructor
-        albumInteractor = new AlbumInteractorImp(this);
+
     }
 
     @Override
@@ -89,6 +84,7 @@ public class AlbumFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_tab_album, container, false);
+        albumPresenter = new AlbumPresenter(this, getActivity());
         init(v);
         prepareAlbums();
 
@@ -101,60 +97,35 @@ public class AlbumFragment extends Fragment implements View.OnClickListener {
         if (view.getId() == R.id.fabOpenCamera) {
             dialogButtons.show();
         } else if (view.getId() == R.id.btnOpenCamera) {
-            cameraManager.takePictureIntent();
+            albumPresenter.openCamera();
+
             dialogButtons.dismiss();
         } else if (view.getId() == R.id.btnOpenGallery) {
-            cameraManager.openGalleryIntent();
+            albumPresenter.openGallery();
             dialogButtons.dismiss();
         }
     }
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        askPermissions();
+        albumPresenter.askForPermissions();
         super.onActivityResult(requestCode, resultCode, data);
         btnUploadImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String comentary = editTextComentary.getText().toString();
-                cameraManager.pushToFirebase(requestCode, resultCode, comentary);
+                albumPresenter.pushTofirebase(requestCode, resultCode,comentary);
                 dialogCameraView.dismiss();
             }
         });
 
         if (resultCode == Activity.RESULT_OK) {
-            cameraManager.OnActivityResult(requestCode, resultCode, data, mImageView);
+            albumPresenter.OnActivityResult(requestCode, resultCode, data);
             dialogCameraView.show();
         }
     }
 
-    public void askPermissions() {
 
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                    Manifest.permission.READ_CONTACTS)) {
-
-                // Show an expanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-            } else {
-
-                // No explanation needed, we can request the permission.
-
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-        }
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[],
@@ -210,22 +181,7 @@ public class AlbumFragment extends Fragment implements View.OnClickListener {
                     }
 
                 });
-
-
-
-  /*  int[] covers = new int[] {
-        R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher,
-        R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher,
-        R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher
-    };
-
-    CardImage a;
-    for (int cover : covers) {
-      a = new CardImage("usuario1", 3, cover, "madrid");
-      cardList.add(a);
-    }*/
-
-    }
+            }
 
     private void render(ArrayList<ImageInfo> imgInfo) {
         final ArrayList<UserInfo> userArray = new ArrayList<>();
@@ -252,11 +208,10 @@ public class AlbumFragment extends Fragment implements View.OnClickListener {
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 1);
         recyclerView.setLayoutManager(mLayoutManager);
-        //recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
 
-        cameraManager = new CameraManager(getActivity(), this);
+
         fabOpenCamera = (FloatingActionButton) v.findViewById(R.id.fabOpenCamera);
         fabOpenCamera.setOnClickListener(this);
 
@@ -309,5 +264,9 @@ public class AlbumFragment extends Fragment implements View.OnClickListener {
     }
 
 
+    @Override
+    public void setImageBitmap(Bitmap imageBitmap) {
+        mImageView.setImageBitmap(imageBitmap);
+    }
 }
 
