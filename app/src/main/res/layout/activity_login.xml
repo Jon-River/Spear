@@ -15,7 +15,7 @@
     <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="Fragments.login.LoginFragment"
+        android:name="fragments.login.LoginFragment"
         android:id="@+id/fragmentLogin"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
@@ -25,7 +25,7 @@
     <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="Fragments.register.RegisterFragment"
+        android:name="fragments.register.RegisterFragment"
         android:id="@+id/fragmentRegister"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"

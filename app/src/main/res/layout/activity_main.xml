@@ -38,7 +38,7 @@
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="Fragments.ProfileFragment"
+        android:name="fragments.ProfileFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"

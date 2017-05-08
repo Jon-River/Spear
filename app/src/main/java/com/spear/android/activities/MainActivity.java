@@ -17,11 +17,11 @@ import android.view.inputmethod.InputMethodManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.spear.android.R;
 
-import Adapters.ViewPagerAdapter;
-import Fragments.ProfileFragment;
-import Fragments.album.AlbumFragment;
-import Fragments.TabFragment;
-import Fragments.TabFragment2;
+import adapters.ViewPagerAdapter;
+import fragments.ProfileFragment;
+import fragments.album.AlbumFragment;
+import fragments.TabFragment;
+import fragments.TabFragment2;
 
 public class MainActivity extends AppCompatActivity {
 

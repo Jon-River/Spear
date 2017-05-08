@@ -10,8 +10,8 @@ import android.view.View;
 import com.google.firebase.auth.FirebaseAuth;
 import com.spear.android.R;
 
-import Fragments.login.LoginFragment;
-import Fragments.register.RegisterFragment;
+import fragments.login.LoginFragment;
+import fragments.register.RegisterFragment;
 
 public class LoginActivity extends AppCompatActivity {
 
