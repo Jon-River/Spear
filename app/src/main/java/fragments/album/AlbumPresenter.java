@@ -4,9 +4,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v4.app.FragmentActivity;
 
+import java.util.List;
+
 import interactors.album.AlbumInteractor;
 import interactors.album.AlbumInteractorImp;
-import java.util.List;
 import objects.CardImage;
 
 /**

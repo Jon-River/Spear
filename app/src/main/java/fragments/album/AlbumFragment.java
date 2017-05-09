@@ -1,6 +1,4 @@
 package fragments.album;
-
-import adapters.AlbumAdapter;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -31,10 +29,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.spear.android.R;
 import java.util.ArrayList;
 import java.util.List;
+import adapters.AlbumAdapter;
 import objects.CardImage;
 import objects.ImageInfo;
 import objects.UserInfo;
-
 import static com.google.android.gms.internal.zzt.TAG;
 
 /**
