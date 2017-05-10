@@ -36,6 +36,8 @@ public class OpenWeatherManager {
 
     private static final String TAG= "OpenWeatherManagerApi";
 
+    public OpenWeatherManager() {
+    }
 
     public void getWeatherByLatLon (double lat, double lon){
         url = url + "lat="+lat+"&lon="+lon+ApiKey;

@@ -13,7 +13,5 @@ public class WeatherApplication extends Application {
     public void onCreate() {
         super.onCreate();
         requestQueue= Volley.newRequestQueue(this);
-
-
     }
 }
