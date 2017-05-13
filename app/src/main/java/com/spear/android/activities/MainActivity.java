@@ -18,9 +18,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.spear.android.R;
 
 import adapters.ViewPagerAdapter;
-import fragments.ProfileFragment;
+import fragments.profile.ProfileFragment;
 import fragments.album.AlbumFragment;
-import fragments.TabFragment;
+import fragments.weather.WeatherFragment;
 import fragments.TabFragment2;
 
 public class MainActivity extends AppCompatActivity {
@@ -130,9 +130,9 @@ public class MainActivity extends AppCompatActivity {
         AlbumFragment =new AlbumFragment();
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(AlbumFragment, "AlbumFragment");
-        adapter.addFragment(new TabFragment(), "TWO");
+        adapter.addFragment(new WeatherFragment(), "TWO");
         adapter.addFragment(new TabFragment2(), "THREE");
-        //adapter.addFragment(new TabFragment(), "FOUR");
+        //adapter.addFragment(new WeatherFragment(), "FOUR");
         viewPager.setAdapter(adapter);
     }
 

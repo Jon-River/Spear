@@ -1,6 +1,6 @@
 package interactors.profile;
 
-import fragments.ProfileFragment;
+import fragments.profile.ProfilePresenter;
 
 /**
  * Created by Pablo on 31/3/17.
@@ -8,10 +8,10 @@ import fragments.ProfileFragment;
 
 public class ProfileInteractorImp implements ProfileInteractor {
 
-    private ProfileFragment profileFragment;
+    private ProfilePresenter profilePresenter;
 
-    public ProfileInteractorImp(ProfileFragment profileFragment) {
-        this.profileFragment = profileFragment;
+    public ProfileInteractorImp(ProfilePresenter profilePresenter) {
+        this.profilePresenter = profilePresenter;
     }
 
 

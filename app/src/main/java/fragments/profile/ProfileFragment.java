@@ -1,4 +1,4 @@
-package fragments;
+package fragments.profile;
 
 
 import android.os.Bundle;
@@ -11,20 +11,17 @@ import android.view.ViewGroup;
 
 import com.spear.android.R;
 
-import interactors.profile.ProfileInteractorImp;
-import interactors.profile.ProfileInteractor;
-
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements ProfileView {
 
-    private ProfileInteractor profileInteractor;
+    private ProfilePresenter profilePresenter;
 
 
     public ProfileFragment() {
         // Required empty public constructor
-        profileInteractor = new ProfileInteractorImp(this);
+        profilePresenter = new ProfilePresenter(this);
     }
 
 

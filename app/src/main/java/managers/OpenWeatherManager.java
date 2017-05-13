@@ -15,12 +15,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import objects.OpenWeather.Coords;
-import objects.OpenWeather.Main;
-import objects.OpenWeather.Sys;
-import objects.OpenWeather.Weather;
+import interactors.weather.WeatherInteractor;
 import objects.OpenWeather.WeatherResponse;
-import objects.OpenWeather.Wind;
 
 
 /**
@@ -28,15 +24,18 @@ import objects.OpenWeather.Wind;
  */
 public class OpenWeatherManager {
 
+    private WeatherInteractor.OnResponseWeatherApi onResponseWeatherApi;
+
     private WeatherResponse weatherResult;
 
     private String url =  "http://api.openweathermap.org/data/2.5/weather?";
 
-    private String ApiKey = "&appid=2561671dd40fb9f79239772713fc07e9";
+    private String ApiKey = "&units=metric&appid=a8042b44f26db02b28c5916d6a000fda";
 
     private static final String TAG= "OpenWeatherManagerApi";
 
-    public OpenWeatherManager() {
+    public OpenWeatherManager(WeatherInteractor.OnResponseWeatherApi onResponseWeatherApi) {
+        this.onResponseWeatherApi = onResponseWeatherApi;
     }
 
     public void getWeatherByLatLon (double lat, double lon){
@@ -76,7 +75,7 @@ public class OpenWeatherManager {
                             float fLon =  Float.parseFloat(lon);
                             float fLat = Float.parseFloat(lat);
 
-                            Coords coord = new Coords(fLat,fLon);
+                            //Coords coord = new Coords(fLat,fLon);
 
                             JSONArray jsWeather = response.getJSONArray("weather");
                             JSONObject obj = (JSONObject) jsWeather.get(0);
@@ -85,18 +84,18 @@ public class OpenWeatherManager {
                             String description = obj.get("description").toString();
                             String icon = obj.get("icon").toString();
 
-                            Weather weather = new Weather(idWeather, sMain, description, icon);
+                           // Weather weather = new Weather(idWeather, sMain, description, icon);
 
                             String base = response.get("base").toString();
 
                             JSONObject objMain = response.getJSONObject("main");
                             double temperature =  Double.parseDouble(objMain.get("temp").toString());
-                            Long pressure = Long.parseLong(objMain.get("pressure").toString());
+                            long pressure = Long.parseLong(objMain.get("pressure").toString());
                             double humidity =  Double.parseDouble(objMain.get("humidity").toString());
                             double tempMin =  Double.parseDouble(objMain.get("temp_min").toString());
                             double tempMax =  Double.parseDouble(objMain.get("temp_max").toString());
 
-                            Main main = new Main(temperature,pressure, humidity, tempMin, tempMax);
+                            //Main main = new Main(temperature,pressure, humidity, tempMin, tempMax);
 
                             String visibility = response.get("visibility").toString();
 
@@ -104,7 +103,7 @@ public class OpenWeatherManager {
                             float speed = Float.parseFloat(objWind.get("speed").toString());
                             int deg = Integer.parseInt(objWind.get("deg").toString());
 
-                            Wind wind = new Wind(speed, deg);
+                            //Wind wind = new Wind(speed, deg);
 
                             JSONObject objClouds = response.getJSONObject("clouds");
                             float clouds = Float.parseFloat(objClouds.get("all").toString());
@@ -119,17 +118,19 @@ public class OpenWeatherManager {
                             long sunrise = Long.parseLong(objSys.get("sunrise").toString());
                             long sunset = Long.parseLong(objSys.get("sunset").toString());
 
-                            Sys sys = new Sys(type, idsys, message, country, sunrise, sunset);
+                           // Sys sys = new Sys(type, idsys, message, country, sunrise, sunset);
 
                             long id = Long.parseLong(response.get("id").toString());
                             String name = response.get("name").toString();
                             long  cod = Long.parseLong(response.get("cod").toString());
 
-                            weatherResult = new WeatherResponse(coord, weather,base,main, wind, clouds, dt, sys,id, name, cod);
+                            weatherResult = new WeatherResponse(description, temperature, pressure , humidity, tempMax, tempMin, speed, deg, sunrise, sunset, name);
+                            onResponseWeatherApi.onSuccess(weatherResult);
 
-                            Log.d(TAG, "Main " + main + " description: "+ description + " temperature: "+ temperature + " pressure: "+ pressure + " humidity: "+ humidity + " speed: "+ speed + " deg: "+ deg + " sunrise: "+ sunrise + " sunset: "+ sunset+ " name: "+name);
 
                         } catch (JSONException e) {
+                            onResponseWeatherApi.onError(e.toString());
+
                             e.printStackTrace();
                         }
 

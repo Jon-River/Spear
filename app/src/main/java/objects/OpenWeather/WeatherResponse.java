@@ -1,121 +1,34 @@
 package objects.OpenWeather;
 
 
-
-
 public class WeatherResponse {
+    String description, name;
+    double temperature, humidity, tempMax, tempMin;
+    long pressure, sunrise, sunset;
+    float speed;
+    int deg;
 
-    private Coords coords;
 
-    private Weather weather;
-
-    private String base; // May be null, Internal parameter
-
-    private Main main;
-
-    private Wind wind;
-
-    private float clouds; // Cloudiness, %
-
-    private long dt; // Time of data calculation, unix, UTC
-
-    private Sys sys;
-
-    private long idCity; // City ID
-
-    private String name; // City name
-
-    private long cod; // Internal parameter
-
-    public WeatherResponse(){
-        super();
-    }
-
-    public WeatherResponse(Coords coords, Weather weather, String base, Main main, Wind wind, float clouds, long dt, Sys sys, long idCity, String name, long cod) {
-        this.coords = coords;
-        this.weather = weather;
-        this.base = base;
-        this.main = main;
-        this.wind = wind;
-        this.clouds = clouds;
-
-        this.dt = dt;
-        this.sys = sys;
-        this.idCity = idCity;
+    public WeatherResponse(String description, double temperature, long pressure, double humidity, double tempMax, double tempMin, float speed, int deg, long sunrise, long sunset, String name) {
+        this.description = description;
+        this.temperature = temperature;
+        this.pressure = pressure;
+        this.humidity = humidity;
+        this.tempMax = tempMax;
+        this.tempMin = tempMin;
+        this.speed = speed;
+        this.deg = deg;
+        this.sunrise = sunrise;
+        this.sunset = sunset;
         this.name = name;
-        this.cod = cod;
     }
 
-    public Coords getCoords() {
-        return coords;
+    public String getDescription() {
+        return description;
     }
 
-    public void setCoords(Coords coords) {
-        this.coords = coords;
-    }
-
-    public Weather getWeather() {
-        return weather;
-    }
-
-    public void setWeather(Weather weather) {
-        this.weather = weather;
-    }
-
-    public String getBase() {
-        return base;
-    }
-
-    public void setBase(String base) {
-        this.base = base;
-    }
-
-    public Main getMain() {
-        return main;
-    }
-
-    public void setMain(Main main) {
-        this.main = main;
-    }
-
-    public Wind getWind() {
-        return wind;
-    }
-
-    public void setWind(Wind wind) {
-        this.wind = wind;
-    }
-
-    public float getClouds() {
-        return clouds;
-    }
-
-    public void setClouds(float clouds) {
-        this.clouds = clouds;
-    }
-
-    public long getDt() {
-        return dt;
-    }
-
-    public void setDt(long dt) {
-        this.dt = dt;
-    }
-
-    public Sys getSys() {
-        return sys;
-    }
-
-    public void setSys(Sys sys) {
-        this.sys = sys;
-    }
-
-    public long getIdCity() {
-        return idCity;
-    }
-
-    public void setIdCity(long idCity) {
-        this.idCity = idCity;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getName() {
@@ -126,11 +39,75 @@ public class WeatherResponse {
         this.name = name;
     }
 
-    public long getCod() {
-        return cod;
+    public double getTemperature() {
+        return temperature;
     }
 
-    public void setCod(long cod) {
-        this.cod = cod;
+    public void setTemperature(double temperature) {
+        this.temperature = temperature;
+    }
+
+    public double getHumidity() {
+        return humidity;
+    }
+
+    public void setHumidity(double humidity) {
+        this.humidity = humidity;
+    }
+
+    public double getTempMax() {
+        return tempMax;
+    }
+
+    public void setTempMax(double tempMax) {
+        this.tempMax = tempMax;
+    }
+
+    public double getTempMin() {
+        return tempMin;
+    }
+
+    public void setTempMin(double tempMin) {
+        this.tempMin = tempMin;
+    }
+
+    public long getPressure() {
+        return pressure;
+    }
+
+    public void setPressure(long pressure) {
+        this.pressure = pressure;
+    }
+
+    public long getSunrise() {
+        return sunrise;
+    }
+
+    public void setSunrise(long sunrise) {
+        this.sunrise = sunrise;
+    }
+
+    public long getSunset() {
+        return sunset;
+    }
+
+    public void setSunset(long sunset) {
+        this.sunset = sunset;
+    }
+
+    public float getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(float speed) {
+        this.speed = speed;
+    }
+
+    public int getDeg() {
+        return deg;
+    }
+
+    public void setDeg(int deg) {
+        this.deg = deg;
     }
 }
