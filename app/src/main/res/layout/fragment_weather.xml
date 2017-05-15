@@ -34,17 +34,101 @@
     </LinearLayout>
 
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2.5">
-
-        <ImageView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:src="@drawable/weatherwind" />
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/imgTemperature"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/temperature" />
+
+                <TextView
+                    android:id="@+id/txtTemperature"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Temp" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imgWeather"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/weatherwind" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/imgTempMax"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@mipmap/maxtemp" />
+
+                        <TextView
+                            android:id="@+id/txtTempMax"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="TempMax" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/imgTempMin"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@mipmap/mintemp" />
+
+                        <TextView
+                            android:id="@+id/txtTempMin"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="TempMin" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
 
     </LinearLayout>
 
@@ -52,7 +136,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
-        android:weightSum="4">
+        android:weightSum="3">
 
 
         <LinearLayout
@@ -62,12 +146,15 @@
             android:gravity="center">
 
             <ImageView
+                android:id="@+id/imgPressure"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/pressure" />
+                android:src="@mipmap/pressure"
+                android:padding="10dp"/>
 
             <TextView
-                android:layout_width="match_parent"
+                android:id="@+id/txtPressure"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Press" />
         </LinearLayout>
@@ -79,82 +166,47 @@
             android:gravity="center">
 
             <ImageView
+                android:id="@+id/imgHumidity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:src="@mipmap/humidity" />
 
             <TextView
+                android:id="@+id/txtHumidity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Humi" />
         </LinearLayout>
 
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <ImageView
+                android:id="@+id/imgSunrise"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/temperature" />
+                android:padding="5dp"
+                android:src="@mipmap/sunrise"
+                />
 
             <TextView
-                android:layout_width="match_parent"
+                android:id="@+id/txtSunrise"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Temp" />
+                android:text="Sunrise" />
+
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@mipmap/maxtemp"/>
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="TempMax"/>
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@mipmap/mintemp"/>
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="TempMin"/>
-
-                </LinearLayout>
-
-
-            </LinearLayout>
         </LinearLayout>
 
 
@@ -166,81 +218,65 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
-        android:weightSum="1"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:weightSum="1">
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="0.5"
-            android:gravity="center"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:gravity="center">
 
             <ImageView
+                android:id="@+id/imgWindVel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/windspeed"/>
+                android:src="@mipmap/windspeed"
+                android:padding="20dp"/>
 
             <TextView
+                android:id="@+id/txtWindVel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Velocity"/>
+                android:text="Velocity" />
 
 
             <ImageView
+                android:id="@+id/imgCardinal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/north"/>
-
+                android:paddingLeft="10dp"
+                android:src="@mipmap/north" />
 
 
         </LinearLayout>
 
-
-
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="0.5"
-            android:orientation="vertical"
-            android:weightSum="1"
-            android:layout_height="wrap_content">
-
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:gravity="center">
 
             <LinearLayout
+
                 android:layout_width="match_parent"
-                android:orientation="horizontal"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@+id/imgSunset"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/sunrise"/>
+                    android:src="@mipmap/sunset"
+                    android:padding="10dp"/>
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:text="Sunrise"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:gravity="center">
-
-                <ImageView
+                    android:id="@+id/txtSunset"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/sunset"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:text="Sunset"
-                    android:layout_height="wrap_content" />
+                    android:text="Sunset" />
 
             </LinearLayout>
 
@@ -252,23 +288,22 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
-        android:layout_weight="2">
+        android:layout_weight="2"
+        android:orientation="vertical">
 
         <EditText
+            android:id="@+id/etCity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="cityname"
-            />
+            android:hint="cityname" />
 
         <Button
-            android:id="@+id/openweather"
+            android:id="@+id/btnFind"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="openweather"/>
+            android:text="Find" />
 
     </LinearLayout>
-
 
 
 </LinearLayout>

@@ -101,7 +101,7 @@ public class OpenWeatherManager {
 
                             JSONObject objWind = response.getJSONObject("wind");
                             float speed = Float.parseFloat(objWind.get("speed").toString());
-                            int deg = Integer.parseInt(objWind.get("deg").toString());
+                            float deg = Float.parseFloat(objWind.get("deg").toString());
 
                             //Wind wind = new Wind(speed, deg);
 
@@ -124,8 +124,9 @@ public class OpenWeatherManager {
                             String name = response.get("name").toString();
                             long  cod = Long.parseLong(response.get("cod").toString());
 
-                            weatherResult = new WeatherResponse(description, temperature, pressure , humidity, tempMax, tempMin, speed, deg, sunrise, sunset, name);
+                            weatherResult = new WeatherResponse(description, temperature, pressure , humidity, tempMax, tempMin, speed, deg, sunrise, sunset, name, icon);
                             onResponseWeatherApi.onSuccess(weatherResult);
+                            rebootUrl();
 
 
                         } catch (JSONException e) {
@@ -151,6 +152,9 @@ public class OpenWeatherManager {
         return weatherResult;
     }
 
+    private void rebootUrl() {
+        url = "http://api.openweathermap.org/data/2.5/weather?";
+    }
 
 
 }

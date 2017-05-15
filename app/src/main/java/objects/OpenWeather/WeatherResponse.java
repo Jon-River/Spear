@@ -2,14 +2,13 @@ package objects.OpenWeather;
 
 
 public class WeatherResponse {
-    String description, name;
+    String description, name, icon;
     double temperature, humidity, tempMax, tempMin;
     long pressure, sunrise, sunset;
-    float speed;
-    int deg;
+    float speed, deg;
 
 
-    public WeatherResponse(String description, double temperature, long pressure, double humidity, double tempMax, double tempMin, float speed, int deg, long sunrise, long sunset, String name) {
+    public WeatherResponse(String description, double temperature, long pressure, double humidity, double tempMax, double tempMin, float speed, float deg, long sunrise, long sunset, String name, String icon) {
         this.description = description;
         this.temperature = temperature;
         this.pressure = pressure;
@@ -21,6 +20,15 @@ public class WeatherResponse {
         this.sunrise = sunrise;
         this.sunset = sunset;
         this.name = name;
+        this.icon = icon;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public String getDescription() {
@@ -103,11 +111,11 @@ public class WeatherResponse {
         this.speed = speed;
     }
 
-    public int getDeg() {
+    public float getDeg() {
         return deg;
     }
 
-    public void setDeg(int deg) {
+    public void setDeg(float deg) {
         this.deg = deg;
     }
 }
