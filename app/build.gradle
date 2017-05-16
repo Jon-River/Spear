@@ -38,6 +38,9 @@ dependencies {
     }
     compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
     testCompile 'junit:junit:4.12'
+
+    //Maps
+    compile 'com.google.android.gms:play-services-maps:10.2.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

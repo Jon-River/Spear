@@ -40,6 +40,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
         public ImageView image;
         public Button btnSubmitRating;
         public int votes;
+        public long timeStamp;
 
         public MyViewHolder(View view) {
             super(view);
@@ -92,7 +93,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
         holder.votes =  album.getVotes();
         float rating = album.getRating() / holder.votes;
         holder.ratingBar.setRating(rating);
-        timeStamp = album.getTimeStamp();
+        holder.timeStamp = album.getTimeStamp();
         // loading album cover using Glide library
         Glide.with(mContext).load(album.getUrlString()).into(holder.image);
 
