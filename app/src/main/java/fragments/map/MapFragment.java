@@ -1,4 +1,4 @@
-package fragments;
+package fragments.map;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -6,18 +6,23 @@ import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.spear.android.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TabFragment2 extends Fragment {
+public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     View mapView;
+    MapView map;
+    private GoogleMap googleMap;
 
 
 
-    public TabFragment2() {
+    public MapFragment() {
         // Required empty public constructor
     }
 
@@ -31,7 +36,11 @@ public class TabFragment2 extends Fragment {
                 parent.removeView(mapView);
         }
         try {
-            mapView = inflater.inflate(R.layout.fragment_tab2, container, false);
+            mapView = inflater.inflate(R.layout.fragment_map, container, false);
+            map = (MapView) mapView.findViewById(R.id.map);
+            map.onCreate(savedInstanceState);
+            map.onResume();
+            map.getMapAsync(this);//when you already implement OnMapReadyCallback in your fragment
         } catch (InflateException e) {
     /* map is already there, just return view as it is */
         }
@@ -39,6 +48,7 @@ public class TabFragment2 extends Fragment {
 
     }
 
-
-
+    @Override public void onMapReady(GoogleMap googleMap) {
+        this.googleMap = googleMap;
+    }
 }

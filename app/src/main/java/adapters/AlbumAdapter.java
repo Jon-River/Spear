@@ -28,7 +28,6 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
     private Context mContext;
     private List<CardImage> albumList;
     private AlbumFragment albumFragment;
-    public long timeStamp;
 
 
 
@@ -41,6 +40,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
         public Button btnSubmitRating;
         public int votes;
         public long timeStamp;
+
 
         public MyViewHolder(View view) {
             super(view);

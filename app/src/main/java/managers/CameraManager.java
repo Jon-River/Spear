@@ -166,8 +166,7 @@ public class CameraManager {
             } else if (requestCode == REQUEST_GALLERY_CAPTURE && resultCode == RESULT_OK) {
                 final Uri uri = dataIntent.getData();
                 StorageReference storageRef = storageReference.child("Images")
-                        .child(firebaseAuth.getCurrentUser().getUid())
-                        .child(uri.getLastPathSegment());
+                        .child(firebaseAuth.getCurrentUser().getUid());
 
                 storageRef.putFile(uri)
                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

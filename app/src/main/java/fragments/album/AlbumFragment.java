@@ -180,7 +180,7 @@ public class AlbumFragment extends Fragment implements View.OnClickListener, Alb
     cardList = new ArrayList<>();
     adapter = new AlbumAdapter(this, getContext(), cardList);
 
-    RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 1);
+    RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 1);  //displays number of cards per row
     recyclerView.setLayoutManager(mLayoutManager);
     recyclerView.setItemAnimator(new DefaultItemAnimator());
     recyclerView.setAdapter(adapter);

@@ -21,7 +21,7 @@ import adapters.ViewPagerAdapter;
 import fragments.profile.ProfileFragment;
 import fragments.album.AlbumFragment;
 import fragments.weather.WeatherFragment;
-import fragments.TabFragment2;
+import fragments.map.MapFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(AlbumFragment, "AlbumFragment");
         adapter.addFragment(new WeatherFragment(), "TWO");
-        adapter.addFragment(new TabFragment2(), "THREE");
+        adapter.addFragment(new MapFragment(), "THREE");
         //adapter.addFragment(new WeatherFragment(), "FOUR");
         viewPager.setAdapter(adapter);
     }
