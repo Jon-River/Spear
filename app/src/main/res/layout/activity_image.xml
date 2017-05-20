@@ -8,7 +8,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/black">
 
         <ImageView
             android:id="@+id/image"
@@ -16,7 +17,7 @@
             android:layout_height="match_parent"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
             android:src="@mipmap/fish_white_tab" />
 
         <LinearLayout
@@ -49,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:text="name"
-                    android:textColor="#4c4c4c"
+                    android:textColor="@color/white"
                     android:textSize="15dp" />
 
                 <TextView
@@ -60,6 +61,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:text="city"
+                    android:textColor="@color/white"
                     android:textSize="15dp" />
 
 
@@ -104,7 +106,8 @@
                         android:background="@android:color/transparent"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
-                        android:text="submit" />
+                        android:text="submit"
+                        android:textColor="@color/white"/>
 
                 </LinearLayout>
 
