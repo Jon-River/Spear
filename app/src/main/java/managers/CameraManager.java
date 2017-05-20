@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -22,13 +23,15 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import interactors.album.AlbumInteractor;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import interactors.album.AlbumInteractor;
 import objects.ImageInfo;
 import objects.UserInfo;
 
@@ -133,12 +136,12 @@ public class CameraManager {
 
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                final long milis = System.currentTimeMillis();
                 String path =
                         MediaStore.Images.Media.insertImage(activity.getContentResolver(), imageBitmap, "Title",
                                 null);
                 final Uri uri = Uri.parse(path);
-                StorageReference storageRef = storageReference.child("Images")
-                        .child(firebaseAuth.getCurrentUser().getUid());
+                StorageReference storageRef = storageReference.child("Images").child(String.valueOf(milis));
 
                 storageRef.putFile(uri)
                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -146,7 +149,7 @@ public class CameraManager {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                 url = taskSnapshot.getDownloadUrl().toString();
-                                long milis = System.currentTimeMillis();
+
 
                                 imageInfo = new ImageInfo(firebaseAuth.getCurrentUser().getEmail(), 0, milis, comentary, url, 0, province, name);
                                 DatabaseReference dataref = databaseReference.child("/images/").child(String.valueOf(milis));
@@ -165,8 +168,9 @@ public class CameraManager {
                         });
             } else if (requestCode == REQUEST_GALLERY_CAPTURE && resultCode == RESULT_OK) {
                 final Uri uri = dataIntent.getData();
-                StorageReference storageRef = storageReference.child("Images")
-                        .child(firebaseAuth.getCurrentUser().getUid());
+                final long milis = System.currentTimeMillis();
+                StorageReference storageRef = storageReference.child("Images").child(String.valueOf(milis));
+
 
                 storageRef.putFile(uri)
                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -174,8 +178,6 @@ public class CameraManager {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                 url = taskSnapshot.getDownloadUrl().toString();
-                                long milis = System.currentTimeMillis();
-
                                 imageInfo = new ImageInfo(firebaseAuth.getCurrentUser().getEmail(), 0, milis, comentary, url, 0, province, name);
                                 DatabaseReference dataref = databaseReference.child("/images/").child(String.valueOf(milis));
                                 String key = dataref.getKey();

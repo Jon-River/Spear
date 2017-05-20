@@ -1,6 +1,5 @@
 package com.spear.android.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -33,8 +32,9 @@ public class LoginActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
 
         if (firebaseAuth.getCurrentUser()!= null){
+            firebaseAuth.signOut();/*
             Intent intent = new Intent(this,MainActivity.class);
-            startActivity(intent);
+            startActivity(intent);*/
 
         }
 
