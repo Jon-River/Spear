@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -57,6 +56,7 @@ public class CameraManager {
     private String name;
     private AlbumInteractor.OnCameraCapture onCameraCapture;
     private FragmentActivity activity;
+    private Uri imageUri;
 
 
     public CameraManager(FragmentActivity activity, AlbumInteractor.OnCameraCapture onCameraCapture) {
@@ -69,19 +69,24 @@ public class CameraManager {
     }
 
     public void takePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, "data");
-        if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
-            onCameraCapture.startActivityForResult(takePictureIntent, REQUEST_CAMERA_CAPTURE);
-            //fragment.startActivityForResult(takePictureIntent, REQUEST_CAMERA_CAPTURE);
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, "image");
+        values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
+        imageUri = activity.getContentResolver().insert(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        if (intent.resolveActivity(activity.getPackageManager())!= null){
+            onCameraCapture.startActivityForResult(intent, REQUEST_CAMERA_CAPTURE);
         }
+
     }
 
     public void openGalleryIntent() {
         Intent openGalleryIntent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         onCameraCapture.startActivityForResult(openGalleryIntent, REQUEST_GALLERY_CAPTURE);
-        //fragment.startActivityForResult(openGalleryIntent, REQUEST_GALLERY_CAPTURE);
+
     }
 
     public void OnActivityResult(int requestCode, int resultCode, Intent data) {
@@ -89,9 +94,17 @@ public class CameraManager {
         dataIntent = data;
         if (resultCode != RESULT_CANCELED) {
             if (requestCode == REQUEST_CAMERA_CAPTURE && resultCode == RESULT_OK) {
-                Bundle extras = data.getExtras();
+                try {
+                    Bitmap image = MediaStore.Images.Media.getBitmap(
+                            activity.getContentResolver(), imageUri);
+                    onCameraCapture.onSuccess(image);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+               /* Bundle extras = data.getExtras();
                 Bitmap imageBitmap = (Bitmap) extras.get("data");
-                onCameraCapture.onSuccess(imageBitmap);
+                onCameraCapture.onSuccess(imageBitmap);*/
             } else if (requestCode == REQUEST_GALLERY_CAPTURE
                     && resultCode == RESULT_OK
                     && null != data) {
@@ -131,41 +144,50 @@ public class CameraManager {
         if (resultCode != RESULT_CANCELED) {
 
             if (requestCode == REQUEST_CAMERA_CAPTURE && resultCode == RESULT_OK) {
-                Bundle extras = dataIntent.getExtras();
-                Bitmap imageBitmap = (Bitmap) extras.get("data");
 
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-                final long milis = System.currentTimeMillis();
-                String path =
-                        MediaStore.Images.Media.insertImage(activity.getContentResolver(), imageBitmap, "Title",
-                                null);
-                final Uri uri = Uri.parse(path);
-                StorageReference storageRef = storageReference.child("Images").child(String.valueOf(milis));
+                try {
+                    Bitmap  imageBitmap= MediaStore.Images.Media.getBitmap(
+                            activity.getContentResolver(), imageUri);
+                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                    imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                    final long milis = System.currentTimeMillis();
+                    String path =
+                            MediaStore.Images.Media.insertImage(activity.getContentResolver(), imageBitmap, "Title",
+                                    null);
+                    final Uri uri = Uri.parse(path);
+                    StorageReference storageRef = storageReference.child("Images").child(String.valueOf(milis));
 
-                storageRef.putFile(uri)
-                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @SuppressWarnings("VisibleForTests")
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                url = taskSnapshot.getDownloadUrl().toString();
-
-
-                                imageInfo = new ImageInfo(firebaseAuth.getCurrentUser().getEmail(), 0, milis, comentary, url, 0, province, name);
-                                DatabaseReference dataref = databaseReference.child("/images/").child(String.valueOf(milis));
-                                String key = dataref.getKey();
-                                dataref.setValue(imageInfo);
-                                //databaseReference.child("/images/").push().setValue(imageInfo);
+                    storageRef.putFile(uri)
+                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @SuppressWarnings("VisibleForTests")
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    url = taskSnapshot.getDownloadUrl().toString();
 
 
-                                databaseReference.child("users")
-                                        .child(firebaseAuth.getCurrentUser().getUid()).child("images").child(key)
-                                        .setValue(url);
-                                ArrayList<String> urlArray = new ArrayList<String>();
-                                urlArray.add(url);
-                               onCameraCapture.hideLoading();
-                            }
-                        });
+                                    imageInfo = new ImageInfo(firebaseAuth.getCurrentUser().getEmail(), 0, milis, comentary, url, 0, province, name);
+                                    DatabaseReference dataref = databaseReference.child("/images/").child(String.valueOf(milis));
+                                    String key = dataref.getKey();
+                                    dataref.setValue(imageInfo);
+                                    //databaseReference.child("/images/").push().setValue(imageInfo);
+
+
+                                    databaseReference.child("users")
+                                            .child(firebaseAuth.getCurrentUser().getUid()).child("images").child(key)
+                                            .setValue(url);
+                                    ArrayList<String> urlArray = new ArrayList<String>();
+                                    urlArray.add(url);
+                                    onCameraCapture.hideLoading();
+                                }
+                            });
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+
             } else if (requestCode == REQUEST_GALLERY_CAPTURE && resultCode == RESULT_OK) {
                 final Uri uri = dataIntent.getData();
                 final long milis = System.currentTimeMillis();

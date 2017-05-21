@@ -54,7 +54,7 @@
             android:glEsVersion="0x00020000"
             android:required="true" />
 
-        <activity android:name=".activities.ImageActivity"></activity>
+        <activity android:name=".activities.SingleImage.SingleImageActivity"></activity>
     </application>
 
 </manifest>

@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.spear.android.R;
@@ -53,9 +52,7 @@ public class AlbumAdapter2  extends RecyclerView.Adapter<AlbumAdapter2.MyViewHol
         @Override
         public void onClick(View view) {
             if (view instanceof ImageView){
-                Toast.makeText(mContext, ""+card.getUsername()+" "+ card.getUrlString(), Toast.LENGTH_SHORT).show();
                 onImageClick.onSuccess(card);
-
             }
 
         }
@@ -72,7 +69,7 @@ public class AlbumAdapter2  extends RecyclerView.Adapter<AlbumAdapter2.MyViewHol
     @Override
     public AlbumAdapter2.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.album_card2, parent, false);
+                .inflate(R.layout.album_card, parent, false);
 
         return new AlbumAdapter2.MyViewHolder(itemView);
     }

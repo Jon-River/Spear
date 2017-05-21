@@ -29,7 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.spear.android.R;
-import com.spear.android.activities.ImageActivity;
+import com.spear.android.activities.SingleImage.SingleImageActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -178,7 +178,7 @@ public class AlbumFragment extends Fragment implements View.OnClickListener, Alb
         @Override
         public void onSuccess(CardImage card) {
             Log.v("", "" + card.getUsername() + " " + card.getUrlString());
-            Intent intent = new Intent(getActivity(), ImageActivity.class);
+            Intent intent = new Intent(getActivity(), SingleImageActivity.class);
             intent.putExtra("Editing", card);
             startActivity(intent);
         }

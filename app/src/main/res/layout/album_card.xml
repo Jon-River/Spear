@@ -1,148 +1,51 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="120dp"
+    android:layout_height="120dp"
     android:layout_gravity="center"
-    android:layout_marginBottom="@dimen/activity_vertical_margin"
-    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-    android:layout_marginRight="@dimen/activity_horizontal_margin"
-    android:layout_marginTop="@dimen/activity_vertical_margin"
     card_view:cardCornerRadius="0dp"
-    card_view:cardElevation="5dp">
+    card_view:cardElevation="0dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal|center_vertical"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/white"
+        card_view:cardCornerRadius="5dp"
+        card_view:cardElevation="5dp"
+        android:padding="5dp">
 
-        <ImageView
-            android:id="@+id/image"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="4"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:scaleType="fitXY"
-            android:src="@mipmap/fish_white_tab" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.6"
-            android:orientation="horizontal"
-            android:weightSum="1">
-
-
-            <TextView
-                android:id="@+id/usernameTittle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/image"
-                android:layout_weight="0.5"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:paddingTop="15dp"
-                android:text="username"
-                android:textSize="20dp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/provinceTittle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/usernameTittle"
-                android:layout_weight="0.5"
-                android:paddingBottom="5dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:text="fishingzone"
-                android:textSize="20dp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.6"
-            android:orientation="horizontal"
-            android:weightSum="1">
-
-
-            <TextView
-                android:id="@+id/username"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/usernameTittle"
-                android:layout_weight="0.5"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:paddingTop="15dp"
-                android:text="PabloRojas"
-                android:textColor="#4c4c4c"
-                android:textSize="15dp" />
-
-            <TextView
-                android:id="@+id/province"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/username"
-                android:layout_weight="0.5"
-                android:paddingBottom="5dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:text="Madrid"
-                android:textSize="15dp" />
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:weightSum="1">
-
-            <LinearLayout
-                android:layout_width="0dp"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.7">
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:scaleType="fitXY"
+                android:src="@color/black" />
 
-                <RatingBar
-                    android:id="@+id/ratingBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.75"
-                    android:numStars="5"
-                    android:rating="0.0"
-                    android:stepSize="1.0" />
+        </RelativeLayout>
 
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/imageshadow"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.3"
-                android:gravity="center_vertical">
+                android:scaleType="fitXY"
+                android:src="@drawable/bg_shadow_png" />
 
-                <Button
-                    android:id="@+id/btnSubmitRating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:text="submit" />
+        </RelativeLayout>
 
-            </LinearLayout>
 
-        </LinearLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </android.support.v7.widget.CardView>
 
