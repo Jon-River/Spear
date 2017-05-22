@@ -1,5 +1,6 @@
 package com.spear.android.activities;
 
+import adapters.ViewPagerAdapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,23 +14,23 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.spear.android.R;
-
-import adapters.ViewPagerAdapter;
-import fragments.profile.ProfileFragment;
 import fragments.album.AlbumFragment;
-import fragments.weather.WeatherFragment;
 import fragments.map.MapFragment;
+import fragments.profile.ProfileFragment;
+import fragments.search.SearchFragment;
+import fragments.weather.WeatherFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private AlbumFragment AlbumFragment;
+    private AlbumFragment albumFragment;
+    private WeatherFragment weatherFragment;
     private FirebaseAuth firebaseAuth;
     private ProfileFragment profileFragment;
+    private SearchFragment searchFragment;
     private FragmentManager fm;
     private ActionBar actionBar;
     private InputMethodManager imm;
@@ -95,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
         fm = getSupportFragmentManager();
         profileFragment = (ProfileFragment) fm.findFragmentById(R.id.profileFragment);
+        searchFragment  = (SearchFragment) fm.findFragmentById(R.id.weatherSearchFragment);
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
@@ -127,10 +129,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setupViewPager(ViewPager viewPager) {
-        AlbumFragment =new AlbumFragment();
+        albumFragment =new AlbumFragment();
+        weatherFragment = new WeatherFragment();
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(AlbumFragment, "AlbumFragment");
-        adapter.addFragment(new WeatherFragment(), "TWO");
+        adapter.addFragment(albumFragment, "AlbumFragment");
+        adapter.addFragment(weatherFragment, "WeatherFragment");
         adapter.addFragment(new MapFragment(), "THREE");
         //adapter.addFragment(new WeatherFragment(), "FOUR");
         viewPager.setAdapter(adapter);
@@ -154,9 +157,16 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fm  = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
         transaction.hide(profileFragment);
+        transaction.hide(searchFragment);
         if(ifrg == 1){
             transaction.show(profileFragment);
+        }else if (ifrg == 2){
+            transaction.show(searchFragment);
         }
         transaction.commit();
+    }
+
+    public void setResultSearch(String cityZip) {
+        weatherFragment.getWeatherByCityZip(cityZip);
     }
 }
