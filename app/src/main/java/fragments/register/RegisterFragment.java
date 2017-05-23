@@ -1,5 +1,6 @@
 package fragments.register;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -48,6 +49,15 @@ public class RegisterFragment extends Fragment implements RegisterView {
     editTextPasswordRegister.setText("usertest1");
     editTextUserRegister.setText("usertest1");
     editTextEmailRegister.setText("usertest1@spear.com");
+
+    Typeface type = Typeface.createFromAsset(getActivity().getAssets(),"OpenSans-Regular.ttf");
+
+    editTextPasswordRegister.setTypeface(type);
+    editTextUserRegister.setTypeface(type);
+    editTextEmailRegister.setTypeface(type);
+    buttonRegister.setTypeface(type);
+
+
   }
 
   private void listeners() {

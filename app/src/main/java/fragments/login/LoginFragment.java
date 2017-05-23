@@ -3,6 +3,7 @@ package fragments.login;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -24,7 +25,7 @@ public class LoginFragment extends Fragment implements LoginView {
     private LoginPresenter loginPresenter;
     private EditText editTextUser;
     private EditText editTextPassword;
-    private Button buttonLogin;
+    private Button btnLogin, btnRegister;
     private ProgressDialog dialog;
 
 
@@ -50,13 +51,22 @@ public class LoginFragment extends Fragment implements LoginView {
         editTextUser = (EditText) view.findViewById(R.id.editTextUser);
         editTextUser.setText("usertest1@spear.com");
         editTextPassword.setText("usertest1");
-        buttonLogin = (Button) view.findViewById(R.id.buttonLogin);
+        btnRegister = (Button) view.findViewById(R.id.btnRegister);
+        btnLogin = (Button) view.findViewById(R.id.buttonLogin);
+
+        Typeface type = Typeface.createFromAsset(getActivity().getAssets(),"OpenSans-Regular.ttf");
+
+        editTextPassword.setTypeface(type);
+        editTextUser.setTypeface(type);
+        btnLogin.setTypeface(type);
+        btnRegister.setTypeface(type);
+
         dialog = new ProgressDialog(view.getContext());
 
     }
 
     private void listeners() {
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showLoading();

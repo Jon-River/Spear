@@ -1,10 +1,12 @@
 package objects;
 
+import java.io.Serializable;
+
 /**
  * Created by Pablo on 10/4/17.
  */
 
-public class CardImage {
+public class CardImage implements Serializable {
 
   private String username;
   private float rating;

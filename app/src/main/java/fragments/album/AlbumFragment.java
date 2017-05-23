@@ -1,4 +1,5 @@
 package fragments.album;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -20,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,12 +29,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.spear.android.R;
+import com.spear.android.activities.SingleImage.SingleImageActivity;
+
 import java.util.ArrayList;
 import java.util.List;
-import adapters.AlbumAdapter;
+
+import adapters.AlbumAdapter2;
 import objects.CardImage;
 import objects.ImageInfo;
 import objects.UserInfo;
+
 import static com.google.android.gms.internal.zzt.TAG;
 
 /**
@@ -41,189 +47,214 @@ import static com.google.android.gms.internal.zzt.TAG;
 
 public class AlbumFragment extends Fragment implements View.OnClickListener, AlbumView {
 
-  private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 111;
-  private AlbumPresenter albumPresenter;
+    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 111;
+    private AlbumPresenter albumPresenter;
 
-  private RecyclerView recyclerView;
-  private AlbumAdapter adapter;
-  private List<CardImage> cardList;
+    private RecyclerView recyclerView;
+    private AlbumAdapter2 adapter;
+    private List<CardImage> cardList;
 
-  private FloatingActionButton fabOpenCamera;
-  private ImageView mImageView;
-  private EditText editTextComentary;
-  private Button btnOpenCamera, btnOpenGallery, btnUploadImage;
-  private Dialog dialogButtons, dialogCameraView;
+    private FloatingActionButton fabOpenCamera;
+    private ImageView mImageView;
+    private EditText editTextComentary;
+    private Button btnOpenCamera, btnOpenGallery, btnUploadImage;
+    private Dialog dialogButtons, dialogCameraView;
 
-  private ProgressDialog dialog;
+    private ProgressDialog dialog;
 
-  private DatabaseReference databaseReference;
-  private FirebaseAuth firebaseAuth;
+    private DatabaseReference databaseReference;
+    private FirebaseAuth firebaseAuth;
 
-  public AlbumFragment() {
-    // Required empty public constructor
+    public AlbumFragment() {
+        // Required empty public constructor
 
-  }
-
-  @Override public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-  }
-
-  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
-    // Inflate the layout for this fragment
-    View v = inflater.inflate(R.layout.fragment_album, container, false);
-    albumPresenter = new AlbumPresenter(this, getActivity());
-    init(v);
-    //albumPresenter.loadImageInfo(); adapter not working
-    loadImageInfo();
-
-    return v;
-  }
-
-  @Override public void onClick(View view) {
-
-    if (view.getId() == R.id.fabOpenCamera) {
-      albumPresenter.askForPermissions();
-      dialogButtons.show();
-    } else if (view.getId() == R.id.btnOpenCamera) {
-      dialogButtons.dismiss();
-      albumPresenter.openCamera();
-    } else if (view.getId() == R.id.btnOpenGallery) {
-      dialogButtons.dismiss();
-      albumPresenter.openGallery();
     }
-  }
 
-  @Override
-  public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-    btnUploadImage.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        dialogCameraView.dismiss();
-        dialog.show();
-        dialog.setContentView(R.layout.custom_progress_dialog);
-        albumPresenter.pushTofirebase(requestCode, resultCode,
-            editTextComentary.getText().toString());
-      }
-    });
-
-    if (resultCode == Activity.RESULT_OK) {
-      dialogCameraView.show();
-      albumPresenter.OnActivityResult(requestCode, resultCode, data);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
-  }
 
-  @Override public void onRequestPermissionsResult(int requestCode, String permissions[],
-      int[] grantResults) {
-    switch (requestCode) {
-      case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
-        // If request is cancelled, the result arrays are empty.
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.fragment_album, container, false);
+        albumPresenter = new AlbumPresenter(this, getActivity());
+        init(v);
+        //albumPresenter.loadImageInfo(); adapter not working
+        loadImageInfo();
 
-          // permission was granted, yay! Do the
-          // contacts-related task you need to do.
+        return v;
+    }
 
-        } else {
+    @Override
+    public void onClick(View view) {
 
-          // permission denied, boo! Disable the
-          // functionality that depends on this permission.
+        if (view.getId() == R.id.fabOpenCamera) {
+            albumPresenter.askForPermissions();
+            dialogButtons.show();
+        } else if (view.getId() == R.id.btnOpenCamera) {
+            dialogButtons.dismiss();
+            albumPresenter.openCamera();
+        } else if (view.getId() == R.id.btnOpenGallery) {
+            dialogButtons.dismiss();
+            albumPresenter.openGallery();
         }
-        return;
-      }
-
-      // other 'case' lines to check for other
-      // permissions this app might request
     }
-  }
 
-  private void loadImageInfo() {
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        btnUploadImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogCameraView.dismiss();
+                dialog.show();
+                dialog.setContentView(R.layout.custom_progress_dialog);
+                albumPresenter.pushTofirebase(requestCode, resultCode,
+                        editTextComentary.getText().toString());
+            }
+        });
 
-    // storageReference = FirebaseStorage.getInstance().getReference().child("Images").child(FirebaseAuth.getInstance().getCurrentUser().toString());
-
-    System.out.print("user " + firebaseAuth.getCurrentUser().getUid());
-    final ArrayList<ImageInfo> imageArray = new ArrayList<>();
-
-    databaseReference.getRoot().child("images").addValueEventListener(new ValueEventListener() {
-      @Override public void onDataChange(DataSnapshot dataSnapshot) {
-        imageArray.clear();
-        cardList.clear();
-        for (DataSnapshot imageSnapshot : dataSnapshot.getChildren()) {
-          Log.d(TAG, "onDataChange: " + imageSnapshot.getKey());
-          ImageInfo image = imageSnapshot.getValue(ImageInfo.class);
-          imageArray.add(image);
+        if (resultCode == Activity.RESULT_OK) {
+            dialogCameraView.show();
+            albumPresenter.OnActivityResult(requestCode, resultCode, data);
         }
-        render(imageArray);
-      }
-
-      @Override public void onCancelled(DatabaseError databaseError) {
-
-      }
-    });
-  }
-
-  private void render(ArrayList<ImageInfo> imgInfo) {
-    final ArrayList<UserInfo> userArray = new ArrayList<>();
-
-    CardImage card;
-    for (ImageInfo imageInfo : imgInfo) {
-      card = new CardImage(imageInfo.getName(), imageInfo.getRating(), imageInfo.getUrl(),
-          imageInfo.getProvince(), imageInfo.getTimeStamp(), imageInfo.getVoted());
-      cardList.add(card);
     }
 
-    adapter.notifyDataSetChanged();
-  }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[],
+                                           int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-  private void init(View v) {
-    recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
 
-    cardList = new ArrayList<>();
-    adapter = new AlbumAdapter(this, getContext(), cardList);
+                } else {
 
-    RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 1);  //displays number of cards per row
-    recyclerView.setLayoutManager(mLayoutManager);
-    recyclerView.setItemAnimator(new DefaultItemAnimator());
-    recyclerView.setAdapter(adapter);
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
 
-    fabOpenCamera = (FloatingActionButton) v.findViewById(R.id.fabOpenCamera);
-    fabOpenCamera.setOnClickListener(this);
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
 
-    dialogButtons = new Dialog(getContext());
-    dialogButtons.setContentView(R.layout.open_camera_dialog);
-    btnOpenCamera = (Button) dialogButtons.findViewById(R.id.btnOpenCamera);
-    btnOpenGallery = (Button) dialogButtons.findViewById(R.id.btnOpenGallery);
-    btnOpenCamera.setOnClickListener(this);
-    btnOpenGallery.setOnClickListener(this);
-    dialogCameraView = new Dialog(getContext());
-    dialogCameraView.setContentView(R.layout.result_camera_dialog);
-    mImageView = (ImageView) dialogCameraView.findViewById(R.id.imageResultDialog);
-    Display display = getActivity().getWindowManager().getDefaultDisplay();
-    int width = ((display.getWidth() * 8) / 10);
-    int height = ((display.getHeight() * 10) / 10);
-    LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width, height);
-    mImageView.setLayoutParams(parms);
-    btnUploadImage = (Button) dialogCameraView.findViewById(R.id.btnUploadPhoto);
-    editTextComentary = (EditText) dialogCameraView.findViewById(R.id.editTextComentary);
-    firebaseAuth = FirebaseAuth.getInstance();
-    databaseReference = FirebaseDatabase.getInstance().getReference();
-    dialog = new ProgressDialog(getActivity());
-    dialog.setMessage("Uploading image");
-  }
+    private void loadImageInfo() {
 
-  public void pushRatingFirebase(final long timeStamp, final float rating) {
-    albumPresenter.pushRatingFirebase(timeStamp, rating);
-  }
+        // storageReference = FirebaseStorage.getInstance().getReference().child("Images").child(FirebaseAuth.getInstance().getCurrentUser().toString());
 
-  @Override public void setImageBitmap(Bitmap imageBitmap) {
-    mImageView.setImageBitmap(imageBitmap);
-  }
+        System.out.print("user " + firebaseAuth.getCurrentUser().getUid());
+        final ArrayList<ImageInfo> imageArray = new ArrayList<>();
 
-  @Override public void hideLoading() {
-    dialog.dismiss();
-  }
+        databaseReference.getRoot().child("images").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                imageArray.clear();
+                cardList.clear();
+                for (DataSnapshot imageSnapshot : dataSnapshot.getChildren()) {
+                    Log.d(TAG, "onDataChange: " + imageSnapshot.getKey());
+                    ImageInfo image = imageSnapshot.getValue(ImageInfo.class);
+                    imageArray.add(image);
+                }
+                render(imageArray);
+            }
 
-  @Override public void notifyAdapter() {
-    adapter.notifyDataSetChanged();
-  }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    final OnImageClick onImageClick = new OnImageClick() {
+        @Override
+        public void onSuccess(CardImage card) {
+            Log.v("", "" + card.getUsername() + " " + card.getUrlString());
+            Intent intent = new Intent(getActivity(), SingleImageActivity.class);
+            intent.putExtra("Editing", card);
+            startActivity(intent);
+        }
+
+        @Override
+        public void onError() {
+
+        }
+    };
+
+    private void render(ArrayList<ImageInfo> imgInfo) {
+        final ArrayList<UserInfo> userArray = new ArrayList<>();
+
+        CardImage card;
+        for (ImageInfo imageInfo : imgInfo) {
+            card = new CardImage(imageInfo.getName(), imageInfo.getRating(), imageInfo.getUrl(),
+                    imageInfo.getProvince(), imageInfo.getTimeStamp(), imageInfo.getVoted());
+            cardList.add(card);
+        }
+
+        adapter.notifyDataSetChanged();
+    }
+
+    private void init(View v) {
+        recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
+
+        cardList = new ArrayList<>();
+        adapter = new AlbumAdapter2(this, getContext(), cardList, onImageClick);
+
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 3);  //displays number of cards per row
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
+
+        fabOpenCamera = (FloatingActionButton) v.findViewById(R.id.fabOpenCamera);
+        fabOpenCamera.setOnClickListener(this);
+
+        dialogButtons = new Dialog(getContext());
+        dialogButtons.setContentView(R.layout.open_camera_dialog);
+        btnOpenCamera = (Button) dialogButtons.findViewById(R.id.btnOpenCamera);
+        btnOpenGallery = (Button) dialogButtons.findViewById(R.id.btnOpenGallery);
+        btnOpenCamera.setOnClickListener(this);
+        btnOpenGallery.setOnClickListener(this);
+        dialogCameraView = new Dialog(getContext());
+        dialogCameraView.setContentView(R.layout.result_camera_dialog);
+        mImageView = (ImageView) dialogCameraView.findViewById(R.id.imageResultDialog);
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        int width = ((display.getWidth() * 8) / 10);
+        int height = ((display.getHeight() * 10) / 10);
+        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width, height);
+        mImageView.setLayoutParams(parms);
+        btnUploadImage = (Button) dialogCameraView.findViewById(R.id.btnUploadPhoto);
+        editTextComentary = (EditText) dialogCameraView.findViewById(R.id.editTextComentary);
+        firebaseAuth = FirebaseAuth.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        dialog = new ProgressDialog(getActivity());
+        dialog.setMessage("Uploading image");
+    }
+
+    public void pushRatingFirebase(final long timeStamp, final float rating) {
+        albumPresenter.pushRatingFirebase(timeStamp, rating);
+    }
+
+    @Override
+    public void setImageBitmap(Bitmap imageBitmap) {
+        mImageView.setImageBitmap(imageBitmap);
+    }
+
+    @Override
+    public void hideLoading() {
+        dialog.dismiss();
+    }
+
+    @Override
+    public void notifyAdapter() {
+        adapter.notifyDataSetChanged();
+    }
 }
 
