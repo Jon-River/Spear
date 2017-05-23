@@ -19,8 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import managers.CameraManager;
-import objects.CardImage;
-import objects.ImageInfo;
+import pojo.CardImage;
+import pojo.ImageInfo;
 
 import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 

@@ -10,7 +10,7 @@ import com.spear.android.activities.SingleImage.SingleImageView;
 import java.util.HashMap;
 import java.util.Map;
 
-import objects.ImageInfo;
+import pojo.ImageInfo;
 
 /**
  * Created by Pablo on 21/5/17.

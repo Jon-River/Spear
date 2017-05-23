@@ -35,9 +35,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import adapters.AlbumAdapter2;
-import objects.CardImage;
-import objects.ImageInfo;
-import objects.UserInfo;
+import pojo.CardImage;
+import pojo.ImageInfo;
+import pojo.UserInfo;
 
 import static com.google.android.gms.internal.zzt.TAG;
 

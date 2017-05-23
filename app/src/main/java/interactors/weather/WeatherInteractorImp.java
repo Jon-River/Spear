@@ -1,7 +1,7 @@
 package interactors.weather;
 
 import managers.OpenWeatherManager;
-import objects.OpenWeather.WeatherResponse;
+import pojo.OpenWeather.WeatherResponse;
 
 /**
  * Created by Pablo on 13/5/17.

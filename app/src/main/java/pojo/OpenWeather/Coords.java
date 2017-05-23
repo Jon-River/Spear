@@ -1,4 +1,4 @@
-package objects.OpenWeather;
+package pojo.OpenWeather;
 
 
 /**

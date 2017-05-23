@@ -8,7 +8,7 @@ import java.util.List;
 
 import interactors.album.AlbumInteractor;
 import interactors.album.AlbumInteractorImp;
-import objects.CardImage;
+import pojo.CardImage;
 
 /**
  * Created by Pablo on 7/5/17.

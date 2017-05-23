@@ -17,7 +17,7 @@ import com.spear.android.R;
 import java.util.List;
 
 import fragments.album.AlbumFragment;
-import objects.CardImage;
+import pojo.CardImage;
 
 /**
  * Created by Pablo on 7/4/17.

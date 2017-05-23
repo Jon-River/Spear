@@ -1,4 +1,4 @@
-package objects;
+package pojo;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 

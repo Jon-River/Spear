@@ -2,7 +2,7 @@ package fragments.album;
 
 import android.graphics.Bitmap;
 
-import objects.CardImage;
+import pojo.CardImage;
 
 
 public interface AlbumView {

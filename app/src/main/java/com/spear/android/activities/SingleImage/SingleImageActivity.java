@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.spear.android.R;
 
-import objects.CardImage;
+import pojo.CardImage;
 
 public class SingleImageActivity extends AppCompatActivity implements View.OnClickListener {
 

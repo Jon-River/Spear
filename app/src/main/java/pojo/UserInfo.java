@@ -1,4 +1,4 @@
-package objects;
+package pojo;
 
 /**
  * Created by Pablo on 26/3/17.

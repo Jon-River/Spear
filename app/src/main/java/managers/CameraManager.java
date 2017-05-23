@@ -31,8 +31,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import interactors.album.AlbumInteractor;
-import objects.ImageInfo;
-import objects.UserInfo;
+import pojo.ImageInfo;
+import pojo.UserInfo;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;

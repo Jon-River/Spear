@@ -1,4 +1,4 @@
-package objects.OpenWeather;
+package pojo.OpenWeather;
 
 /**
  * Created by alvaro.montes on 01/03/2017.

@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.spear.android.R;
@@ -89,6 +90,10 @@ public class MainActivity extends AppCompatActivity{
         actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setElevation(0);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 
         imm = (InputMethodManager) getSystemService(
                 Activity.INPUT_METHOD_SERVICE);

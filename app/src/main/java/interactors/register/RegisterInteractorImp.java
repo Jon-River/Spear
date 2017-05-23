@@ -10,7 +10,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import objects.UserInfo;
+import pojo.UserInfo;
 
 /**
  * Created by Pablo on 24/3/17.

@@ -14,7 +14,7 @@ import java.util.List;
 
 import fragments.album.AlbumFragment;
 import fragments.album.AlbumView;
-import objects.CardImage;
+import pojo.CardImage;
 
 /**
  * Created by Pablo on 20/5/17.

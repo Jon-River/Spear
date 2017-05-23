@@ -17,7 +17,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
-import objects.OpenWeather.WeatherResponse;
+
 
 
 /**
@@ -63,13 +63,13 @@ public class WeatherFragment extends Fragment implements WeatherView, View.OnCli
     imgCardinal = (ImageView) v.findViewById(R.id.imgCardinal);
     imgWeather = (ImageView) v.findViewById(R.id.imgWeather);
     fabOpenSearchView = (FloatingActionButton) v.findViewById(R.id.fabSearchView);
-    fabOpenSearchView.setBackgroundTintList(getResources().getColorStateList(R.color.black));
+    //fabOpenSearchView.setBackgroundTintList(getResources().getColorStateList(R.color.black));
     fabOpenSearchView.setOnClickListener(this);
   }
 
-  @Override public void setWeatherResult(WeatherResponse weatherResult) {
+  @Override public void setWeatherResult(pojo.OpenWeather.WeatherResponse weatherResult) {
     main.cambiarFragment(0);
-    WeatherResponse data = weatherResult;
+    pojo.OpenWeather.WeatherResponse data = weatherResult;
     if (data != null) {
       setDataResponse(data);
       Log.v("data", ""
@@ -95,7 +95,7 @@ public class WeatherFragment extends Fragment implements WeatherView, View.OnCli
     }
   }
 
-  private void setDataResponse(WeatherResponse data) {
+  private void setDataResponse(pojo.OpenWeather.WeatherResponse data) {
     convertDegToImage(data.getDeg());
     convertIconToImage(data.getIcon());
     Date date = new Date();
@@ -240,6 +240,8 @@ public class WeatherFragment extends Fragment implements WeatherView, View.OnCli
       imgCardinal.setImageResource(R.mipmap.northwest);
     }
   }
+
+
 
   @Override public void showError(String error) {
     Toast.makeText(getActivity(), "" + error, Toast.LENGTH_SHORT).show();

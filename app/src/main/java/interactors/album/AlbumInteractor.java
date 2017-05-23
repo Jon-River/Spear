@@ -3,7 +3,7 @@ package interactors.album;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import java.util.List;
-import objects.CardImage;
+import pojo.CardImage;
 
 /**
  * Created by Pablo on 7/4/17.

@@ -16,7 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import interactors.weather.WeatherInteractor;
-import objects.OpenWeather.WeatherResponse;
+import pojo.OpenWeather.WeatherResponse;
 
 
 /**

@@ -2,7 +2,7 @@ package fragments.weather;
 
 import interactors.weather.WeatherInteractor;
 import interactors.weather.WeatherInteractorImp;
-import objects.OpenWeather.WeatherResponse;
+import pojo.OpenWeather.WeatherResponse;
 
 /**
  * Created by Pablo on 12/5/17.
