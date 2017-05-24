@@ -236,6 +236,7 @@ public class AlbumFragment extends Fragment implements View.OnClickListener, Alb
         databaseReference = FirebaseDatabase.getInstance().getReference();
         dialog = new ProgressDialog(getActivity());
         dialog.setMessage("Uploading image");
+
     }
 
     public void pushRatingFirebase(final long timeStamp, final float rating) {
