@@ -4,42 +4,68 @@
     android:layout_height="match_parent"
     tools:context="fragments.login.LoginFragment"
     android:orientation="vertical"
-    android:weightSum="4">
+    android:weightSum="7">
 
 
 
-    <EditText
-        android:layout_weight="1"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        >
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
-        android:id="@+id/editTextUser"/>
-
-
-
-    <EditText
-        android:layout_weight="1"
+        ></LinearLayout>
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
-        android:id="@+id/editTextPassword"/>
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:gravity="center"
+        android:orientation="vertical"
 
-    <Button
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Login"
-        android:background="@android:color/transparent"
-        android:gravity="center_vertical|center_horizontal"
-        android:id="@+id/buttonLogin"/>
+        >
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|center_horizontal"
+            android:hint="email"
+            android:id="@+id/editTextUser"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnRegister"
-        android:layout_weight="1"
-        android:background="@android:color/transparent"
-        android:text="Registro"
-        android:textColor="@color/colorPrimaryDark"
-        android:onClick="openFragmentRegister"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:hint="password"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|center_horizontal"
+            android:id="@+id/editTextPassword"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:background="@android:color/transparent"
+            android:gravity="center_vertical|center_horizontal"
+            android:id="@+id/buttonLogin"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnRegister"
+            android:background="@android:color/transparent"
+            android:text="Registro"
+            android:textColor="@color/colorPrimaryDark"
+            android:onClick="openFragmentRegister"/>
+
+
+    </LinearLayout>
+
+
+
+
+
 </LinearLayout>
