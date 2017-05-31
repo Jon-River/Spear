@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.spear.android.album.AlbumActivity">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:scrollbars="vertical" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabOpenCamera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:src="@mipmap/camera_white"
+        android:layout_marginBottom="40dp"
+        android:layout_marginRight="40dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        >
+
+        <include android:id="@+id/toolbar"
+            layout="@layout/toolbar_album"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            />
+
+    </LinearLayout>
+
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.spear.android.map.MapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+</FrameLayout>
