@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <style name="TextAppearance.App.TextInputLayout" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">14sp</item>
+    </style>
     <style name="DialogAnimation" parent="@android:style/Theme.Dialog">
         <item name="android:windowAnimationStyle">@style/DialogAnimSettings</item>
     </style>
@@ -10,9 +15,15 @@
     </style>
     <style name="MyTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/steelblue</item>
-        <item name="colorPrimaryDark">@color/steelblue</item>
-        <item name="colorAccent">@color/orangered</item>
+
+        <item name="colorPrimary">@color/Gunmetal</item>
+        <item name="colorPrimaryDark">@color/Gunmetal</item>
+        <item name="colorAccent">@color/tomato</item>
+        <!-- Text input Edit Text Line color -->
+        <item name="colorControlNormal">@color/greysnow</item>
+        <!-- Text input Edit Text Hint color -->
+        <item name="android:textColorHint">@color/greysnow</item>
+
     </style>
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
