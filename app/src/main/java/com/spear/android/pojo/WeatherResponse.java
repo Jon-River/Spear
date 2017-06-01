@@ -11,7 +11,7 @@ public class WeatherResponse {
     public WeatherResponse() {
     }
 
-    public WeatherResponse(String description, double temperature, long pressure, double humidity, double tempMax, double tempMin, float speed, float deg, long sunrise, long sunset, String name, String icon) {
+    public WeatherResponse(String city, String description, double temperature, long pressure, double humidity, double tempMax, double tempMin, float speed, float deg, long sunrise, long sunset, String name, String icon) {
         this.description = description;
         this.temperature = temperature;
         this.pressure = pressure;
@@ -25,6 +25,7 @@ public class WeatherResponse {
         this.name = name;
         this.icon = icon;
     }
+
 
     public String getDescription() {
         return description;

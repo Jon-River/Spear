@@ -32,8 +32,8 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
 
 
     private ImageView imgWeather, imgCardinal;
-    private TextView txtHumidity, txtPressure, txtTemperature, txtTempMax, txtTempMin, txtDate,
-            txtDescription, txtWindVel, txtSunrise, txtSunset;
+    private TextView txtHumidity, txtPressure, txtTemperature, txtDate,
+            txtDescription, txtWindVel, txtSunrise, txtSunset, txtCity;
     private FloatingActionButton fabOpenSearchView;
 
     private WeatherPresenter weatherPresenter;
@@ -46,7 +46,7 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_weather);
+        setContentView(R.layout.activity_weather2);
 
 
         weatherPresenter = new WeatherPresenter(this);
@@ -57,7 +57,7 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        this.menu =menu;
+        this.menu = menu;
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_weather, menu);
         return true;
@@ -79,19 +79,17 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
             case R.id.newsmenu:
                 startActivity(new Intent(this, NewsActivity
                         .class));
-                finish();
                 return true;
             case R.id.mapmenu:
-                if (menu.getItem(1).getTitle().equals("map")){
+                if (menu.getItem(1).getTitle().equals("map")) {
                     openMapFragment();
-                }else{
+                } else {
                     closeMapFragment();
                 }
                 return true;
             case R.id.gallerymenu:
                 startActivity(new Intent(this, AlbumActivity
                         .class));
-                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -118,13 +116,12 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
 
         searchFragment = (SearchFragment) fm.findFragmentById(R.id.weatherSearchFrag);
         mapFragment = (MapFragment) fm.findFragmentById(R.id.mapFragment);
+        txtCity = (TextView) findViewById(R.id.txtCity);
         txtDate = (TextView) findViewById(R.id.txtDate);
         txtDescription = (TextView) findViewById(R.id.txtDescription);
         txtHumidity = (TextView) findViewById(R.id.txtHumidity);
         txtPressure = (TextView) findViewById(R.id.txtPressure);
         txtTemperature = (TextView) findViewById(R.id.txtTemperature);
-        txtTempMax = (TextView) findViewById(R.id.txtTempMax);
-        txtTempMin = (TextView) findViewById(R.id.txtTempMin);
         txtSunrise = (TextView) findViewById(R.id.txtSunrise);
         txtSunset = (TextView) findViewById(R.id.txtSunset);
         txtWindVel = (TextView) findViewById(R.id.txtWindVel);
@@ -133,7 +130,7 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
         fabOpenSearchView = (FloatingActionButton) findViewById(R.id.fabSearchView);
         //fabOpenSearchView.setBackgroundTintList(getResources().getColorStateList(R.color.black));
         fabOpenSearchView.setOnClickListener(this);
-        cambiarFragment(0);
+        cambiarFragment(1);
     }
 
     @Override
@@ -161,7 +158,9 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
                     + " "
                     + data.getSunrise()
                     + " "
-                    + data.getSunset());
+                    + data.getSunset()
+                    + " "
+                    + data.getName());
         }
     }
 
@@ -205,9 +204,6 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
         }
 
 
-        txtTempMin.setText("N/A");
-        txtTempMax.setText("N/A");
-
         if (data.getSpeed() != 0) {
             txtWindVel.setText(convertToKMH(data.getSpeed()));
         } else {
@@ -233,6 +229,12 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
 
         } else {
             txtSunset.setText("N/A");
+        }
+
+        if (data.getName() != null) {
+            txtCity.setText(data.getName());
+        } else {
+            txtCity.setText("N/A");
         }
 
     }

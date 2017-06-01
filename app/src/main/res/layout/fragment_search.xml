@@ -1,72 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/searchWeather"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@android:color/transparent"
     android:gravity="center_vertical"
-    android:orientation="vertical"
-    android:padding="60dp"
-    tools:context="com.spear.android.weather.WeatherActivity">
+    android:orientation="vertical">
 
 
   <LinearLayout
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:background="@color/seagreen"
+      android:layout_height="match_parent"
+      android:background="@color/Blue_Koi"
       android:orientation="vertical"
       android:paddingBottom="10dp"
-      android:paddingLeft="30dp"
-      android:paddingRight="30dp"
+      android:paddingLeft="40dp"
+      android:paddingRight="40dp"
       android:paddingTop="10dp"
-      >
+      android:weightSum="5">
+
+
+    <TextView
+        android:id="@+id/textTittle"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:gravity="center"
+        android:text="Introduce a city name or zip code"
+        android:textColor="@color/white"
+        android:textSize="40dp" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
 
-      <EditText
-          android:id="@+id/etCity"
+
+      <android.support.design.widget.TextInputLayout
+          android:id="@+id/etEmailLayout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:gravity="center"
-          android:hint="cityname"
-          android:textColorHint="#FFFFFF"
-          android:textColor="@android:color/white"
-          android:textSize="20dp"
-          />
+          android:layout_marginBottom="20dp"
+
+          app:passwordToggleEnabled="true"
+          app:passwordToggleTint="@color/selector_password_visibility_toggle"
+          app:passwordToggleTintMode="src_atop">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/etCity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="cityname"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/whitesmoke"
+            android:textSize="20dp" />
+      </android.support.design.widget.TextInputLayout>
+
     </ScrollView>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="1"
-        >
+        android:orientation="vertical"
+        android:weightSum="1">
 
-      <Button
-          android:id="@+id/btnSkip"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="0.4"
-          android:background="@android:color/transparent"
-          android:text="Skip"
-          android:textSize="20dp"
-          android:textColor="@android:color/white"
-          />
 
       <Button
           android:id="@+id/btnFind"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
+          android:layout_width="match_parent"
+          android:layout_height="0dp"
           android:layout_weight="0.6"
-          android:background="@android:color/transparent"
+          android:background="@color/tomato"
           android:text="Search"
-          android:textSize="20dp"
+          android:textAllCaps="false"
           android:textColor="@android:color/white"
-          />
+          android:textSize="20dp" />
+
+      <Button
+          android:id="@+id/btnSkip"
+          android:layout_width="match_parent"
+          android:layout_height="0dp"
+          android:layout_weight="0.4"
+          android:paddingTop="15dp"
+          android:background="@android:color/transparent"
+          android:text="Skip"
+          android:textAllCaps="false"
+          android:textColor="@android:color/white"
+          android:textSize="20dp" />
     </LinearLayout>
 
 
