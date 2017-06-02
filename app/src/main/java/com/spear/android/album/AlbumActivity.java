@@ -104,7 +104,8 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
                 //backSignOut();
                 return true;
             case R.id.weathermenu:
-                startActivity(new Intent(this, WeatherActivity.class) );
+                Intent intent = new Intent(this, WeatherActivity.class);
+                startActivity(intent);
                 return true;
             case R.id.mapmenu:
                 if (menu.getItem(1).getTitle().equals("map")){
@@ -123,6 +124,7 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
 
     private void closeMapFragment() {
         setTitle("Album");
+        fabOpenCamera.show();
         cambiarFragment(0);
         menu.getItem(1).setIcon(R.mipmap.earth);
         menu.getItem(1).setTitle("map");
@@ -130,6 +132,7 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
 
     private void openMapFragment() {
         setTitle("Map");
+        fabOpenCamera.hide();
         menu.getItem(1).setIcon(R.mipmap.ic_collections);
         menu.getItem(1).setTitle("album");
         cambiarFragment(2);

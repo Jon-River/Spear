@@ -43,15 +43,56 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
     private FragmentManager fm;
     private Menu menu;
 
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        if (savedInstanceState!= null){
+            Log.v("instance","no null");
+            txtTemperature.setText(savedInstanceState.getString("temp"));
+            txtDate.setText(savedInstanceState.getString("date"));
+        }else{
+            Log.v("instance","null");
+
+        }
         setContentView(R.layout.activity_weather2);
 
 
         weatherPresenter = new WeatherPresenter(this);
 
         init();
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+
+        // Save UI state changes to the savedInstanceState.
+        // This bundle will be passed to onCreate if the process is
+        // killed and restarted.
+        savedInstanceState.putString("temp", txtTemperature.getText().toString());
+        savedInstanceState.putString("date", txtDate.getText().toString());
+        super.onSaveInstanceState(savedInstanceState);
+
+        // etc.
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        // Restore UI state from the savedInstanceState.
+        // This bundle has also been passed to onCreate.
+       txtTemperature.setText(savedInstanceState.getString("temp"));
+       txtDate.setText(savedInstanceState.getString("date"));
+
 
     }
 
@@ -98,7 +139,7 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
 
     private void closeMapFragment() {
         setTitle("Weather");
-        cambiarFragment(0);
+        cambiarFragment(1);
         menu.getItem(1).setIcon(R.mipmap.earth);
         menu.getItem(1).setTitle("map");
     }

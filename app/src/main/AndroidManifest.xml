@@ -67,7 +67,6 @@
         <activity
             android:name=".weather.WeatherActivity"
             android:label="Weather"
-            android:alwaysRetainTaskState="true"
             android:windowSoftInputMode="stateHidden|adjustPan"
             android:configChanges="orientation"
             android:screenOrientation="portrait"/>
