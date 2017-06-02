@@ -3,6 +3,7 @@
     package="com.spear.android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <service android:name="com.spear.android.OnClearFromRecentService" android:stopWithTask="true" />
 
     <uses-feature
         android:name="android.hardware.camera"

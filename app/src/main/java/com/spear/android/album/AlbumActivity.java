@@ -124,17 +124,17 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
 
     private void closeMapFragment() {
         setTitle("Album");
-        fabOpenCamera.show();
-        cambiarFragment(0);
         menu.getItem(1).setIcon(R.mipmap.earth);
         menu.getItem(1).setTitle("map");
+        fabOpenCamera.show();
+        cambiarFragment(0);
     }
 
     private void openMapFragment() {
         setTitle("Map");
-        fabOpenCamera.hide();
         menu.getItem(1).setIcon(R.mipmap.ic_collections);
         menu.getItem(1).setTitle("album");
+        fabOpenCamera.hide();
         cambiarFragment(2);
     }
 

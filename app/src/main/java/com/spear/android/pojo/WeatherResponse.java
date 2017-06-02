@@ -2,13 +2,29 @@ package com.spear.android.pojo;
 
 
 public class WeatherResponse {
-    String description, name, icon;
+    String description, name, icon, date;
     double temperature, humidity, tempMax, tempMin;
     long pressure, sunrise, sunset;
     float speed, deg;
 
 
     public WeatherResponse() {
+    }
+
+    public WeatherResponse(String description, String name, String icon, String date, double temperature, double humidity, double tempMax, double tempMin, long pressure, long sunrise, long sunset, float speed, float deg) {
+        this.description = description;
+        this.name = name;
+        this.icon = icon;
+        this.date = date;
+        this.temperature = temperature;
+        this.humidity = humidity;
+        this.tempMax = tempMax;
+        this.tempMin = tempMin;
+        this.pressure = pressure;
+        this.sunrise = sunrise;
+        this.sunset = sunset;
+        this.speed = speed;
+        this.deg = deg;
     }
 
     public WeatherResponse(String city, String description, double temperature, long pressure, double humidity, double tempMax, double tempMin, float speed, float deg, long sunrise, long sunset, String name, String icon) {
@@ -26,6 +42,14 @@ public class WeatherResponse {
         this.icon = icon;
     }
 
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     public String getDescription() {
         return description;

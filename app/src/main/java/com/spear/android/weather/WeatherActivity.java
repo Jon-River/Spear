@@ -1,6 +1,8 @@
 package com.spear.android.weather;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
@@ -15,10 +17,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.spear.android.news.NewsActivity;
+import com.spear.android.OnClearFromRecentService;
 import com.spear.android.R;
 import com.spear.android.album.AlbumActivity;
+import com.spear.android.managers.SQLliteManager;
 import com.spear.android.map.MapFragment;
+import com.spear.android.news.NewsActivity;
 import com.spear.android.pojo.WeatherResponse;
 import com.spear.android.weather.search.SearchFragment;
 
@@ -42,59 +46,68 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
     private MapFragment mapFragment;
     private FragmentManager fm;
     private Menu menu;
+    private SQLliteManager dataManager;
+    private SQLiteDatabase db;
+    private WeatherResponse data;
 
 
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-        if (savedInstanceState!= null){
-            Log.v("instance","no null");
-            txtTemperature.setText(savedInstanceState.getString("temp"));
-            txtDate.setText(savedInstanceState.getString("date"));
-        }else{
-            Log.v("instance","null");
-
-        }
-        setContentView(R.layout.activity_weather2);
+        setContentView(R.layout.activity_weather);
 
 
         weatherPresenter = new WeatherPresenter(this);
 
         init();
 
-    }
+        data = checkIfDataExist();
 
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
 
-        // Save UI state changes to the savedInstanceState.
-        // This bundle will be passed to onCreate if the process is
-        // killed and restarted.
-        savedInstanceState.putString("temp", txtTemperature.getText().toString());
-        savedInstanceState.putString("date", txtDate.getText().toString());
-        super.onSaveInstanceState(savedInstanceState);
-
-        // etc.
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        // Restore UI state from the savedInstanceState.
-        // This bundle has also been passed to onCreate.
-       txtTemperature.setText(savedInstanceState.getString("temp"));
-       txtDate.setText(savedInstanceState.getString("date"));
+        if (data != null) {
+            setDataResponse(data, data.getDate());
+            cambiarFragment(0);
+        }else{
+            cambiarFragment(1);
+        }
 
 
     }
+
+
+
+    private WeatherResponse checkIfDataExist() {
+        WeatherResponse dataAux = null;
+        db = dataManager.getWritableDatabase();
+        if (db != null) {
+            String selectQuery = "SELECT  * FROM " + "weather_response";
+            Cursor cursor = db.rawQuery(selectQuery, null);
+
+            if (cursor.moveToFirst()) {
+                dataAux = new WeatherResponse();
+                do {
+                    Log.v("Cursor", "" + cursor.getString(0) + cursor.getString(1) + cursor.getString(2) + cursor.getString(3) + cursor.getString(4) + cursor.getString(5) + " sun: " + cursor.getString(6) + " sun: " + cursor.getString(7) + " deg: " + cursor.getString(8) + " icon: " + cursor.getString(9));
+                    dataAux.setDate(cursor.getString(0));
+                    dataAux.setDescription(cursor.getString(1));
+                    dataAux.setPressure(Long.parseLong(cursor.getString(2)));
+                    dataAux.setHumidity(Double.parseDouble(cursor.getString(3)));
+                    dataAux.setTemperature(Double.parseDouble(cursor.getString(4)));
+                    dataAux.setSpeed(Float.parseFloat(cursor.getString(5)));
+                    dataAux.setSunrise(Long.parseLong(cursor.getString(6)));
+                    dataAux.setSunset(Long.parseLong(cursor.getString(7)));
+                    dataAux.setDeg(Float.parseFloat(cursor.getString(8)));
+                    dataAux.setIcon(cursor.getString(9));
+                    dataAux.setName(cursor.getString(10));
+
+                } while (cursor.moveToNext());
+            }
+        }
+
+        return dataAux;
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -139,22 +152,33 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
 
     private void closeMapFragment() {
         setTitle("Weather");
-        cambiarFragment(1);
         menu.getItem(1).setIcon(R.mipmap.earth);
         menu.getItem(1).setTitle("map");
+        if (data != null) {
+            cambiarFragment(0);
+            fabOpenSearchView.show();
+        }else{
+            cambiarFragment(1);
+            fabOpenSearchView.hide();
+        }
+
+
+
     }
 
     private void openMapFragment() {
         setTitle("Map");
         menu.getItem(1).setIcon(R.mipmap.weathermenu);
         menu.getItem(1).setTitle("weather");
+        fabOpenSearchView.hide();
         cambiarFragment(2);
     }
 
     public void init() {
-
+        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
+        dataManager = new SQLliteManager(this, "spear", null, 1);
+        db = dataManager.getWritableDatabase();
         fm = getSupportFragmentManager();
-
         searchFragment = (SearchFragment) fm.findFragmentById(R.id.weatherSearchFrag);
         mapFragment = (MapFragment) fm.findFragmentById(R.id.mapFragment);
         txtCity = (TextView) findViewById(R.id.txtCity);
@@ -171,88 +195,79 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
         fabOpenSearchView = (FloatingActionButton) findViewById(R.id.fabSearchView);
         //fabOpenSearchView.setBackgroundTintList(getResources().getColorStateList(R.color.black));
         fabOpenSearchView.setOnClickListener(this);
-        cambiarFragment(1);
+
     }
 
     @Override
     public void setWeatherResult(WeatherResponse weatherResult) {
+
         cambiarFragment(0);
-        WeatherResponse data = weatherResult;
-        if (data != null) {
-            setDataResponse(data);
-            Log.v("data", ""
-                    + data.getDescription()
-                    + " "
-                    + data.getPressure()
-                    + " "
-                    + data.getTemperature()
-                    + " "
-                    + data.getHumidity()
-                    + " "
-                    + data.getSpeed()
-                    + " "
-                    + data.getDeg()
-                    + " "
-                    + data.getTempMax()
-                    + " "
-                    + data.getTempMin()
-                    + " "
-                    + data.getSunrise()
-                    + " "
-                    + data.getSunset()
-                    + " "
-                    + data.getName());
+        WeatherResponse result = weatherResult;
+        if (result != null) {
+            Date date = new Date();
+            SimpleDateFormat fmtOut = new SimpleDateFormat("dd-MM-yyyy");
+            String dateStr = fmtOut.format(date);
+            saveWeatherResultToDatabase(result, dateStr);
+            setDataResponse(result, dateStr);
         }
     }
 
-    private void setDataResponse(WeatherResponse data) {
-        convertDegToImage(data.getDeg());
-        convertIconToImage(data.getIcon());
-        Date date = new Date();
-        SimpleDateFormat fmtOut = new SimpleDateFormat("dd-MM-yyyy");
-        String dateStr = fmtOut.format(date);
-        if (date != null) {
+    private void saveWeatherResultToDatabase(WeatherResponse weatherResult, String dateStr) {
+        db = dataManager.getWritableDatabase();
+        if (db != null) {
+            db.execSQL("INSERT INTO weather_response (date, description,pressure,humidity,temperature ,windvel ,sunrise,sunset,deg,icon,city) " +
+                    "VALUES ('" + dateStr + "', '" + weatherResult.getDescription() + "' , '" + weatherResult.getPressure() + "','" + weatherResult.getHumidity() + "','" + weatherResult.getTemperature() + "','" + weatherResult.getSpeed() + "','" + weatherResult.getSunrise() + "','" + weatherResult.getSunset() + "','" + weatherResult.getDeg() + "','" + weatherResult.getIcon() + "','" + weatherResult.getName() + "')");
+
+
+
+        }
+    }
+
+    private void setDataResponse(WeatherResponse response, String dateStr) {
+        convertDegToImage(response.getDeg());
+        convertIconToImage(response.getIcon());
+        if (dateStr != null) {
             txtDate.setText(dateStr);
         } else {
             txtDate.setText("N/A");
         }
 
-        if (data.getDescription() != null) {
-            txtDescription.setText(data.getDescription());
+        if (response.getDescription() != null) {
+            txtDescription.setText(response.getDescription());
         } else {
             txtDescription.setText("N/A");
         }
 
-        if (data.getPressure() != 0) {
-            txtPressure.setText(String.valueOf(data.getPressure()) + "hPa");
+        if (response.getPressure() != 0) {
+            txtPressure.setText(String.valueOf(response.getPressure()) + "hPa");
         } else {
             txtPressure.setText("N/A");
         }
 
 
-        if (data.getHumidity() != 0) {
-            txtHumidity.setText(String.valueOf(data.getHumidity()) + "%");
+        if (response.getHumidity() != 0) {
+            txtHumidity.setText(String.valueOf(response.getHumidity()) + "%");
 
         } else {
             txtHumidity.setText("N/A");
         }
 
-        if (data.getTemperature() != 0) {
-            int temp = (int) data.getTemperature();
+        if (response.getTemperature() != 0) {
+            int temp = (int) response.getTemperature();
             txtTemperature.setText(String.valueOf(temp) + "ºC");
         } else {
             txtTemperature.setText("N/A");
         }
 
 
-        if (data.getSpeed() != 0) {
-            txtWindVel.setText(convertToKMH(data.getSpeed()));
+        if (response.getSpeed() != 0) {
+            txtWindVel.setText(convertToKMH(response.getSpeed()));
         } else {
             txtWindVel.setText("N/A");
         }
 
-        if (data.getSunrise() != 0) {
-            String sunrise = timeStampToDate(data.getSunrise());
+        if (response.getSunrise() != 0) {
+            String sunrise = timeStampToDate(response.getSunrise());
 
             sunrise = sunrise.substring(10);
             txtSunrise.setText(sunrise);
@@ -261,9 +276,9 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
             txtSunrise.setText("N/A");
         }
 
-        if (data.getSunset() != 0) {
+        if (response.getSunset() != 0) {
 
-            String sunset = timeStampToDate(data.getSunset());
+            String sunset = timeStampToDate(response.getSunset());
 
             sunset = sunset.substring(10);
             txtSunset.setText(sunset);
@@ -272,12 +287,12 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
             txtSunset.setText("N/A");
         }
 
-        if (data.getName() != null) {
-            txtCity.setText(data.getName());
+        if (response.getName() != null) {
+            txtCity.setText(response.getName());
         } else {
             txtCity.setText("N/A");
         }
-
+        data = checkIfDataExist();
     }
 
     private String convertToKMH(float speed) {
