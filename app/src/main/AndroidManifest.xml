@@ -3,7 +3,7 @@
     package="com.spear.android">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <service android:name="com.spear.android.OnClearFromRecentService" android:stopWithTask="true" />
+
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -19,6 +19,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/MyTheme">
+        <service android:name="com.spear.android.OnClearFromRecentService" android:stopWithTask="false" />
         <activity
             android:name=".login.LoginActivity"
             android:configChanges="orientation"

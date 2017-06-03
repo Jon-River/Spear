@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.spear.android.OnClearFromRecentService;
 import com.spear.android.R;
 import com.spear.android.album.AlbumActivity;
 import com.spear.android.managers.SQLliteManager;
@@ -175,7 +174,6 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
     }
 
     public void init() {
-        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
         dataManager = new SQLliteManager(this, "spear", null, 1);
         db = dataManager.getWritableDatabase();
         fm = getSupportFragmentManager();
@@ -418,6 +416,11 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
             transaction.show(searchFragment);
         } else if (ifrg == 2) {
             transaction.show(mapFragment);
+        }else if (ifrg == 0){
+            if (!fabOpenSearchView.isShown()){
+                fabOpenSearchView.show();
+            }
+
         }
         transaction.commit();
     }
@@ -431,6 +434,7 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
     public void onClick(View v) {
         if (v.getId() == R.id.fabSearchView) {
             cambiarFragment(1);
+            fabOpenSearchView.hide();
         }
 
     }

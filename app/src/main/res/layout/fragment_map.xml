@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:src="@mipmap/ic_add_round"
-        android:layout_marginBottom="40dp"
-        android:layout_marginRight="40dp"/>
+        android:layout_marginBottom="25dp"
+        android:layout_marginRight="25dp"/>
 
 </FrameLayout>

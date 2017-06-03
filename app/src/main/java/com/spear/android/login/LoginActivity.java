@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.spear.android.OnClearFromRecentService;
 import com.spear.android.R;
 import com.spear.android.news.NewsActivity;
 import com.spear.android.register.RegisterActivity;
@@ -45,6 +46,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     }
 
     private void init() {
+        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
         actionBar = getSupportActionBar();
         actionBar.hide();
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
