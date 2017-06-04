@@ -12,14 +12,34 @@
         android:clipToPadding="false"
         android:scrollbars="vertical" />
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"
+        android:id="@+id/btnOrderRating"
+        android:layout_marginLeft="20dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:layout_marginBottom="70dp"
+        android:src="@mipmap/ic_top_rated" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:id="@+id/btnOrderByDate"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"
+        android:layout_marginLeft="20dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:layout_marginBottom="20dp"
+        android:src="@mipmap/ic_swapper" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabOpenCamera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:src="@mipmap/camera_white"
         android:layout_marginBottom="20dp"
-        android:layout_marginRight="20dp"/>
+        android:layout_marginRight="20dp"
+        android:src="@mipmap/camera_white" />
 
 
     <fragment

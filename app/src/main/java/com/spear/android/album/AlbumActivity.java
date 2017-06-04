@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -31,22 +32,23 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.spear.android.news.NewsActivity;
 import com.spear.android.R;
 import com.spear.android.album.detail.DetailActivity;
 import com.spear.android.map.MapFragment;
+import com.spear.android.news.NewsActivity;
 import com.spear.android.pojo.CardImage;
 import com.spear.android.pojo.ImageInfo;
-import com.spear.android.pojo.UserInfo;
 import com.spear.android.weather.WeatherActivity;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.activeandroid.Cache.getContext;
 import static com.google.android.gms.internal.zzt.TAG;
 
-public class AlbumActivity extends AppCompatActivity implements View.OnClickListener, AlbumView{
+public class AlbumActivity extends AppCompatActivity implements View.OnClickListener, AlbumView {
 
 
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 111;
@@ -60,6 +62,7 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
     private ImageView mImageView;
     private EditText editTextComentary;
     private Button btnOpenCamera, btnOpenGallery, btnUploadImage;
+    private ImageButton btnOrderByRating, btnOrderByDate;
     private Dialog dialogButtons, dialogCameraView;
 
     private ProgressDialog dialog;
@@ -69,6 +72,7 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
     private Menu menu;
     private MapFragment mapFragment;
     private FragmentManager fm;
+    private ArrayList<ImageInfo> imageArray;
 
 
     @Override
@@ -95,7 +99,7 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.signOutItem:
-               // signOut();
+                // signOut();
                 return true;
             case R.id.profile:
                 //settings();
@@ -108,14 +112,14 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(intent);
                 return true;
             case R.id.mapmenu:
-                if (menu.getItem(1).getTitle().equals("map")){
+                if (menu.getItem(1).getTitle().equals("map")) {
                     openMapFragment();
-                }else{
+                } else {
                     closeMapFragment();
                 }
                 return true;
             case R.id.newsmenu:
-                startActivity(new Intent(this, NewsActivity.class) );
+                startActivity(new Intent(this, NewsActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -150,7 +154,46 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
         } else if (view.getId() == R.id.btnOpenGallery) {
             dialogButtons.dismiss();
             albumPresenter.openGallery();
+        } else if (view.getId() == R.id.btnOrderByDate) {
+            Log.v("order","rating");
+            if (imageArray != null) {
+                Log.v("order","rating imagearray" );
+                orderByDate(imageArray);
+            }
+        } else if (view.getId() == R.id.btnOrderRating) {
+            Log.v("order","rating");
+            if (imageArray != null) {
+                Log.v("order","rating imagearray" );
+                orderByRating(imageArray);
+            }
         }
+    }
+
+    private void orderByRating(ArrayList<ImageInfo> imageArray) {
+        Collections.sort(imageArray, new Comparator<ImageInfo>() {
+            @Override
+            public int compare(ImageInfo o1, ImageInfo o2) {
+
+                float rating1 = o1.getRating() / o1.getVoted();
+                float rating2 = o2.getRating() / o2.getVoted();
+                if (Float.isNaN(rating1)){
+                    rating1 = 0;
+                }else if (Float.isNaN(rating2)){
+                    rating2 = 0;
+                }
+                return Float.compare(rating2, rating1);
+            }
+        });
+        render(imageArray);
+    }
+    private void orderByDate(ArrayList<ImageInfo> imageArray) {
+        Collections.sort(imageArray, new Comparator<ImageInfo>() {
+            @Override
+            public int compare(ImageInfo o1, ImageInfo o2) {
+                return Long.compare(o1.getTimeStamp(), o2.getTimeStamp());
+            }
+        });
+        render(imageArray);
     }
 
     @Override
@@ -202,7 +245,7 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
         // storageReference = FirebaseStorage.getInstance().getReference().child("Images").child(FirebaseAuth.getInstance().getCurrentUser().toString());
 
         System.out.print("user " + firebaseAuth.getCurrentUser().getUid());
-        final ArrayList<ImageInfo> imageArray = new ArrayList<>();
+        imageArray = new ArrayList<>();
 
         databaseReference.getRoot().child("images").addValueEventListener(new ValueEventListener() {
             @Override
@@ -224,6 +267,7 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
+
     final OnImageClick onImageClick = new OnImageClick() {
         @Override
         public void onSuccess(CardImage card) {
@@ -240,8 +284,7 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
     };
 
     private void render(ArrayList<ImageInfo> imgInfo) {
-        final ArrayList<UserInfo> userArray = new ArrayList<>();
-
+        cardList.clear();
         CardImage card;
         for (ImageInfo imageInfo : imgInfo) {
             card = new CardImage(imageInfo.getName(), imageInfo.getRating(), imageInfo.getUrl(),
@@ -270,6 +313,10 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
         dialogButtons.setContentView(R.layout.open_camera_dialog);
         btnOpenCamera = (Button) dialogButtons.findViewById(R.id.btnOpenCamera);
         btnOpenGallery = (Button) dialogButtons.findViewById(R.id.btnOpenGallery);
+        btnOrderByDate = (ImageButton) findViewById(R.id.btnOrderByDate);
+        btnOrderByRating = (ImageButton) findViewById(R.id.btnOrderRating);
+        btnOrderByDate.setOnClickListener(this);
+        btnOrderByRating.setOnClickListener(this);
         btnOpenCamera.setOnClickListener(this);
         btnOpenGallery.setOnClickListener(this);
         dialogCameraView = new Dialog(this);
@@ -311,17 +358,24 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
         adapter.notifyDataSetChanged();
     }
 
-    public void cambiarFragment(int ifrg){
-        FragmentManager fm  = getSupportFragmentManager();
+    public void cambiarFragment(int ifrg) {
+        FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
         transaction.hide(mapFragment);
 
-        if(ifrg == 1){
+        if (ifrg == 1) {
 
-        }else if (ifrg == 2){
+        } else if (ifrg == 2) {
             transaction.show(mapFragment);
         }
         transaction.commit();
     }
 
+}
+class MyComparator implements Comparator<ImageInfo> {
+
+    @Override
+    public int compare(ImageInfo imageInfo, ImageInfo t1) {
+        return (int) imageInfo.getRating()-(int) t1.getRating();
+    }
 }
