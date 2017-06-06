@@ -1,6 +1,8 @@
 package com.spear.android.news;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.VideoView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.spear.android.R;
@@ -20,7 +23,7 @@ import com.spear.android.map.MapFragment;
 import com.spear.android.profile.ProfileFragment;
 import com.spear.android.weather.WeatherActivity;
 
-public class NewsActivity extends AppCompatActivity{
+public class NewsActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener,MediaPlayer.OnPreparedListener{
 
 
 
@@ -30,7 +33,7 @@ public class NewsActivity extends AppCompatActivity{
     private FragmentManager fm;
     private Menu menu;
 
-
+    private VideoView mVV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +42,7 @@ public class NewsActivity extends AppCompatActivity{
 
         init();
 
-
+        settingsVideo();
         if (firebaseAuth.getCurrentUser() ==null) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
@@ -49,7 +52,21 @@ public class NewsActivity extends AppCompatActivity{
 
 
     }
+    private void settingsVideo() {
+        int fileRes=0;
+        String resourceName = "meros_edit";
+        if (resourceName!=null) {
+            fileRes = this.getResources().getIdentifier(resourceName, "raw", getPackageName());
+        }
 
+        mVV = (VideoView) findViewById(R.id.vwNews);
+        mVV.setOnCompletionListener(this);
+        mVV.setOnPreparedListener(this);
+
+        if (!playFileRes(fileRes)) return;
+
+        mVV.start();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -184,6 +201,32 @@ public class NewsActivity extends AppCompatActivity{
             transaction.show(mapFragment);
         }
         transaction.commit();
+    }
+
+    private boolean playFileRes(int fileRes) {
+        if (fileRes==0) {
+            stopPlaying();
+            return false;
+        } else {
+            mVV.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + fileRes));
+            return true;
+        }
+    }
+
+    public void stopPlaying() {
+        mVV.stopPlayback();
+        this.finish();
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        finish();
+    }
+
+
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+        mp.setLooping(true);
     }
 
 

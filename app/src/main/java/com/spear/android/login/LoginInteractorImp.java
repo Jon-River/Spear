@@ -30,7 +30,6 @@ public class LoginInteractorImp implements LoginInteractor {
 
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
             onLoginCallback.emptyFields();
-
         } else {
             firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override

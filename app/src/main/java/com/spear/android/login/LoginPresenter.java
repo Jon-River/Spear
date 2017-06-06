@@ -15,6 +15,7 @@ public class LoginPresenter {
     }
 
     public void logIn(String email, String password) {
+        view.showLoading();
         loginInteractor.logIn(email, password);
     }
 

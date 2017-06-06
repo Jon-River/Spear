@@ -34,8 +34,30 @@
                 app:expandedTitleMarginEnd="64dp"
                 app:title="Noticias"
                 >
+                    <VideoView
+                        android:id="@+id/vwNews"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentBottom="true"
+                        android:fitsSystemWindows="true"
+                        app:layout_collapseMode="parallax"
+                        />
 
-                <ImageView
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Your Spearfishing community"
+                    android:textColor="@color/white"
+                    android:textSize="30dp"
+                    android:layout_alignParentBottom="true"
+                    android:gravity="center"/>
+
+
+              <!--  <ImageView
                     android:id="@+id/main.backdrop"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -43,7 +65,7 @@
                     android:fitsSystemWindows="true"
                     android:src="@drawable/weatherclear"
                     app:layout_collapseMode="parallax"
-                    />
+                    />-->
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/main.toolbar"

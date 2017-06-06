@@ -25,6 +25,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.VideoView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -48,8 +49,9 @@ import java.util.List;
 import static com.activeandroid.Cache.getContext;
 import static com.google.android.gms.internal.zzt.TAG;
 
-public class AlbumActivity extends AppCompatActivity implements View.OnClickListener, AlbumView {
+public class AlbumActivity extends AppCompatActivity implements View.OnClickListener, AlbumView{
 
+    private VideoView mVV;
 
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 111;
     private AlbumPresenter albumPresenter;
@@ -82,9 +84,15 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
 
         albumPresenter = new AlbumPresenter(this);
         init();
+
         //albumPresenter.loadImageInfo(); adapter not working
         loadImageInfo();
     }
+
+
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -3,13 +3,17 @@ package com.spear.android.login;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.spear.android.OnClearFromRecentService;
@@ -17,9 +21,8 @@ import com.spear.android.R;
 import com.spear.android.news.NewsActivity;
 import com.spear.android.register.RegisterActivity;
 
-import static com.activeandroid.Cache.getContext;
 
-public class LoginActivity extends AppCompatActivity implements LoginView {
+public class LoginActivity extends AppCompatActivity implements LoginView , MediaPlayer.OnCompletionListener,MediaPlayer.OnPreparedListener{
 
     private FirebaseAuth firebaseAuth;
     private LoginPresenter loginPresenter;
@@ -28,12 +31,17 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     private Button btnLogin, btnRegister;
     private ProgressDialog dialog;
     private ActionBar actionBar;
+    private TextView txtTittle;
+
+    private VideoView mVV;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         init();
+        settingsVideo();
         firebaseAuth = FirebaseAuth.getInstance();
         loginPresenter = new LoginPresenter(this);
 
@@ -43,6 +51,24 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
             startActivity(intent);
             finish();
         }
+        //playVideo("login_spear_video1");
+
+    }
+
+    private void settingsVideo() {
+        int fileRes=0;
+       String resourceName = "login_spear_no_audio";
+        if (resourceName!=null) {
+            fileRes = this.getResources().getIdentifier(resourceName, "raw", getPackageName());
+        }
+
+        mVV = (VideoView) findViewById(R.id.vwLogin);
+        mVV.setOnCompletionListener(this);
+        mVV.setOnPreparedListener(this);
+
+        if (!playFileRes(fileRes)) return;
+
+        mVV.start();
     }
 
     private void init() {
@@ -55,13 +81,15 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         editTextPassword.setText("usertest1");
         btnRegister = (Button) findViewById(R.id.btnRegister);
         btnLogin = (Button) findViewById(R.id.btnLogin);
+        txtTittle = (TextView) findViewById(R.id.txtTittle);
 
-        Typeface type = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
+        Typeface typeLibel = Typeface.createFromAsset(getAssets(), "Libel_Suit.ttf");
 
-        editTextPassword.setTypeface(type);
-        editTextUser.setTypeface(type);
-        btnLogin.setTypeface(type);
-        btnRegister.setTypeface(type);
+        editTextPassword.setTypeface(typeLibel);
+        editTextUser.setTypeface(typeLibel);
+        btnLogin.setTypeface(typeLibel);
+        btnRegister.setTypeface(typeLibel);
+        txtTittle.setTypeface(typeLibel);
 
         dialog = new ProgressDialog(this);
 
@@ -69,7 +97,6 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showLoading();
                 loginPresenter.logIn(editTextUser.getText().toString(), editTextPassword.getText().toString());
             }
         });
@@ -77,12 +104,14 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
             }
         });
 
 
     }
+
 
 
     @Override
@@ -102,11 +131,39 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
     @Override
     public void showErrorEmptyFields() {
-        Toast.makeText(getContext(), "Debe completar todos los campos", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Debe completar todos los campos", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void showAuthError() {
-        Toast.makeText(getContext(), "Error de autenticación", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Error de autenticación", Toast.LENGTH_SHORT).show();
+    }
+
+
+
+    private boolean playFileRes(int fileRes) {
+        if (fileRes==0) {
+            stopPlaying();
+            return false;
+        } else {
+            mVV.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + fileRes));
+            return true;
+        }
+    }
+
+    public void stopPlaying() {
+        mVV.stopPlayback();
+        this.finish();
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        finish();
+    }
+
+
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+        mp.setLooping(true);
     }
 }

@@ -3,13 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/spear_cartoon_background">
+    android:layout_height="match_parent">
 
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <VideoView
+            android:id="@+id/vwLogin"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            />
+
         <ImageView
             android:id="@+id/imageshadow"
             android:layout_width="match_parent"
@@ -17,6 +27,8 @@
             android:scaleType="fitXY"
             android:src="@drawable/bg_shadow5_png" />
     </RelativeLayout>
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -28,8 +40,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2">
+            android:layout_weight="2"
+            android:gravity="center|bottom">
 
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SPEAR"
+                android:textColor="@color/white"
+                android:id="@+id/txtTittle"
+                android:textSize="80dp"
+                android:gravity="center"/>
             <!--    <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -91,7 +113,7 @@
                 android:text="Enter"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="17dp" />
+                android:textSize="20dp" />
 
             <Button
                 android:id="@+id/btnRegister"
@@ -101,7 +123,7 @@
                 android:text="Don't have an account"
                 android:textAllCaps="false"
                 android:textColor="@color/whitesmoke"
-                android:textSize="17dp" />
+                android:textSize="20dp" />
 
 
         </LinearLayout>
