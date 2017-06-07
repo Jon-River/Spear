@@ -163,6 +163,18 @@ public class LoginActivity extends AppCompatActivity implements LoginView , Medi
 
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        mVV.stopPlayback();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mVV.start();
+    }
+
+    @Override
     public void onPrepared(MediaPlayer mp) {
         mp.setLooping(true);
     }

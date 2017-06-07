@@ -3,11 +3,15 @@ package com.spear.android.weather;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +23,7 @@ import android.widget.Toast;
 
 import com.spear.android.R;
 import com.spear.android.album.AlbumActivity;
+import com.spear.android.custom.CustomTypeFace;
 import com.spear.android.managers.SQLliteManager;
 import com.spear.android.map.MapFragment;
 import com.spear.android.news.NewsActivity;
@@ -48,6 +53,7 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
     private SQLliteManager dataManager;
     private SQLiteDatabase db;
     private WeatherResponse data;
+    private ActionBar actionBar;
 
 
 
@@ -174,6 +180,7 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
     }
 
     public void init() {
+        Typeface typeLibel = Typeface.createFromAsset(getAssets(), "Libel_Suit.ttf");
         dataManager = new SQLliteManager(this, "spear", null, 1);
         db = dataManager.getWritableDatabase();
         fm = getSupportFragmentManager();
@@ -191,8 +198,20 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
         imgCardinal = (ImageView) findViewById(R.id.imgCardinal);
         imgWeather = (ImageView) findViewById(R.id.imgWeather);
         fabOpenSearchView = (FloatingActionButton) findViewById(R.id.fabSearchView);
-        //fabOpenSearchView.setBackgroundTintList(getResources().getColorStateList(R.color.black));
+       txtCity.setTypeface(typeLibel);
+        txtDate.setTypeface(typeLibel);
+        txtDescription.setTypeface(typeLibel);
+        txtHumidity.setTypeface(typeLibel);
+        txtPressure.setTypeface(typeLibel);
+        txtTemperature.setTypeface(typeLibel);
+        txtSunrise.setTypeface(typeLibel);
+        txtSunset.setTypeface(typeLibel);
+        txtWindVel.setTypeface(typeLibel);
         fabOpenSearchView.setOnClickListener(this);
+        actionBar = getSupportActionBar();
+        SpannableStringBuilder typeFaceAction = new SpannableStringBuilder("Weather");
+        typeFaceAction.setSpan (new CustomTypeFace("", typeLibel), 0, typeFaceAction.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+        actionBar.setTitle(typeFaceAction);
 
     }
 

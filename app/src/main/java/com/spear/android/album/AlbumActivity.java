@@ -6,14 +6,18 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
@@ -35,6 +39,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.spear.android.R;
 import com.spear.android.album.detail.DetailActivity;
+import com.spear.android.custom.CustomTypeFace;
 import com.spear.android.map.MapFragment;
 import com.spear.android.news.NewsActivity;
 import com.spear.android.pojo.CardImage;
@@ -75,6 +80,7 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
     private MapFragment mapFragment;
     private FragmentManager fm;
     private ArrayList<ImageInfo> imageArray;
+    private ActionBar actionBar;
 
 
     @Override
@@ -305,6 +311,7 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
 
     private void init() {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        actionBar = getSupportActionBar();
 
         cardList = new ArrayList<>();
         adapter = new AlbumAdapter(this, getContext(), cardList, onImageClick);
@@ -330,6 +337,12 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
         dialogCameraView = new Dialog(this);
         dialogCameraView.setContentView(R.layout.result_camera_dialog);
         mImageView = (ImageView) dialogCameraView.findViewById(R.id.imageResultDialog);
+
+        Typeface typeLibel = Typeface.createFromAsset(getAssets(), "Libel_Suit.ttf");
+        SpannableStringBuilder typeFaceAction = new SpannableStringBuilder("Gallery");
+        typeFaceAction.setSpan (new CustomTypeFace("", typeLibel), 0, typeFaceAction.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+        actionBar.setTitle(typeFaceAction);
+
         Display display = getWindowManager().getDefaultDisplay();
         int width = ((display.getWidth() * 8) / 10);
         int height = ((display.getHeight() * 10) / 10);

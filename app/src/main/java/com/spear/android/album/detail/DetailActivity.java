@@ -2,7 +2,10 @@ package com.spear.android.album.detail;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -12,7 +15,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.spear.android.R;
-
+import com.spear.android.custom.CustomTypeFace;
 import com.spear.android.pojo.CardImage;
 
 public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
@@ -24,7 +27,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     public int votes;
     public float rating;
     public long timeStamp;
-    DetailPresenter detailPresenter;
+    private DetailPresenter detailPresenter;
+    private ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +43,13 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         image = (ImageView) findViewById(R.id.image);
         ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         btnSubmitRating = (Button) findViewById(R.id.btnSubmitRating);
+        actionBar = getSupportActionBar();
 
-        Typeface type = Typeface.createFromAsset(getAssets(),"OpenSans-Regular.ttf");
+        Typeface type = Typeface.createFromAsset(getAssets(),"Libel_Suit.ttf");
+
+        SpannableStringBuilder typeFaceAction = new SpannableStringBuilder("Detail");
+        typeFaceAction.setSpan (new CustomTypeFace("", type), 0, typeFaceAction.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+        actionBar.setTitle(typeFaceAction);
         name.setTypeface(type);
         province.setTypeface(type);
         btnSubmitRating.setTypeface(type);

@@ -1,23 +1,27 @@
 package com.spear.android.news;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.spear.android.R;
 import com.spear.android.album.AlbumActivity;
+import com.spear.android.custom.CustomTypeFace;
 import com.spear.android.login.LoginActivity;
 import com.spear.android.map.MapFragment;
 import com.spear.android.profile.ProfileFragment;
@@ -32,8 +36,10 @@ public class NewsActivity extends AppCompatActivity implements MediaPlayer.OnCom
     private MapFragment mapFragment;
     private FragmentManager fm;
     private Menu menu;
-
+    private TextView txtTittle;
     private VideoView mVV;
+    private CollapsingToolbarLayout collapsingToolbar;
+    private ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,9 +128,18 @@ public class NewsActivity extends AppCompatActivity implements MediaPlayer.OnCom
     }
 
     private void init() {
+        actionBar = getSupportActionBar();
+        Typeface typeLibel = Typeface.createFromAsset(getAssets(), "Libel_Suit.ttf");
 
+        SpannableStringBuilder typeFaceAction = new SpannableStringBuilder("Spear");
+        typeFaceAction.setSpan (new CustomTypeFace("", typeLibel), 0, typeFaceAction.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+        actionBar.setTitle(typeFaceAction);
 
-
+        collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbar);
+        txtTittle  = (TextView) findViewById(R.id.txtTittleCollapsing);
+        txtTittle.setTypeface(typeLibel);
+        collapsingToolbar.setCollapsedTitleTypeface(typeLibel);
+        collapsingToolbar.setExpandedTitleTypeface(typeLibel);
         fm = getSupportFragmentManager();
         profileFragment = (ProfileFragment) fm.findFragmentById(R.id.profileFragment);
         mapFragment = (MapFragment) fm.findFragmentById(R.id.mapFragment);
@@ -133,44 +148,26 @@ public class NewsActivity extends AppCompatActivity implements MediaPlayer.OnCom
         cambiarFragment(0);
     }
 
-    public void FullScreencall() {
-        if(Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
-            View v = this.getWindow().getDecorView();
-            v.setSystemUiVisibility(View.GONE);
-        } else if(Build.VERSION.SDK_INT >= 19) {
-            //for new api versions.
-            View decorView = getWindow().getDecorView();
-            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-            decorView.setSystemUiVisibility(uiOptions);
-        }
-    }
-
-    private void settingsNavigationStatusBar() {
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 
-        View decorView = getWindow().getDecorView();
-        // Hide both the navigation bar and the status bar.
-        // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
-        // a general rule, you should design your app to hide the status bar whenever you
-        // hide the navigation bar.
-        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        decorView.setSystemUiVisibility(uiOptions);
-
-    }
-
-    /*private void setupTabIcons() {
-        tabLayout.getTabAt(0).setIcon(tabIcons[0]);
-        tabLayout.getTabAt(1).setIcon(tabIcons[1]);
-        tabLayout.getTabAt(2).setIcon(tabIcons[2]);
-
-    }*/
     private void backSignOut() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         firebaseAuth.signOut();
     }
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mVV.stopPlayback();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mVV.start();
+    }
 
 
 
@@ -231,3 +228,4 @@ public class NewsActivity extends AppCompatActivity implements MediaPlayer.OnCom
 
 
 }
+

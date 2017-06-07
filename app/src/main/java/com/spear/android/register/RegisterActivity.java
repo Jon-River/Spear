@@ -3,14 +3,17 @@ package com.spear.android.register;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.spear.android.R;
-
+import com.spear.android.custom.CustomTypeFace;
 import com.spear.android.login.LoginActivity;
 
 import static com.activeandroid.Cache.getContext;
@@ -24,6 +27,8 @@ public class RegisterActivity extends AppCompatActivity implements RegisterView 
     private Spinner spinnerProvinces;
     private Button buttonRegister;
     private RegisterPresenter registerPresenter;
+    private ActionBar actionBar;
+    private Typeface typeLibel;
 
 
     @Override
@@ -38,6 +43,14 @@ public class RegisterActivity extends AppCompatActivity implements RegisterView 
     }
 
     private void init() {
+        actionBar = getSupportActionBar();
+        typeLibel = Typeface.createFromAsset(getAssets(), "Libel_Suit.ttf");
+
+        SpannableStringBuilder typeFaceAction = new SpannableStringBuilder("Spear");
+        typeFaceAction.setSpan (new CustomTypeFace("", typeLibel), 0, typeFaceAction.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+        actionBar.setTitle(typeFaceAction);
+
+
         editTextUserRegister = (EditText) findViewById(R.id.editTextUserRegister);
         editTextPasswordRegister = (EditText) findViewById(R.id.editTextPasswordRegister);
         editTextEmailRegister = (EditText) findViewById(R.id.editTextEmailRegister);
@@ -47,12 +60,10 @@ public class RegisterActivity extends AppCompatActivity implements RegisterView 
         editTextUserRegister.setText("usertest1");
         editTextEmailRegister.setText("usertest1@spear.com");
 
-        Typeface type = Typeface.createFromAsset(getAssets(),"OpenSans-Regular.ttf");
-
-        editTextPasswordRegister.setTypeface(type);
-        editTextUserRegister.setTypeface(type);
-        editTextEmailRegister.setTypeface(type);
-        buttonRegister.setTypeface(type);
+        editTextPasswordRegister.setTypeface(typeLibel);
+        editTextUserRegister.setTypeface(typeLibel);
+        editTextEmailRegister.setTypeface(typeLibel);
+        buttonRegister.setTypeface(typeLibel);
 
 
     }
