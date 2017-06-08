@@ -36,6 +36,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView , Medi
     private VideoView mVV;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

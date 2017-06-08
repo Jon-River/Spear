@@ -111,12 +111,5 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" />
 
-    <fragment
-        android:id="@+id/mapFragment"
-        android:name="com.spear.android.map.MapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
 
 </RelativeLayout>

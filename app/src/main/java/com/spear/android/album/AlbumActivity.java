@@ -40,10 +40,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.spear.android.R;
 import com.spear.android.album.detail.DetailActivity;
 import com.spear.android.custom.CustomTypeFace;
-import com.spear.android.map.MapFragment;
+import com.spear.android.login.LoginActivity;
+import com.spear.android.map.MapActivity;
 import com.spear.android.news.NewsActivity;
 import com.spear.android.pojo.CardImage;
 import com.spear.android.pojo.ImageInfo;
+import com.spear.android.profile.ProfileFragment;
 import com.spear.android.weather.WeatherActivity;
 
 import java.util.ArrayList;
@@ -54,7 +56,7 @@ import java.util.List;
 import static com.activeandroid.Cache.getContext;
 import static com.google.android.gms.internal.zzt.TAG;
 
-public class AlbumActivity extends AppCompatActivity implements View.OnClickListener, AlbumView{
+public class AlbumActivity extends AppCompatActivity implements View.OnClickListener, AlbumView {
 
     private VideoView mVV;
 
@@ -76,11 +78,14 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
 
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
+
     private Menu menu;
-    private MapFragment mapFragment;
     private FragmentManager fm;
     private ArrayList<ImageInfo> imageArray;
     private ActionBar actionBar;
+    private ProfileFragment profileFragment;
+    final int hideFragment = 0;
+    final int profile = 2;
 
 
     @Override
@@ -96,10 +101,6 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-
-
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;
@@ -113,24 +114,20 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.signOutItem:
-                // signOut();
+                signOut();
                 return true;
             case R.id.profile:
-                //settings();
+                openProfile();
                 return true;
             case android.R.id.home:
-                //backSignOut();
+
                 return true;
             case R.id.weathermenu:
                 Intent intent = new Intent(this, WeatherActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.mapmenu:
-                if (menu.getItem(1).getTitle().equals("map")) {
-                    openMapFragment();
-                } else {
-                    closeMapFragment();
-                }
+                startActivity(new Intent(this, MapActivity.class));
                 return true;
             case R.id.newsmenu:
                 startActivity(new Intent(this, NewsActivity.class));
@@ -138,22 +135,6 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void closeMapFragment() {
-        setTitle("Album");
-        menu.getItem(1).setIcon(R.mipmap.earth);
-        menu.getItem(1).setTitle("map");
-        fabOpenCamera.show();
-        cambiarFragment(0);
-    }
-
-    private void openMapFragment() {
-        setTitle("Map");
-        menu.getItem(1).setIcon(R.mipmap.ic_collections);
-        menu.getItem(1).setTitle("album");
-        fabOpenCamera.hide();
-        cambiarFragment(2);
     }
 
     @Override
@@ -169,15 +150,15 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
             dialogButtons.dismiss();
             albumPresenter.openGallery();
         } else if (view.getId() == R.id.btnOrderByDate) {
-            Log.v("order","rating");
+            Log.v("order", "rating");
             if (imageArray != null) {
-                Log.v("order","rating imagearray" );
+                Log.v("order", "rating imagearray");
                 orderByDate(imageArray);
             }
         } else if (view.getId() == R.id.btnOrderRating) {
-            Log.v("order","rating");
+            Log.v("order", "rating");
             if (imageArray != null) {
-                Log.v("order","rating imagearray" );
+                Log.v("order", "rating imagearray");
                 orderByRating(imageArray);
             }
         }
@@ -190,9 +171,9 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
 
                 float rating1 = o1.getRating() / o1.getVoted();
                 float rating2 = o2.getRating() / o2.getVoted();
-                if (Float.isNaN(rating1)){
+                if (Float.isNaN(rating1)) {
                     rating1 = 0;
-                }else if (Float.isNaN(rating2)){
+                } else if (Float.isNaN(rating2)) {
                     rating2 = 0;
                 }
                 return Float.compare(rating2, rating1);
@@ -200,6 +181,7 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
         });
         render(imageArray);
     }
+
     private void orderByDate(ArrayList<ImageInfo> imageArray) {
         Collections.sort(imageArray, new Comparator<ImageInfo>() {
             @Override
@@ -340,7 +322,7 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
 
         Typeface typeLibel = Typeface.createFromAsset(getAssets(), "Libel_Suit.ttf");
         SpannableStringBuilder typeFaceAction = new SpannableStringBuilder("Gallery");
-        typeFaceAction.setSpan (new CustomTypeFace("", typeLibel), 0, typeFaceAction.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+        typeFaceAction.setSpan(new CustomTypeFace("", typeLibel), 0, typeFaceAction.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
         actionBar.setTitle(typeFaceAction);
 
         Display display = getWindowManager().getDefaultDisplay();
@@ -355,13 +337,11 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
         dialog = new ProgressDialog(this);
         dialog.setMessage("Uploading image");
         fm = getSupportFragmentManager();
-        mapFragment = (MapFragment) fm.findFragmentById(R.id.mapFragment);
-        cambiarFragment(0);
 
-    }
+        profileFragment = (ProfileFragment) fm.findFragmentById(R.id.profileFragment);
 
-    public void pushRatingFirebase(final long timeStamp, final float rating) {
-        albumPresenter.pushRatingFirebase(timeStamp, rating);
+        cambiarFragment(hideFragment);
+
     }
 
     @Override
@@ -379,24 +359,28 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
         adapter.notifyDataSetChanged();
     }
 
+    private void initLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    private void signOut() {
+        firebaseAuth.signOut();
+        initLogin();
+    }
+
+    private void openProfile() {
+        cambiarFragment(profile);
+    }
+
     public void cambiarFragment(int ifrg) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
-        transaction.hide(mapFragment);
-
-        if (ifrg == 1) {
-
-        } else if (ifrg == 2) {
-            transaction.show(mapFragment);
+        transaction.hide(profileFragment);
+        if (ifrg == profile) {
+            transaction.show(profileFragment);
         }
         transaction.commit();
     }
 
-}
-class MyComparator implements Comparator<ImageInfo> {
-
-    @Override
-    public int compare(ImageInfo imageInfo, ImageInfo t1) {
-        return (int) imageInfo.getRating()-(int) t1.getRating();
-    }
 }

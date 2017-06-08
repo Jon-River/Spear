@@ -21,13 +21,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.spear.android.R;
 import com.spear.android.album.AlbumActivity;
 import com.spear.android.custom.CustomTypeFace;
+import com.spear.android.login.LoginActivity;
 import com.spear.android.managers.SQLliteManager;
-import com.spear.android.map.MapFragment;
+import com.spear.android.map.MapActivity;
 import com.spear.android.news.NewsActivity;
 import com.spear.android.pojo.WeatherResponse;
+import com.spear.android.profile.ProfileFragment;
 import com.spear.android.weather.search.SearchFragment;
 
 import java.text.SimpleDateFormat;
@@ -43,18 +46,19 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
     private TextView txtHumidity, txtPressure, txtTemperature, txtDate,
             txtDescription, txtWindVel, txtSunrise, txtSunset, txtCity;
     private FloatingActionButton fabOpenSearchView;
-
     private WeatherPresenter weatherPresenter;
-
     private SearchFragment searchFragment;
-    private MapFragment mapFragment;
+    private ProfileFragment profileFragment;
     private FragmentManager fm;
     private Menu menu;
     private SQLliteManager dataManager;
     private SQLiteDatabase db;
     private WeatherResponse data;
     private ActionBar actionBar;
-
+    private FirebaseAuth firebaseAuth;
+    final int hideFragment = 0;
+    final int search = 1;
+    final int profile = 2;
 
 
     @Override
@@ -73,14 +77,13 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
 
         if (data != null) {
             setDataResponse(data, data.getDate());
-            cambiarFragment(0);
-        }else{
+            cambiarFragment(hideFragment);
+        } else {
             cambiarFragment(1);
         }
 
 
     }
-
 
 
     private WeatherResponse checkIfDataExist() {
@@ -127,10 +130,10 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.signOutItem:
-
+                signOut();
                 return true;
             case R.id.profile:
-
+                openProfile();
                 return true;
             case android.R.id.home:
 
@@ -140,11 +143,8 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
                         .class));
                 return true;
             case R.id.mapmenu:
-                if (menu.getItem(1).getTitle().equals("map")) {
-                    openMapFragment();
-                } else {
-                    closeMapFragment();
-                }
+                startActivity(new Intent(this, MapActivity
+                        .class));
                 return true;
             case R.id.gallerymenu:
                 startActivity(new Intent(this, AlbumActivity
@@ -155,29 +155,6 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
         }
     }
 
-    private void closeMapFragment() {
-        setTitle("Weather");
-        menu.getItem(1).setIcon(R.mipmap.earth);
-        menu.getItem(1).setTitle("map");
-        if (data != null) {
-            cambiarFragment(0);
-            fabOpenSearchView.show();
-        }else{
-            cambiarFragment(1);
-            fabOpenSearchView.hide();
-        }
-
-
-
-    }
-
-    private void openMapFragment() {
-        setTitle("Map");
-        menu.getItem(1).setIcon(R.mipmap.weathermenu);
-        menu.getItem(1).setTitle("weather");
-        fabOpenSearchView.hide();
-        cambiarFragment(2);
-    }
 
     public void init() {
         Typeface typeLibel = Typeface.createFromAsset(getAssets(), "Libel_Suit.ttf");
@@ -185,7 +162,7 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
         db = dataManager.getWritableDatabase();
         fm = getSupportFragmentManager();
         searchFragment = (SearchFragment) fm.findFragmentById(R.id.weatherSearchFrag);
-        mapFragment = (MapFragment) fm.findFragmentById(R.id.mapFragment);
+        profileFragment = (ProfileFragment) fm.findFragmentById(R.id.profileFragment);
         txtCity = (TextView) findViewById(R.id.txtCity);
         txtDate = (TextView) findViewById(R.id.txtDate);
         txtDescription = (TextView) findViewById(R.id.txtDescription);
@@ -198,7 +175,7 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
         imgCardinal = (ImageView) findViewById(R.id.imgCardinal);
         imgWeather = (ImageView) findViewById(R.id.imgWeather);
         fabOpenSearchView = (FloatingActionButton) findViewById(R.id.fabSearchView);
-       txtCity.setTypeface(typeLibel);
+        txtCity.setTypeface(typeLibel);
         txtDate.setTypeface(typeLibel);
         txtDescription.setTypeface(typeLibel);
         txtHumidity.setTypeface(typeLibel);
@@ -210,15 +187,16 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
         fabOpenSearchView.setOnClickListener(this);
         actionBar = getSupportActionBar();
         SpannableStringBuilder typeFaceAction = new SpannableStringBuilder("Weather");
-        typeFaceAction.setSpan (new CustomTypeFace("", typeLibel), 0, typeFaceAction.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+        typeFaceAction.setSpan(new CustomTypeFace("", typeLibel), 0, typeFaceAction.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
         actionBar.setTitle(typeFaceAction);
+        firebaseAuth = FirebaseAuth.getInstance();
 
     }
 
     @Override
     public void setWeatherResult(WeatherResponse weatherResult) {
 
-        cambiarFragment(0);
+        cambiarFragment(hideFragment);
         WeatherResponse result = weatherResult;
         if (result != null) {
             Date date = new Date();
@@ -234,7 +212,6 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
         if (db != null) {
             db.execSQL("INSERT INTO weather_response (date, description,pressure,humidity,temperature ,windvel ,sunrise,sunset,deg,icon,city) " +
                     "VALUES ('" + dateStr + "', '" + weatherResult.getDescription() + "' , '" + weatherResult.getPressure() + "','" + weatherResult.getHumidity() + "','" + weatherResult.getTemperature() + "','" + weatherResult.getSpeed() + "','" + weatherResult.getSunrise() + "','" + weatherResult.getSunset() + "','" + weatherResult.getDeg() + "','" + weatherResult.getIcon() + "','" + weatherResult.getName() + "')");
-
 
 
         }
@@ -420,6 +397,20 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
         }
     }
 
+    private void initLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    private void signOut() {
+        firebaseAuth.signOut();
+        initLogin();
+    }
+
+    private void openProfile() {
+        cambiarFragment(profile);
+
+    }
 
     @Override
     public void showError(String error) {
@@ -429,14 +420,14 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
     public void cambiarFragment(int ifrg) {
         FragmentTransaction transaction = fm.beginTransaction();
         transaction.hide(searchFragment);
-        transaction.hide(mapFragment);
+        transaction.hide(profileFragment);
 
-        if (ifrg == 1) {
+        if (ifrg == search) {
             transaction.show(searchFragment);
-        } else if (ifrg == 2) {
-            transaction.show(mapFragment);
-        }else if (ifrg == 0){
-            if (!fabOpenSearchView.isShown()){
+        } else if (ifrg == profile) {
+            transaction.show(profileFragment);
+        } else if (ifrg == hideFragment) {
+            if (!fabOpenSearchView.isShown()) {
                 fabOpenSearchView.show();
             }
 

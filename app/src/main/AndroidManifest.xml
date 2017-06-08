@@ -81,6 +81,10 @@
             android:configChanges="orientation"
             android:label="Album"
             android:screenOrientation="portrait" />
+        <activity android:name=".map.MapActivity"
+            android:configChanges="orientation"
+            android:label="Map"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

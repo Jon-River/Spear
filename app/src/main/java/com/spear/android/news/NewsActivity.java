@@ -23,45 +23,44 @@ import com.spear.android.R;
 import com.spear.android.album.AlbumActivity;
 import com.spear.android.custom.CustomTypeFace;
 import com.spear.android.login.LoginActivity;
-import com.spear.android.map.MapFragment;
+import com.spear.android.map.MapActivity;
 import com.spear.android.profile.ProfileFragment;
 import com.spear.android.weather.WeatherActivity;
 
-public class NewsActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener,MediaPlayer.OnPreparedListener{
-
+public class NewsActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener {
 
 
     private FirebaseAuth firebaseAuth;
-    private ProfileFragment profileFragment;
-    private MapFragment mapFragment;
+
     private FragmentManager fm;
     private Menu menu;
     private TextView txtTittle;
     private VideoView mVV;
     private CollapsingToolbarLayout collapsingToolbar;
     private ActionBar actionBar;
+    private ProfileFragment profileFragment;
+    final int hideFragment = 0;
+    final int profile = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
-
         init();
-
         settingsVideo();
-        if (firebaseAuth.getCurrentUser() ==null) {
+        if (firebaseAuth.getCurrentUser() == null) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
 
         }
 
 
-
     }
+
     private void settingsVideo() {
-        int fileRes=0;
+        int fileRes = 0;
         String resourceName = "meros_edit";
-        if (resourceName!=null) {
+        if (resourceName != null) {
             fileRes = this.getResources().getIdentifier(resourceName, "raw", getPackageName());
         }
 
@@ -78,7 +77,7 @@ public class NewsActivity extends AppCompatActivity implements MediaPlayer.OnCom
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu, menu);
+        menuInflater.inflate(R.menu.menu_news, menu);
         return true;
     }
 
@@ -90,64 +89,45 @@ public class NewsActivity extends AppCompatActivity implements MediaPlayer.OnCom
                 signOut();
                 return true;
             case R.id.profile:
-                settings();
+                openProfile();
                 return true;
             case android.R.id.home:
                 backSignOut();
                 return true;
             case R.id.weathermenu:
-                startActivity(new Intent(this, WeatherActivity.class) );
+                startActivity(new Intent(this, WeatherActivity.class));
                 return true;
             case R.id.mapmenu:
-                if (menu.getItem(1).getTitle().equals("map")){
-                    openMapFragment();
-                }else{
-                    closeMapFragment();
-                }
+                startActivity(new Intent(this, MapActivity.class));
                 return true;
             case R.id.gallerymenu:
-                startActivity(new Intent(this, AlbumActivity.class) );
+                startActivity(new Intent(this, AlbumActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void closeMapFragment(){
-        setTitle("Spear");
-        cambiarFragment(0);
-        menu.getItem(1).setIcon(R.mipmap.earth);
-        menu.getItem(1).setTitle("map");
-    }
-
-    private void openMapFragment() {
-        setTitle("Map");
-        menu.getItem(1).setIcon(R.mipmap.news_list);
-        menu.getItem(1).setTitle("newslist");
-        cambiarFragment(2);
-    }
 
     private void init() {
         actionBar = getSupportActionBar();
         Typeface typeLibel = Typeface.createFromAsset(getAssets(), "Libel_Suit.ttf");
 
         SpannableStringBuilder typeFaceAction = new SpannableStringBuilder("Spear");
-        typeFaceAction.setSpan (new CustomTypeFace("", typeLibel), 0, typeFaceAction.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+        typeFaceAction.setSpan(new CustomTypeFace("", typeLibel), 0, typeFaceAction.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
         actionBar.setTitle(typeFaceAction);
 
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbar);
-        txtTittle  = (TextView) findViewById(R.id.txtTittleCollapsing);
+        txtTittle = (TextView) findViewById(R.id.txtTittleCollapsing);
         txtTittle.setTypeface(typeLibel);
         collapsingToolbar.setCollapsedTitleTypeface(typeLibel);
         collapsingToolbar.setExpandedTitleTypeface(typeLibel);
         fm = getSupportFragmentManager();
+
         profileFragment = (ProfileFragment) fm.findFragmentById(R.id.profileFragment);
-        mapFragment = (MapFragment) fm.findFragmentById(R.id.mapFragment);
-
         firebaseAuth = FirebaseAuth.getInstance();
-        cambiarFragment(0);
+        cambiarFragment(hideFragment);
     }
-
 
 
     private void backSignOut() {
@@ -170,38 +150,34 @@ public class NewsActivity extends AppCompatActivity implements MediaPlayer.OnCom
     }
 
 
-
     private void initLogin() {
-        Intent  intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 
-    private void signOut(){
+    private void signOut() {
         firebaseAuth.signOut();
         initLogin();
     }
 
-    private void settings() {
-        cambiarFragment(1);
+    private void openProfile() {
+        cambiarFragment(profile);
 
     }
-    public void cambiarFragment(int ifrg){
-        FragmentManager fm  = getSupportFragmentManager();
+
+    public void cambiarFragment(int ifrg) {
+        FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
         transaction.hide(profileFragment);
 
-        transaction.hide(mapFragment);
-
-        if(ifrg == 1){
+        if (ifrg == profile) {
             transaction.show(profileFragment);
-        }else if (ifrg == 2){
-            transaction.show(mapFragment);
         }
         transaction.commit();
     }
 
     private boolean playFileRes(int fileRes) {
-        if (fileRes==0) {
+        if (fileRes == 0) {
             stopPlaying();
             return false;
         } else {
