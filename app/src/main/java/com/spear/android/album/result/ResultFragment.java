@@ -60,7 +60,7 @@ public class ResultFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         if (v.getId() == R.id.btnPushToFirebase) {
             view.showLoading();
-            view.pushTofirebase(requestCode,resultCode,etComentary.getText().toString());
+            view.pushTofirebase(image,requestCode,resultCode,etComentary.getText().toString());
         }
     }
 }

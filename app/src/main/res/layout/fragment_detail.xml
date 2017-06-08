@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_image"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black85"
+    android:orientation="vertical"
+    wind
+    android:weightSum="6"
+    tools:context="com.spear.android.album.detail.DetailFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4.5"
+        android:orientation="vertical">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4">
+
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:scaleType="fitCenter"
+                android:src="@mipmap/fish_white_tab" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/username"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="name"
+                    android:textColor="@color/white"
+                    android:textSize="17dp" />
+
+                <RatingBar
+                    android:id="@+id/ratingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:numStars="5"
+                    android:rating="0.0"
+                    android:stepSize="0.01" />
+            </LinearLayout>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:weightSum="2">
+
+
+        <Button
+            android:id="@+id/btnSubmitRating"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/tomato"
+            android:textAllCaps="false"
+            android:elevation="4dp"
+            android:text="Submit"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
+
+
+        <Button
+            android:id="@+id/btnSkip"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:text="Skip"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
+
+
+    </LinearLayout>
+</LinearLayout>

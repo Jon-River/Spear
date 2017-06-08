@@ -62,11 +62,6 @@
             android:required="true" />
 
         <activity
-            android:name=".album.detail.DetailActivity"
-            android:configChanges="orientation"
-            android:label="Detail"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".register.RegisterActivity"
             android:configChanges="orientation"
             android:label="Register"

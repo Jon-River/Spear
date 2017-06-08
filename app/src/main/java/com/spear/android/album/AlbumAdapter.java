@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.spear.android.R;
@@ -26,19 +27,17 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
     private AlbumView.OnImageClick onImageClick;
 
 
-
-
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public ImageView image;
+        public TextView txtRating;
         public CardImage card;
-
-
 
 
         public MyViewHolder(View view) {
             super(view);
             image = (ImageView) view.findViewById(R.id.image);
+            txtRating = (TextView) view.findViewById(R.id.txtRating);
             image.setOnClickListener(this);
 
 
@@ -49,7 +48,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
 
         @Override
         public void onClick(View view) {
-            if (view instanceof ImageView){
+            if (view instanceof ImageView) {
                 onImageClick.onSuccess(card);
             }
 
@@ -66,7 +65,6 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
     }
 
 
-
     @Override
     public AlbumAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
@@ -78,8 +76,17 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         CardImage album = albumList.get(position);
-        holder.card= album;
+        holder.card = album;
         Glide.with(mContext).load(album.getUrlString()).into(holder.image);
+        float rating = album.getRating() / album.getVotes();
+        String ratingStr;
+        if (Float.isNaN(rating)) {
+            ratingStr = "N/A";
+        } else {
+             ratingStr = String.format("%.1f", rating);
+
+        }
+        holder.txtRating.setText(ratingStr);
     }
 
 

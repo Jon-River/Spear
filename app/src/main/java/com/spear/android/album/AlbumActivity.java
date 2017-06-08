@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
@@ -23,6 +24,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,7 +35,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.spear.android.R;
-import com.spear.android.album.detail.DetailActivity;
+import com.spear.android.album.detail.DetailFragment;
 import com.spear.android.album.galleryoption.GalleryOptionFragment;
 import com.spear.android.album.result.ResultFragment;
 import com.spear.android.custom.CustomTypeFace;
@@ -47,7 +50,6 @@ import com.spear.android.weather.WeatherActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import static com.activeandroid.Cache.getContext;
@@ -78,13 +80,17 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
     private ActionBar actionBar;
     private ProfileFragment profileFragment;
     private GalleryOptionFragment galleryOptionFragment;
+    private DetailFragment detailFragment;
+
     private ResultFragment resultFragment;
     private CameraManager cameraManager;
-    private boolean isGalleryOptionShown;
+    private boolean isGalleryOptionShown, isDetailShown;
+    private Intent galleryIntent;
     final int hideFragment = 0;
     final int galleryOption = 1;
     final int profile = 2;
     final int result = 3;
+    final int detail = 4;
 
 
     @Override
@@ -94,11 +100,15 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
 
         albumPresenter = new AlbumPresenter(this);
         init();
-
-        //albumPresenter.loadImageInfo(); adapter not working
+        FullScreencall();
         loadImageInfo();
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        FullScreencall();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -106,6 +116,19 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_album, menu);
         return true;
+    }
+
+    public void FullScreencall() {
+        if (Build.VERSION.SDK_INT < 19) {
+            //19 or above api
+            View v = this.getWindow().getDecorView();
+            v.setSystemUiVisibility(View.GONE);
+        } else {
+            //for lower api versions.
+            View decorView = getWindow().getDecorView();
+            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+            decorView.setSystemUiVisibility(uiOptions);
+        }
     }
 
     @Override
@@ -117,9 +140,6 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
                 return true;
             case R.id.profile:
                 openProfile();
-                return true;
-            case android.R.id.home:
-
                 return true;
             case R.id.weathermenu:
                 Intent intent = new Intent(this, WeatherActivity.class);
@@ -138,7 +158,7 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        if (!isGalleryOptionShown) {
+        if (!isGalleryOptionShown && !isDetailShown) {
             if (view.getId() == R.id.fabOpenCamera) {
                 albumPresenter.askForPermissions();
                 fabOpenCamera.hide();
@@ -146,49 +166,25 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
 
             } else if (view.getId() == R.id.btnOrderByDate) {
                 if (imageArray != null) {
-                    orderByDate(imageArray);
+                    imageArray = albumPresenter.orderByDate(imageArray);
+                    render(imageArray);
                 }
             } else if (view.getId() == R.id.btnOrderRating) {
                 if (imageArray != null) {
-                    orderByRating(imageArray);
+                    imageArray = albumPresenter.orderByRating(imageArray);
+                    render(imageArray);
                 }
             }
 
         }
     }
 
-    private void orderByRating(ArrayList<ImageInfo> imageArray) {
-        Collections.sort(imageArray, new Comparator<ImageInfo>() {
-            @Override
-            public int compare(ImageInfo o1, ImageInfo o2) {
-
-                float rating1 = o1.getRating() / o1.getVoted();
-                float rating2 = o2.getRating() / o2.getVoted();
-                if (Float.isNaN(rating1)) {
-                    rating1 = 0;
-                } else if (Float.isNaN(rating2)) {
-                    rating2 = 0;
-                }
-                return Float.compare(rating2, rating1);
-            }
-        });
-        render(imageArray);
-    }
-
-    private void orderByDate(ArrayList<ImageInfo> imageArray) {
-        Collections.sort(imageArray, new Comparator<ImageInfo>() {
-            @Override
-            public int compare(ImageInfo o1, ImageInfo o2) {
-                return Long.compare(o1.getTimeStamp(), o2.getTimeStamp());
-            }
-        });
-        render(imageArray);
-    }
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
+            galleryIntent = data;
             cameraManager.proccessImage(requestCode, resultCode, data);
         }
     }
@@ -206,7 +202,7 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
 
         @Override
         public void hideLoading() {
-           dialog.dismiss();
+            dialog.dismiss();
             cambiarFragment(hideFragment);
         }
     };
@@ -248,13 +244,13 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
                     Log.d(TAG, "onDataChange: " + imageSnapshot.getKey());
                     ImageInfo image = imageSnapshot.getValue(ImageInfo.class);
                     imageArray.add(image);
-
                 }
-                while (imageArray.size()%3 !=0){
-                    ImageInfo image2 = new ImageInfo("spear",45,111111,"adasdasdasdasd","https://firebasestorage.googleapis.com/v0/b/spear-e5a6a.appspot.com/o/Images%2F1495440673015?alt=media&token=68462995-3c3a-4425-b0c4-9e9c8cb406c3",5,"madrid","test");
+                while (imageArray.size() % 3 != 0) {
+                    ImageInfo image2 = new ImageInfo("spear", 0, 111111, "spear", "https://firebasestorage.googleapis.com/v0/b/spear-e5a6a.appspot.com/o/Images%2F1495440673015?alt=media&token=68462995-3c3a-4425-b0c4-9e9c8cb406c3", 0, "spear", "spear");
                     imageArray.add(image2);
 
                 }
+                Collections.reverse(imageArray);
                 render(imageArray);
             }
 
@@ -270,11 +266,10 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onSuccess(CardImage card) {
             if (!isGalleryOptionShown) {
-                Log.v("", "" + card.getUsername() + " " + card.getUrlString());
-                Intent intent = new Intent(AlbumActivity.this, DetailActivity.class);
-                intent.putExtra("Editing", card);
-                startActivity(intent);
-
+                fabOpenCamera.hide();
+                actionBar.hide();
+                cambiarFragment(detail);
+                detailFragment.setModel(card);
             }
         }
 
@@ -292,35 +287,24 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
                     imageInfo.getProvince(), imageInfo.getTimeStamp(), imageInfo.getVoted());
             cardList.add(card);
         }
-        while (cardList.size()%3 !=0){
-            CardImage image2 = new CardImage("spear",45,"https://firebasestorage.googleapis.com/v0/b/spear-e5a6a.appspot.com/o/Images%2F1495440673015?alt=media&token=68462995-3c3a-4425-b0c4-9e9c8cb406c3","madrid",1123123123,9);
-            cardList.add(image2);
-
-        }
-
         adapter.notifyDataSetChanged();
     }
 
     private void init() {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         actionBar = getSupportActionBar();
-
         cardList = new ArrayList<>();
         adapter = new AlbumAdapter(this, getContext(), cardList, onImageClick);
-
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 3);  //displays number of cards per row
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
-
         fabOpenCamera = (FloatingActionButton) findViewById(R.id.fabOpenCamera);
         fabOpenCamera.setOnClickListener(this);
-
         btnOrderByDate = (ImageButton) findViewById(R.id.btnOrderByDate);
         btnOrderByRating = (ImageButton) findViewById(R.id.btnOrderRating);
         btnOrderByDate.setOnClickListener(this);
         btnOrderByRating.setOnClickListener(this);
-
         Typeface typeLibel = Typeface.createFromAsset(getAssets(), "Libel_Suit.ttf");
         SpannableStringBuilder typeFaceAction = new SpannableStringBuilder("Gallery");
         typeFaceAction.setSpan(new CustomTypeFace("", typeLibel), 0, typeFaceAction.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
@@ -333,27 +317,34 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
         galleryOptionFragment = (GalleryOptionFragment) fm.findFragmentById(R.id.galleryOptionFragment);
         profileFragment = (ProfileFragment) fm.findFragmentById(R.id.profileFragment);
         resultFragment = (ResultFragment) fm.findFragmentById(R.id.resultFragment);
+        detailFragment = (DetailFragment) fm.findFragmentById(R.id.detailFragment);
+
+        cameraManager = new CameraManager(this, onCameraCapture);
 
         cambiarFragment(hideFragment);
-        cameraManager = new CameraManager(this, onCameraCapture);
 
     }
 
     @Override
     public void openResultFragment(Bitmap imageBitmap, int requestCode, int resultCode) {
         cambiarFragment(result);
-        setImageBitmap(imageBitmap, requestCode,  resultCode);
+        resultFragment.setImageBitmap(imageBitmap, requestCode, resultCode);
     }
 
-    private void setImageBitmap(Bitmap imageBitmap,int requestCode, int resultCode) {
-    cambiarFragment(result);
-        resultFragment.setImageBitmap(imageBitmap, requestCode,  resultCode);
-
-    }
 
     @Override
     public void showLoading() {
         dialog.show();
+    }
+
+    @Override
+    public void hideLoading() {
+        dialog.hide();
+    }
+
+    @Override
+    public void showError(String s) {
+        Toast.makeText(this, "Error exception:"+ s, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -372,10 +363,20 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    public void pushTofirebase(int requestCode, int resultCode, String comentary) {
-        cameraManager.pushToFirebase(requestCode,resultCode,comentary);
-
+    public void pushTofirebase(ImageView image, int requestCode, int resultCode, String comentary) {
+        albumPresenter.pushToFirebase(galleryIntent,image, requestCode, resultCode, comentary);
     }
+
+    @Override
+    public void pushRatingToFirebase(long timeStamp, float rating) {
+        albumPresenter.pushRatingFirebase(timeStamp, rating);
+    }
+
+    @Override
+    public void setNewDetailRating(float currentRating) {
+        detailFragment.setDetailRating(currentRating);
+    }
+
 
     private void initLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
@@ -397,6 +398,7 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
         transaction.hide(profileFragment);
         transaction.hide(galleryOptionFragment);
         transaction.hide(resultFragment);
+        transaction.hide(detailFragment);
 
         if (ifrg == profile) {
             transaction.show(profileFragment);
@@ -405,11 +407,16 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
             transaction.show(galleryOptionFragment);
         } else if (ifrg == hideFragment) {
             isGalleryOptionShown = false;
+            isDetailShown = false;
             if (!fabOpenCamera.isShown()) {
                 fabOpenCamera.show();
             }
-        }else if (ifrg== result){
+            actionBar.show();
+        } else if (ifrg == result) {
             transaction.show(resultFragment);
+        } else if (ifrg == detail) {
+            isDetailShown = true;
+            transaction.show(detailFragment);
         }
         transaction.commit();
     }

@@ -1,6 +1,7 @@
 package com.spear.android.album;
 
 import android.graphics.Bitmap;
+import android.widget.ImageView;
 
 import com.spear.android.pojo.CardImage;
 
@@ -14,12 +15,25 @@ public interface AlbumView {
 
     void openGallery();
 
-    void pushTofirebase(int requestCode, int resultCode, String s);
+    void pushTofirebase(ImageView image, int requestCode, int resultCode, String comentary);
+
+    void pushRatingToFirebase(long timeStamp, float rating);
+
+    void setNewDetailRating(float currentRating);
+
+    void hideLoading();
+
+    void showError(String s);
 
     interface OnImageClick {
         void onSuccess(CardImage card);
         void onError();
 
+    }
+
+    interface OnPushRatingToFirebase{
+        void OnSucces(float currentRating);
+        void OnError();
     }
 
     interface OnCameraCapture {

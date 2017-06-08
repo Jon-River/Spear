@@ -65,4 +65,11 @@
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" />
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.spear.android.album.detail.DetailFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
 </FrameLayout>
