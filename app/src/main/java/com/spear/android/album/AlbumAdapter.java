@@ -62,7 +62,10 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
         this.mContext = mContext;
         this.albumList = albumList;
         this.onImageClick = onImageClick;
+
     }
+
+
 
     @Override
     public AlbumAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

@@ -1,7 +1,6 @@
 package com.spear.android.album;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,16 +18,11 @@ import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.util.Log;
-import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.VideoView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,8 +33,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.spear.android.R;
 import com.spear.android.album.detail.DetailActivity;
+import com.spear.android.album.galleryoption.GalleryOptionFragment;
+import com.spear.android.album.result.ResultFragment;
 import com.spear.android.custom.CustomTypeFace;
 import com.spear.android.login.LoginActivity;
+import com.spear.android.managers.CameraManager;
 import com.spear.android.map.MapActivity;
 import com.spear.android.news.NewsActivity;
 import com.spear.android.pojo.CardImage;
@@ -62,17 +59,13 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
 
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 111;
     private AlbumPresenter albumPresenter;
-
     private RecyclerView recyclerView;
     private AlbumAdapter adapter;
     private List<CardImage> cardList;
-
     private FloatingActionButton fabOpenCamera;
-    private ImageView mImageView;
-    private EditText editTextComentary;
-    private Button btnOpenCamera, btnOpenGallery, btnUploadImage;
+
     private ImageButton btnOrderByRating, btnOrderByDate;
-    private Dialog dialogButtons, dialogCameraView;
+
 
     private ProgressDialog dialog;
 
@@ -84,8 +77,14 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
     private ArrayList<ImageInfo> imageArray;
     private ActionBar actionBar;
     private ProfileFragment profileFragment;
+    private GalleryOptionFragment galleryOptionFragment;
+    private ResultFragment resultFragment;
+    private CameraManager cameraManager;
+    private boolean isGalleryOptionShown;
     final int hideFragment = 0;
+    final int galleryOption = 1;
     final int profile = 2;
+    final int result = 3;
 
 
     @Override
@@ -139,28 +138,22 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View view) {
+        if (!isGalleryOptionShown) {
+            if (view.getId() == R.id.fabOpenCamera) {
+                albumPresenter.askForPermissions();
+                fabOpenCamera.hide();
+                cambiarFragment(galleryOption);
 
-        if (view.getId() == R.id.fabOpenCamera) {
-            albumPresenter.askForPermissions();
-            dialogButtons.show();
-        } else if (view.getId() == R.id.btnOpenCamera) {
-            dialogButtons.dismiss();
-            albumPresenter.openCamera();
-        } else if (view.getId() == R.id.btnOpenGallery) {
-            dialogButtons.dismiss();
-            albumPresenter.openGallery();
-        } else if (view.getId() == R.id.btnOrderByDate) {
-            Log.v("order", "rating");
-            if (imageArray != null) {
-                Log.v("order", "rating imagearray");
-                orderByDate(imageArray);
+            } else if (view.getId() == R.id.btnOrderByDate) {
+                if (imageArray != null) {
+                    orderByDate(imageArray);
+                }
+            } else if (view.getId() == R.id.btnOrderRating) {
+                if (imageArray != null) {
+                    orderByRating(imageArray);
+                }
             }
-        } else if (view.getId() == R.id.btnOrderRating) {
-            Log.v("order", "rating");
-            if (imageArray != null) {
-                Log.v("order", "rating imagearray");
-                orderByRating(imageArray);
-            }
+
         }
     }
 
@@ -195,22 +188,28 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        btnUploadImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialogCameraView.dismiss();
-                dialog.show();
-                dialog.setContentView(R.layout.custom_progress_dialog);
-                albumPresenter.pushTofirebase(requestCode, resultCode,
-                        editTextComentary.getText().toString());
-            }
-        });
-
         if (resultCode == Activity.RESULT_OK) {
-            dialogCameraView.show();
-            albumPresenter.OnActivityResult(requestCode, resultCode, data);
+            cameraManager.proccessImage(requestCode, resultCode, data);
         }
     }
+
+    final AlbumView.OnCameraCapture onCameraCapture = new AlbumView.OnCameraCapture() {
+        @Override
+        public void onSuccess(Bitmap imageBitmap, int requestCode, int resultCode) {
+            openResultFragment(imageBitmap, requestCode, resultCode);
+        }
+
+        @Override
+        public void onError() {
+
+        }
+
+        @Override
+        public void hideLoading() {
+           dialog.dismiss();
+            cambiarFragment(hideFragment);
+        }
+    };
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[],
@@ -238,9 +237,6 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
 
     private void loadImageInfo() {
 
-        // storageReference = FirebaseStorage.getInstance().getReference().child("Images").child(FirebaseAuth.getInstance().getCurrentUser().toString());
-
-        System.out.print("user " + firebaseAuth.getCurrentUser().getUid());
         imageArray = new ArrayList<>();
 
         databaseReference.getRoot().child("images").addValueEventListener(new ValueEventListener() {
@@ -252,6 +248,12 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
                     Log.d(TAG, "onDataChange: " + imageSnapshot.getKey());
                     ImageInfo image = imageSnapshot.getValue(ImageInfo.class);
                     imageArray.add(image);
+
+                }
+                while (imageArray.size()%3 !=0){
+                    ImageInfo image2 = new ImageInfo("spear",45,111111,"adasdasdasdasd","https://firebasestorage.googleapis.com/v0/b/spear-e5a6a.appspot.com/o/Images%2F1495440673015?alt=media&token=68462995-3c3a-4425-b0c4-9e9c8cb406c3",5,"madrid","test");
+                    imageArray.add(image2);
+
                 }
                 render(imageArray);
             }
@@ -267,10 +269,13 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
     final OnImageClick onImageClick = new OnImageClick() {
         @Override
         public void onSuccess(CardImage card) {
-            Log.v("", "" + card.getUsername() + " " + card.getUrlString());
-            Intent intent = new Intent(AlbumActivity.this, DetailActivity.class);
-            intent.putExtra("Editing", card);
-            startActivity(intent);
+            if (!isGalleryOptionShown) {
+                Log.v("", "" + card.getUsername() + " " + card.getUrlString());
+                Intent intent = new Intent(AlbumActivity.this, DetailActivity.class);
+                intent.putExtra("Editing", card);
+                startActivity(intent);
+
+            }
         }
 
         @Override
@@ -286,6 +291,11 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
             card = new CardImage(imageInfo.getName(), imageInfo.getRating(), imageInfo.getUrl(),
                     imageInfo.getProvince(), imageInfo.getTimeStamp(), imageInfo.getVoted());
             cardList.add(card);
+        }
+        while (cardList.size()%3 !=0){
+            CardImage image2 = new CardImage("spear",45,"https://firebasestorage.googleapis.com/v0/b/spear-e5a6a.appspot.com/o/Images%2F1495440673015?alt=media&token=68462995-3c3a-4425-b0c4-9e9c8cb406c3","madrid",1123123123,9);
+            cardList.add(image2);
+
         }
 
         adapter.notifyDataSetChanged();
@@ -306,57 +316,65 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
         fabOpenCamera = (FloatingActionButton) findViewById(R.id.fabOpenCamera);
         fabOpenCamera.setOnClickListener(this);
 
-        dialogButtons = new Dialog(this);
-        dialogButtons.setContentView(R.layout.open_camera_dialog);
-        btnOpenCamera = (Button) dialogButtons.findViewById(R.id.btnOpenCamera);
-        btnOpenGallery = (Button) dialogButtons.findViewById(R.id.btnOpenGallery);
         btnOrderByDate = (ImageButton) findViewById(R.id.btnOrderByDate);
         btnOrderByRating = (ImageButton) findViewById(R.id.btnOrderRating);
         btnOrderByDate.setOnClickListener(this);
         btnOrderByRating.setOnClickListener(this);
-        btnOpenCamera.setOnClickListener(this);
-        btnOpenGallery.setOnClickListener(this);
-        dialogCameraView = new Dialog(this);
-        dialogCameraView.setContentView(R.layout.result_camera_dialog);
-        mImageView = (ImageView) dialogCameraView.findViewById(R.id.imageResultDialog);
 
         Typeface typeLibel = Typeface.createFromAsset(getAssets(), "Libel_Suit.ttf");
         SpannableStringBuilder typeFaceAction = new SpannableStringBuilder("Gallery");
         typeFaceAction.setSpan(new CustomTypeFace("", typeLibel), 0, typeFaceAction.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
         actionBar.setTitle(typeFaceAction);
-
-        Display display = getWindowManager().getDefaultDisplay();
-        int width = ((display.getWidth() * 8) / 10);
-        int height = ((display.getHeight() * 10) / 10);
-        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width, height);
-        mImageView.setLayoutParams(parms);
-        btnUploadImage = (Button) dialogCameraView.findViewById(R.id.btnUploadPhoto);
-        editTextComentary = (EditText) dialogCameraView.findViewById(R.id.editTextComentary);
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         dialog = new ProgressDialog(this);
         dialog.setMessage("Uploading image");
         fm = getSupportFragmentManager();
-
+        galleryOptionFragment = (GalleryOptionFragment) fm.findFragmentById(R.id.galleryOptionFragment);
         profileFragment = (ProfileFragment) fm.findFragmentById(R.id.profileFragment);
+        resultFragment = (ResultFragment) fm.findFragmentById(R.id.resultFragment);
 
         cambiarFragment(hideFragment);
+        cameraManager = new CameraManager(this, onCameraCapture);
 
     }
 
     @Override
-    public void setImageBitmap(Bitmap imageBitmap) {
-        mImageView.setImageBitmap(imageBitmap);
+    public void openResultFragment(Bitmap imageBitmap, int requestCode, int resultCode) {
+        cambiarFragment(result);
+        setImageBitmap(imageBitmap, requestCode,  resultCode);
+    }
+
+    private void setImageBitmap(Bitmap imageBitmap,int requestCode, int resultCode) {
+    cambiarFragment(result);
+        resultFragment.setImageBitmap(imageBitmap, requestCode,  resultCode);
+
     }
 
     @Override
-    public void hideLoading() {
-        dialog.dismiss();
+    public void showLoading() {
+        dialog.show();
     }
 
     @Override
     public void notifyAdapter() {
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void openCamera() {
+        cameraManager.openCameraIntent();
+    }
+
+    @Override
+    public void openGallery() {
+        cameraManager.openGalleryIntent();
+    }
+
+    @Override
+    public void pushTofirebase(int requestCode, int resultCode, String comentary) {
+        cameraManager.pushToFirebase(requestCode,resultCode,comentary);
+
     }
 
     private void initLogin() {
@@ -377,8 +395,21 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
         transaction.hide(profileFragment);
+        transaction.hide(galleryOptionFragment);
+        transaction.hide(resultFragment);
+
         if (ifrg == profile) {
             transaction.show(profileFragment);
+        } else if (ifrg == galleryOption) {
+            isGalleryOptionShown = true;
+            transaction.show(galleryOptionFragment);
+        } else if (ifrg == hideFragment) {
+            isGalleryOptionShown = false;
+            if (!fabOpenCamera.isShown()) {
+                fabOpenCamera.show();
+            }
+        }else if (ifrg== result){
+            transaction.show(resultFragment);
         }
         transaction.commit();
     }

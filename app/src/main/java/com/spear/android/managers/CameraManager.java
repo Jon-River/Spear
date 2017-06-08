@@ -1,15 +1,11 @@
 package com.spear.android.managers;
 
 import android.app.Activity;
-import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,16 +18,13 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.spear.android.album.AlbumInteractor;
+import com.spear.android.album.AlbumView;
 import com.spear.android.pojo.ImageInfo;
 import com.spear.android.pojo.UserInfo;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -53,12 +46,12 @@ public class CameraManager {
     private String url;
     private String province;
     private String name;
-    private AlbumInteractor.OnCameraCapture onCameraCapture;
+    private AlbumView.OnCameraCapture onCameraCapture;
     private Activity activity;
     private Uri imageUri;
 
 
-    public CameraManager(Activity activity, AlbumInteractor.OnCameraCapture onCameraCapture) {
+    public CameraManager(Activity activity, AlbumView.OnCameraCapture onCameraCapture) {
         this.activity = activity;
         this.onCameraCapture = onCameraCapture;
         storageReference = FirebaseStorage.getInstance().getReference();
@@ -67,16 +60,17 @@ public class CameraManager {
         getDataUser();
     }
 
-    public void takePictureIntent() {
+
+    public void openCameraIntent() {
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, "image");
         values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
         imageUri = activity.getContentResolver().insert(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-        if (intent.resolveActivity(activity.getPackageManager())!= null){
-            onCameraCapture.startActivityForResult(intent, REQUEST_CAMERA_CAPTURE);
+        Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        if (openCameraIntent.resolveActivity(activity.getPackageManager()) != null) {
+            activity.startActivityForResult(openCameraIntent, REQUEST_CAMERA_CAPTURE);
         }
 
     }
@@ -84,11 +78,11 @@ public class CameraManager {
     public void openGalleryIntent() {
         Intent openGalleryIntent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        onCameraCapture.startActivityForResult(openGalleryIntent, REQUEST_GALLERY_CAPTURE);
+        activity.startActivityForResult(openGalleryIntent, REQUEST_GALLERY_CAPTURE);
 
     }
 
-    public void OnActivityResult(int requestCode, int resultCode, Intent data) {
+    public void proccessImage(int requestCode, int resultCode, Intent data) {
 
         dataIntent = data;
         if (resultCode != RESULT_CANCELED) {
@@ -96,19 +90,16 @@ public class CameraManager {
                 try {
                     Bitmap image = MediaStore.Images.Media.getBitmap(
                             activity.getContentResolver(), imageUri);
-                    onCameraCapture.onSuccess(image);
+                    onCameraCapture.onSuccess(image, requestCode, resultCode);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-               /* Bundle extras = data.getExtras();
-                Bitmap imageBitmap = (Bitmap) extras.get("data");
-                onCameraCapture.onSuccess(imageBitmap);*/
             } else if (requestCode == REQUEST_GALLERY_CAPTURE
                     && resultCode == RESULT_OK
                     && null != data) {
                 try {
-                    onCameraCapture.onSuccess(MediaStore.Images.Media.getBitmap(activity.getContentResolver(), data.getData()));
+                    onCameraCapture.onSuccess(MediaStore.Images.Media.getBitmap(activity.getContentResolver(), data.getData()), requestCode, resultCode);
 
                 } catch (IOException ex) {
                     Log.v("IOException", "" + ex.getMessage());
@@ -145,7 +136,7 @@ public class CameraManager {
             if (requestCode == REQUEST_CAMERA_CAPTURE && resultCode == RESULT_OK) {
 
                 try {
-                    Bitmap  imageBitmap= MediaStore.Images.Media.getBitmap(
+                    Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(
                             activity.getContentResolver(), imageUri);
                     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                     imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
@@ -168,14 +159,12 @@ public class CameraManager {
                                     DatabaseReference dataref = databaseReference.child("/images/").child(String.valueOf(milis));
                                     String key = dataref.getKey();
                                     dataref.setValue(imageInfo);
-                                    //databaseReference.child("/images/").push().setValue(imageInfo);
 
 
                                     databaseReference.child("users")
                                             .child(firebaseAuth.getCurrentUser().getUid()).child("images").child(key)
                                             .setValue(url);
-                                    ArrayList<String> urlArray = new ArrayList<String>();
-                                    urlArray.add(url);
+
                                     onCameraCapture.hideLoading();
                                 }
                             });
@@ -184,7 +173,6 @@ public class CameraManager {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
 
 
             } else if (requestCode == REQUEST_GALLERY_CAPTURE && resultCode == RESULT_OK) {
@@ -203,7 +191,6 @@ public class CameraManager {
                                 DatabaseReference dataref = databaseReference.child("/images/").child(String.valueOf(milis));
                                 String key = dataref.getKey();
                                 dataref.setValue(imageInfo);
-                                //databaseReference.child("/images/").push().setValue(imageInfo);
 
 
                                 databaseReference.child("users")
