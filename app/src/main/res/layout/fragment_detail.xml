@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/black85"
     android:orientation="vertical"
-    wind
     android:weightSum="6"
     tools:context="com.spear.android.album.detail.DetailFragment">
 
