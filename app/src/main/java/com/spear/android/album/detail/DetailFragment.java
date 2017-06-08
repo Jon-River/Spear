@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.spear.android.R;
@@ -25,7 +24,6 @@ import com.spear.android.pojo.CardImage;
  */
 public class DetailFragment extends Fragment implements View.OnClickListener {
 
-    public TextView name;
     public RatingBar ratingBar;
     public ImageView image;
     public Button btnSubmitRating, btnSkip;
@@ -52,8 +50,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
 
     private void init(View v) {
         view = (AlbumActivity)getActivity();
-        name = (TextView) v.findViewById(R.id.username);
-
         image = (ImageView)  v.findViewById(R.id.image);
         ratingBar = (RatingBar)  v.findViewById(R.id.ratingBar);
         btnSubmitRating = (Button)  v.findViewById(R.id.btnSubmitRating);
@@ -66,7 +62,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         SpannableStringBuilder typeFaceAction = new SpannableStringBuilder("Detail");
         typeFaceAction.setSpan (new CustomTypeFace("", type), 0, typeFaceAction.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
 
-        name.setTypeface(type);
         btnSubmitRating.setTypeface(type);
         btnSkip.setTypeface(type);
         btnSubmitRating.setOnClickListener(this);
@@ -90,7 +85,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
 
 
     public void setModel(CardImage model){
-        name.setText(model.getUsername());
         Glide.with(this).load(model.getUrlString()).into(image);
         votes = model.getVotes();
         rating = model.getRating() / votes;

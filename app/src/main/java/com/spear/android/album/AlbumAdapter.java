@@ -2,6 +2,7 @@ package com.spear.android.album;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +31,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public ImageView image;
-        public TextView txtRating;
+        public TextView txtRating, txtUsername;
         public CardImage card;
 
 
@@ -38,6 +39,10 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
             super(view);
             image = (ImageView) view.findViewById(R.id.image);
             txtRating = (TextView) view.findViewById(R.id.txtRating);
+            txtUsername = (TextView) view.findViewById(R.id.txtUsername);
+            Typeface typeLibel = Typeface.createFromAsset(albumActivity.getAssets(), "Libel_Suit.ttf");
+            txtRating.setTypeface(typeLibel);
+            txtUsername.setTypeface(typeLibel);
             image.setOnClickListener(this);
 
 
@@ -83,10 +88,11 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
         if (Float.isNaN(rating)) {
             ratingStr = "N/A";
         } else {
-             ratingStr = String.format("%.1f", rating);
+            ratingStr = String.format("%.1f", rating);
 
         }
         holder.txtRating.setText(ratingStr);
+        holder.txtUsername.setText(album.getUsername());
     }
 
 

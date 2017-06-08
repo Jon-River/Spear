@@ -35,6 +35,8 @@
             android:scaleType="fitXY"
             android:src="@drawable/bg_shadow_png" />
 
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -57,6 +59,25 @@
                 android:src="@mipmap/star" />
 
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:paddingTop="5dp"
+            android:gravity="center|left">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtUsername"
+                android:textColor="@color/white"
+                android:textSize="15dp"
+                android:paddingLeft="5dp"
+                android:text="Name"/>
+
+        </LinearLayout>
+
 
 
     </RelativeLayout>
