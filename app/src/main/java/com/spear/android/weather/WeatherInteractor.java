@@ -11,7 +11,7 @@ public interface WeatherInteractor {
 
     void getWeatherByName(String cityName);
 
-    public interface OnResponseWeatherApi{
+    interface OnResponseWeatherApi{
         void onSuccess(WeatherResponse weatherResult);
         void onError(String error);
     }

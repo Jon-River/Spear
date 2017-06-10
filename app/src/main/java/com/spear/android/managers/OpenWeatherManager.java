@@ -43,7 +43,7 @@ public class OpenWeatherManager {
         rebootUrl();
         url = url + "lat=" + lat + "&lon=" + lon + ApiKey;
         Log.d("Query", "" + url);
-        getWeatherByUrl(url);
+        getWeatherResponse(url);
     }
 
 
@@ -51,7 +51,7 @@ public class OpenWeatherManager {
         rebootUrl();
         url = url + "zip=" + zip + "," + countryCode + ApiKey;
         Log.d("Query", "" + url);
-        getWeatherByUrl(url);
+        getWeatherResponse(url);
 
     }
 
@@ -59,10 +59,10 @@ public class OpenWeatherManager {
         rebootUrl();
         url = url + "q=" + cityName + ApiKey;
         Log.d("Query", "" + url);
-        getWeatherByUrl(url);
+        getWeatherResponse(url);
     }
 
-    private WeatherResponse getWeatherByUrl(String url) {
+    private WeatherResponse getWeatherResponse(String url) {
         weatherResult = new WeatherResponse();
         JsonObjectRequest jsArrayRequest = new JsonObjectRequest(
                 Request.Method.GET,

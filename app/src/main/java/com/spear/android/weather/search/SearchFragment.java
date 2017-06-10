@@ -18,7 +18,7 @@ import com.spear.android.weather.WeatherActivity;
 public class SearchFragment extends Fragment implements View.OnClickListener {
 
   private Button btnSkip, btnFind;
-  private WeatherActivity main;
+  private WeatherActivity view;
   private EditText etCityZip;
 
   public SearchFragment() {
@@ -29,7 +29,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     View v = inflater.inflate(R.layout.fragment_search, container, false);
-    main = (WeatherActivity) getActivity();
+    view = (WeatherActivity) getActivity();
     btnFind = (Button) v.findViewById(R.id.btnFind);
     btnSkip = (Button) v.findViewById(R.id.btnSkip);
     etCityZip = (EditText) v.findViewById(R.id.etCity);
@@ -42,11 +42,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
 
   @Override public void onClick(View v) {
     if (v.getId() == R.id.btnSkip){
-      main.cambiarFragment(0);
+      view.cambiarFragment(0);
     }else if (v.getId() == R.id.btnFind){
       String cityZip = etCityZip.getText().toString().trim();
       if (cityZip!= null){
-        main.getWeatherByCityZip(cityZip);
+        view.getWeatherResponse(cityZip);
       }
     }
 

@@ -9,6 +9,5 @@ import com.spear.android.pojo.WeatherResponse;
 public interface WeatherView {
     void setWeatherResult(WeatherResponse weatherResult);
     void showError(String error);
-
-  void getWeatherByCityZip(String cityZip);
+    void getWeatherResponse(String cityZip);
 }

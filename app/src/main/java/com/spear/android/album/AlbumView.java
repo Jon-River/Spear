@@ -8,8 +8,8 @@ import com.spear.android.pojo.CardImage;
 
 public interface AlbumView {
     void openResultFragment(Bitmap imageBitmap, int requestCode, int resultCode);
+
     void showLoading();
-    void notifyAdapter();
 
     void openCamera();
 

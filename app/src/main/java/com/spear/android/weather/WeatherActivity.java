@@ -135,9 +135,6 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
             case R.id.profile:
                 openProfile();
                 return true;
-            case android.R.id.home:
-
-                return true;
             case R.id.newsmenu:
                 startActivity(new Intent(this, NewsActivity
                         .class));
@@ -218,8 +215,19 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
     }
 
     private void setDataResponse(WeatherResponse response, String dateStr) {
-        convertDegToImage(response.getDeg());
-        convertIconToImage(response.getIcon());
+
+        if (response.getIcon() != null){
+            imgWeather.setImageResource(weatherPresenter.convertIconToImage(response.getIcon()));
+        }else{
+            imgWeather.setImageResource(R.mipmap.error);
+        }
+
+        if (!Float.isNaN(response.getDeg()) || response.getDeg() != 0){
+            imgCardinal.setImageResource(weatherPresenter.convertDegToImage(response.getDeg()));
+        }else{
+            imgCardinal.setImageResource(R.mipmap.error);
+        }
+
         if (dateStr != null) {
             txtDate.setText(dateStr);
         } else {
@@ -241,7 +249,6 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
 
         if (response.getHumidity() != 0) {
             txtHumidity.setText(String.valueOf(response.getHumidity()) + "%");
-
         } else {
             txtHumidity.setText("N/A");
         }
@@ -321,81 +328,7 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
         return offset;
     }
 
-    private void convertIconToImage(String icon) {
-        if (icon != null) {
-            if (icon.equals("01d")) {
-                imgWeather.setImageResource(R.drawable.weatherclear);
-            } else if (icon.equals("01n")) {
-                imgWeather.setImageResource(R.drawable.weatherclearnight);
-            } else if (icon.equals("02d")) {
-                imgWeather.setImageResource(R.drawable.weatherfewclouds);
-            } else if (icon.equals("02n")) {
-                imgWeather.setImageResource(R.drawable.weatherfewcloudsnight);
-            } else if (icon.equals("03d")) {
-                imgWeather.setImageResource(R.drawable.weatherclouds);
-            } else if (icon.equals("03n")) {
-                imgWeather.setImageResource(R.drawable.weathercloudsnight);
-            } else if (icon.equals("04d")) {
-                imgWeather.setImageResource(R.drawable.weatherclouds);
-            } else if (icon.equals("04n")) {
-                imgWeather.setImageResource(R.drawable.weathercloudsnight);
-            } else if (icon.equals("09d")) {
-                imgWeather.setImageResource(R.drawable.weathershowersday);
-            } else if (icon.equals("09n")) {
-                imgWeather.setImageResource(R.drawable.weathershowersnight);
-            } else if (icon.equals("010n")) {
-                imgWeather.setImageResource(R.drawable.weatherrainday);
-            } else if (icon.equals("010n")) {
-                imgWeather.setImageResource(R.drawable.weatherrainnight);
-            } else if (icon.equals("011n")) {
-                imgWeather.setImageResource(R.drawable.weatherstorm);
-            } else if (icon.equals("011n")) {
-                imgWeather.setImageResource(R.drawable.weatherstormnight);
-            } else if (icon.equals("013n")) {
-                imgWeather.setImageResource(R.drawable.weathersnow);
-            } else if (icon.equals("013n")) {
-                imgWeather.setImageResource(R.drawable.weathersnow);
-            } else if (icon.equals("050n")) {
-                imgWeather.setImageResource(R.drawable.weathermist);
-            } else if (icon.equals("050n")) {
-                imgWeather.setImageResource(R.drawable.weathermist);
-            }
-        } else {
-            imgWeather.setImageResource(R.mipmap.error);
-        }
-    }
 
-    private void convertDegToImage(float deg) {
-        if (deg == 0) {
-            imgCardinal.setImageResource(R.mipmap.error);
-        } else {
-            if (deg >= 337.5 || deg < 22.5) {
-                //north
-                imgCardinal.setImageResource(R.mipmap.north);
-            } else if (deg >= 22.5 && deg < 67.5) {
-                //northeast
-                imgCardinal.setImageResource(R.mipmap.northeast);
-            } else if (deg >= 67.5 && deg < 112.5) {
-                //east
-                imgCardinal.setImageResource(R.mipmap.east);
-            } else if (deg >= 112.5 && deg < 157.5) {
-                //southeast
-                imgCardinal.setImageResource(R.mipmap.southeast);
-            } else if (deg >= 157.5 && deg < 202.5) {
-                //south
-                imgCardinal.setImageResource(R.mipmap.south);
-            } else if (deg >= 202.5 && deg < 247.5) {
-                //southweast
-                imgCardinal.setImageResource(R.mipmap.southwest);
-            } else if (deg >= 247.5 && deg < 292.5) {
-                //west
-                imgCardinal.setImageResource(R.mipmap.west);
-            } else if (deg >= 292.5 && deg < 337.5) {
-                //northwest
-                imgCardinal.setImageResource(R.mipmap.northwest);
-            }
-        }
-    }
 
     private void initLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
@@ -436,8 +369,8 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
     }
 
     @Override
-    public void getWeatherByCityZip(String cityZip) {
-        weatherPresenter.getWeatherByName(cityZip);
+    public void getWeatherResponse(String cityZip) {
+        weatherPresenter.getWeatherResponse(cityZip);
     }
 
     @Override

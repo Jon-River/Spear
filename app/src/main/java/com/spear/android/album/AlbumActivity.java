@@ -347,10 +347,6 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
         Toast.makeText(this, "Error exception:"+ s, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void notifyAdapter() {
-        adapter.notifyDataSetChanged();
-    }
 
     @Override
     public void openCamera() {
