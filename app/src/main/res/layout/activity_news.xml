@@ -25,12 +25,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
+                app:collapsedTitleTextAppearance="@style/TextAppearance.Collapsed"
                 app:contentScrim="@color/steelblue"
                 app:expandedTitleMarginEnd="64dp"
                 app:expandedTitleMarginStart="48dp"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                app:collapsedTitleTextAppearance="@style/TextAppearance.Collapsed"
                 app:expandedTitleTextAppearance="@style/Expanded"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:title="News">
 
                 <VideoView
@@ -49,12 +49,12 @@
                     android:layout_height="match_parent">
 
                     <TextView
+                        android:id="@+id/txtTittleCollapsing"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right"
-                        android:id="@+id/txtTittleCollapsing"
-                        android:paddingTop="20dp"
                         android:paddingRight="20dp"
+                        android:paddingTop="20dp"
                         android:text="Your Spearfishing community"
                         android:textColor="@color/white50"
                         android:textSize="40dp" />
@@ -85,13 +85,13 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <TextView
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/news_recycler"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:lineSpacingExtra="8dp"
-                android:padding="@dimen/activity_horizontal_margin"
-                android:text="asdasdasdas asdsaada"
-                android:textSize="20sp" />
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:scrollbars="vertical" />
+
         </android.support.v4.widget.NestedScrollView>
 
         <android.support.design.widget.FloatingActionButton

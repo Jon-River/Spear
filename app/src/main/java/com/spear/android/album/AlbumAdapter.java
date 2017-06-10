@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.spear.android.R;
-import com.spear.android.pojo.CardImage;
+import com.spear.android.pojo.GalleryCard;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ import java.util.List;
 public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder> {
 
     private Context mContext;
-    private List<CardImage> albumList;
+    private List<GalleryCard> albumList;
     private Activity albumActivity;
     private AlbumView.OnImageClick onImageClick;
 
@@ -32,7 +32,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
 
         public ImageView image;
         public TextView txtRating, txtUsername;
-        public CardImage card;
+        public GalleryCard card;
 
 
         public MyViewHolder(View view) {
@@ -61,7 +61,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
     }
 
 
-    public AlbumAdapter(Activity albumActivity, Context mContext, List<CardImage> albumList, AlbumView.OnImageClick onImageClick) {
+    public AlbumAdapter(Activity albumActivity, Context mContext, List<GalleryCard> albumList, AlbumView.OnImageClick onImageClick) {
         this.albumActivity = albumActivity;
         this.mContext = mContext;
         this.albumList = albumList;
@@ -80,7 +80,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        CardImage album = albumList.get(position);
+        GalleryCard album = albumList.get(position);
         holder.card = album;
         Glide.with(mContext).load(album.getUrlString()).into(holder.image);
         float rating = album.getRating() / album.getVotes();

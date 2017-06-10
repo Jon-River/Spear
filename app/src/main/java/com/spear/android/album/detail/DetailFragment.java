@@ -17,7 +17,7 @@ import com.bumptech.glide.Glide;
 import com.spear.android.R;
 import com.spear.android.album.AlbumActivity;
 import com.spear.android.custom.CustomTypeFace;
-import com.spear.android.pojo.CardImage;
+import com.spear.android.pojo.GalleryCard;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -84,7 +84,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    public void setModel(CardImage model){
+    public void setModel(GalleryCard model){
         Glide.with(this).load(model.getUrlString()).into(image);
         votes = model.getVotes();
         rating = model.getRating() / votes;

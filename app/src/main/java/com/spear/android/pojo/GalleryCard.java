@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by Pablo on 10/4/17.
  */
 
-public class CardImage implements Serializable {
+public class GalleryCard implements Serializable {
 
   private String username;
   private float rating;
@@ -17,7 +17,7 @@ public class CardImage implements Serializable {
   private int votes;
 
 
-  public CardImage(String username, float rating, String urlString, String province, long timeStamp, int votes) {
+  public GalleryCard(String username, float rating, String urlString, String province, long timeStamp, int votes) {
     this.username = username;
     this.rating = rating;
     this.urlString = urlString;
@@ -26,7 +26,7 @@ public class CardImage implements Serializable {
     this.votes = votes;
 
   }
-  public CardImage(String username, float rating, int imgres, String province) {
+  public GalleryCard(String username, float rating, int imgres, String province) {
     this.username = username;
     this.rating = rating;
     this.imgRes = imgres;
@@ -37,7 +37,7 @@ public class CardImage implements Serializable {
 
 
 
-  public CardImage() {
+  public GalleryCard() {
 
   }
 

@@ -43,7 +43,7 @@ import com.spear.android.login.LoginActivity;
 import com.spear.android.managers.CameraManager;
 import com.spear.android.map.MapActivity;
 import com.spear.android.news.NewsActivity;
-import com.spear.android.pojo.CardImage;
+import com.spear.android.pojo.GalleryCard;
 import com.spear.android.pojo.ImageInfo;
 import com.spear.android.profile.ProfileFragment;
 import com.spear.android.weather.WeatherActivity;
@@ -63,7 +63,7 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
     private AlbumPresenter albumPresenter;
     private RecyclerView recyclerView;
     private AlbumAdapter adapter;
-    private List<CardImage> cardList;
+    private List<GalleryCard> cardList;
     private FloatingActionButton fabOpenCamera;
 
     private ImageButton btnOrderByRating, btnOrderByDate;
@@ -264,7 +264,7 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
 
     final OnImageClick onImageClick = new OnImageClick() {
         @Override
-        public void onSuccess(CardImage card) {
+        public void onSuccess(GalleryCard card) {
             if (!isGalleryOptionShown) {
                 fabOpenCamera.hide();
                 actionBar.hide();
@@ -281,9 +281,9 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
 
     private void render(ArrayList<ImageInfo> imgInfo) {
         cardList.clear();
-        CardImage card;
+        GalleryCard card;
         for (ImageInfo imageInfo : imgInfo) {
-            card = new CardImage(imageInfo.getName(), imageInfo.getRating(), imageInfo.getUrl(),
+            card = new GalleryCard(imageInfo.getName(), imageInfo.getRating(), imageInfo.getUrl(),
                     imageInfo.getProvince(), imageInfo.getTimeStamp(), imageInfo.getVoted());
             cardList.add(card);
         }
@@ -312,7 +312,7 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         dialog = new ProgressDialog(this);
-        dialog.setMessage("Uploading image");
+        dialog.setMessage("Uploading newsImage");
         fm = getSupportFragmentManager();
         galleryOptionFragment = (GalleryOptionFragment) fm.findFragmentById(R.id.galleryOptionFragment);
         profileFragment = (ProfileFragment) fm.findFragmentById(R.id.profileFragment);
@@ -388,6 +388,7 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
         cambiarFragment(profile);
     }
 
+    @Override
     public void cambiarFragment(int ifrg) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();

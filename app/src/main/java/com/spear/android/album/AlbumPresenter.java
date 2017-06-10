@@ -1,5 +1,6 @@
 package com.spear.android.album;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -16,7 +17,7 @@ import java.util.Comparator;
 
 public class AlbumPresenter {
 
-    private AlbumActivity view;
+    private AlbumView view;
     private AlbumInteractor albumInteractor;
     final int hideFragment = 0;
 
@@ -30,7 +31,7 @@ public class AlbumPresenter {
     AlbumView.OnPushRatingToFirebase onPushRating = new AlbumView.OnPushRatingToFirebase() {
         @Override
         public void OnSucces(float currentRating) {
-            Toast.makeText(view, "" + currentRating, Toast.LENGTH_SHORT).show();
+            Toast.makeText((Activity)view, "" + currentRating, Toast.LENGTH_SHORT).show();
             view.setNewDetailRating(currentRating);
         }
 

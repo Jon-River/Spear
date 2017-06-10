@@ -22,7 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.spear.android.pojo.CardImage;
+import com.spear.android.pojo.GalleryCard;
 import com.spear.android.pojo.ImageInfo;
 import com.spear.android.pojo.UserInfo;
 
@@ -48,7 +48,7 @@ public class AlbumInteractorImp implements AlbumInteractor {
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
     private StorageReference storageReference;
-    private List<CardImage> cardList;
+    private List<GalleryCard> cardList;
     private String url, province, name;
     AlbumView.OnPushRatingToFirebase onPushRating;
     OnPushImage onPushImage;
@@ -200,7 +200,7 @@ public class AlbumInteractorImp implements AlbumInteractor {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ImageInfo image = dataSnapshot.getValue(ImageInfo.class);
-                //long time = image.getTimeStamp();
+                //long time = newsImage.getTimeStamp();
                 float currentRating = image.getRating();
                 int votes = image.getVoted();
                 votes = votes + 1;

@@ -10,6 +10,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.view.Menu;
@@ -24,10 +27,15 @@ import com.spear.android.album.AlbumActivity;
 import com.spear.android.custom.CustomTypeFace;
 import com.spear.android.login.LoginActivity;
 import com.spear.android.map.MapActivity;
+import com.spear.android.pojo.NewsCard;
 import com.spear.android.profile.ProfileFragment;
 import com.spear.android.weather.WeatherActivity;
 
-public class NewsActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener {
+import java.util.ArrayList;
+
+import static com.activeandroid.Cache.getContext;
+
+public class NewsActivity extends AppCompatActivity implements NewsView, MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener {
 
 
     private FirebaseAuth firebaseAuth;
@@ -39,6 +47,10 @@ public class NewsActivity extends AppCompatActivity implements MediaPlayer.OnCom
     private CollapsingToolbarLayout collapsingToolbar;
     private ActionBar actionBar;
     private ProfileFragment profileFragment;
+    private NewsPresenter newsPresenter;
+    private ArrayList <NewsCard> newsList;
+    private RecyclerView recyclerView;
+    private NewsAdapter adapter;
     final int hideFragment = 0;
     final int profile = 2;
 
@@ -67,9 +79,7 @@ public class NewsActivity extends AppCompatActivity implements MediaPlayer.OnCom
         mVV = (VideoView) findViewById(R.id.vwNews);
         mVV.setOnCompletionListener(this);
         mVV.setOnPreparedListener(this);
-
         if (!playFileRes(fileRes)) return;
-
         mVV.start();
     }
 
@@ -110,7 +120,20 @@ public class NewsActivity extends AppCompatActivity implements MediaPlayer.OnCom
 
 
     private void init() {
+        newsPresenter = new NewsPresenter(this);
         actionBar = getSupportActionBar();
+
+        recyclerView = (RecyclerView) findViewById(R.id.news_recycler);
+
+        newsList = new ArrayList<>();
+        newsList.add(new NewsCard("asdasd","https://firebasestorage.googleapis.com/v0/b/spear-e5a6a.appspot.com/o/imagenews%2Fnoticia1image.jpg?alt=media&token=0504a857-33dd-4695-9f02-9310b3fdd066","titutlo","subtitulo","descripcion"));
+        newsList.add(new NewsCard("asdasd","https://firebasestorage.googleapis.com/v0/b/spear-e5a6a.appspot.com/o/imagenews%2Fnoticia1image.jpg?alt=media&token=0504a857-33dd-4695-9f02-9310b3fdd066","titutlo","subtitulo","descripcion"));
+        adapter = new NewsAdapter(this, getContext(), newsList);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 1);  //displays number of cards per row
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+       recyclerView.setAdapter(adapter);
+
         Typeface typeLibel = Typeface.createFromAsset(getAssets(), "Libel_Suit.ttf");
 
         SpannableStringBuilder typeFaceAction = new SpannableStringBuilder("Spear");

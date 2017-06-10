@@ -3,7 +3,7 @@ package com.spear.android.album;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 
-import com.spear.android.pojo.CardImage;
+import com.spear.android.pojo.GalleryCard;
 
 
 public interface AlbumView {
@@ -25,8 +25,10 @@ public interface AlbumView {
 
     void showError(String s);
 
+    void cambiarFragment(int hideFragment);
+
     interface OnImageClick {
-        void onSuccess(CardImage card);
+        void onSuccess(GalleryCard card);
         void onError();
 
     }
