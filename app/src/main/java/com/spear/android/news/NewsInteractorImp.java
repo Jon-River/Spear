@@ -53,7 +53,7 @@ public class NewsInteractorImp implements  NewsInteractor{
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                onLoadNews.OnError(databaseError.toString());
+                //onLoadNews.OnError(databaseError.toString());
             }
         });
 

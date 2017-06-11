@@ -235,7 +235,7 @@ public class NewsActivity extends AppCompatActivity implements NewsView, MediaPl
 
     @Override
     public void showError(String error) {
-        Toast.makeText(this, "" + error, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "eeeeeeeeeeee" + error, Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -15,6 +15,15 @@
         android:layout_centerVertical="true" />
 
 
+
+    <fragment
+        android:id="@+id/mapMenuFragment"
+        android:name="com.spear.android.map.MapMenuFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.spear.android.profile.ProfileFragment"

@@ -5,4 +5,13 @@ package com.spear.android.map;
  */
 
 public class MapPresenter {
+
+    private MapView view;
+    private MapInteractor mapInteractor;
+
+
+    public MapPresenter(MapView mapActivity) {
+        this.view = mapActivity;
+        mapInteractor = new MapInteractorImp();
+    }
 }

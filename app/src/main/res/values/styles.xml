@@ -15,6 +15,16 @@
         <item name="android:windowExitAnimation">@android:anim/slide_out_right</item>
     </style>
 
+    <style name="MySwitch" parent="Theme.AppCompat.Light">
+        <!-- active thumb & track color (30% transparency) -->
+        <item name="colorControlActivated">@color/tomato</item>
+
+        <!-- inactive thumb color -->
+        <item name="colorSwitchThumbNormal">@color/steelblue</item>
+
+        <!-- inactive track color (30% transparency) -->
+        <item name="android:colorForeground">@color/Ash_Gray</item>
+    </style>
     <style name="MyTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
 

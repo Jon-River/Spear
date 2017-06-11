@@ -6,4 +6,6 @@ package com.spear.android.map;
 
 public interface MapView {
 
+    void cambiarFragment(int fragment);
+
 }

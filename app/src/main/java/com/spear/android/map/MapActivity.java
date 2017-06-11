@@ -22,17 +22,20 @@ import com.spear.android.news.NewsActivity;
 import com.spear.android.profile.ProfileFragment;
 import com.spear.android.weather.WeatherActivity;
 
-public class MapActivity extends AppCompatActivity {
+public class MapActivity extends AppCompatActivity implements MapView {
 
 
     private MapFragment mapFragment;
+    private MapMenuFragment mapMenuFragment;
     private FragmentManager fm;
     private Menu menu;
     private ActionBar actionBar;
     private ProfileFragment profileFragment;
     private FirebaseAuth firebaseAuth;
+    private MapPresenter mapPresenter;
     final int map = 1;
     final int profile = 2;
+    final int mapmenu = 3;
     final int hideFragment = 0;
 
 
@@ -47,7 +50,10 @@ public class MapActivity extends AppCompatActivity {
     private void init() {
         fm = getSupportFragmentManager();
         mapFragment = (MapFragment) fm.findFragmentById(R.id.mapFragment);
+        mapMenuFragment = (MapMenuFragment) fm.findFragmentById(R.id.mapMenuFragment);
+
         actionBar = getSupportActionBar();
+        mapPresenter = new MapPresenter(this);
         Typeface typeLibel = Typeface.createFromAsset(getAssets(), "Libel_Suit.ttf");
         SpannableStringBuilder typeFaceAction = new SpannableStringBuilder("Map");
         typeFaceAction.setSpan(new CustomTypeFace("", typeLibel), 0, typeFaceAction.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
@@ -95,15 +101,21 @@ public class MapActivity extends AppCompatActivity {
         }
     }
 
+    @Override
     public void cambiarFragment(int ifrg) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
         transaction.hide(mapFragment);
         transaction.hide(profileFragment);
+        transaction.hide(mapMenuFragment);
         if (ifrg == map) {
             transaction.show(mapFragment);
         } else if (ifrg == profile) {
             transaction.show(profileFragment);
+        } else if (ifrg == hideFragment) {
+
+        } else if (ifrg == mapmenu) {
+            transaction.show(mapMenuFragment);
         }
         transaction.commit();
     }
@@ -120,6 +132,5 @@ public class MapActivity extends AppCompatActivity {
 
     private void openProfile() {
         cambiarFragment(profile);
-
     }
 }
