@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,7 +49,7 @@ public class NewsActivity extends AppCompatActivity implements NewsView, MediaPl
     private ActionBar actionBar;
     private ProfileFragment profileFragment;
     private NewsPresenter newsPresenter;
-    private ArrayList <NewsCard> newsList;
+    private ArrayList<NewsCard> newsList;
     private RecyclerView recyclerView;
     private NewsAdapter adapter;
     final int hideFragment = 0;
@@ -122,17 +123,17 @@ public class NewsActivity extends AppCompatActivity implements NewsView, MediaPl
     private void init() {
         newsPresenter = new NewsPresenter(this);
         actionBar = getSupportActionBar();
-
         recyclerView = (RecyclerView) findViewById(R.id.news_recycler);
-
+        recyclerView.setNestedScrollingEnabled(false);
         newsList = new ArrayList<>();
-        newsList.add(new NewsCard("asdasd","https://firebasestorage.googleapis.com/v0/b/spear-e5a6a.appspot.com/o/imagenews%2Fnoticia1image.jpg?alt=media&token=0504a857-33dd-4695-9f02-9310b3fdd066","titutlo","subtitulo","descripcion"));
-        newsList.add(new NewsCard("asdasd","https://firebasestorage.googleapis.com/v0/b/spear-e5a6a.appspot.com/o/imagenews%2Fnoticia1image.jpg?alt=media&token=0504a857-33dd-4695-9f02-9310b3fdd066","titutlo","subtitulo","descripcion"));
+        newsPresenter.loadNewsFirebase();
+        //newsList.add(new NewsCard("ss","https://firebasestorage.googleapis.com/v0/b/spear-e5a6a.appspot.com/o/imagenews%2Fnoticia1image.jpg?alt=media&token=0504a857-33dd-4695-9f02-9310b3fdd066","sssss","sssss","ssssss"));
+
         adapter = new NewsAdapter(this, getContext(), newsList);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 1);  //displays number of cards per row
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-       recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);
 
         Typeface typeLibel = Typeface.createFromAsset(getAssets(), "Libel_Suit.ttf");
 
@@ -226,5 +227,22 @@ public class NewsActivity extends AppCompatActivity implements NewsView, MediaPl
     }
 
 
+    @Override
+    public void render(ArrayList<NewsCard> newsListLoaded) {
+        adapter.updateReceiptsList(newsListLoaded);
+
+    }
+
+    @Override
+    public void showError(String error) {
+        Toast.makeText(this, "" + error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void openUrlIntent(String url) {
+        Intent openUrlIntent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse(url));
+        startActivity(openUrlIntent);
+    }
 }
 

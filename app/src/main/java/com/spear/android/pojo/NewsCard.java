@@ -6,13 +6,13 @@ package com.spear.android.pojo;
 
 public class NewsCard {
 
-    String linkurl, imageurl, tittle, subttitle, description;
+    String linkurl, imageurl, tittle, subtitule, description;
 
-    public NewsCard(String linkurl, String imageurl, String tittle, String subttitle, String description) {
+    public NewsCard(String linkurl, String imageurl, String tittle, String subtitule, String description) {
         this.linkurl = linkurl;
         this.imageurl = imageurl;
         this.tittle = tittle;
-        this.subttitle = subttitle;
+        this.subtitule = subtitule;
         this.description = description;
     }
 
@@ -45,12 +45,12 @@ public class NewsCard {
         this.tittle = tittle;
     }
 
-    public String getSubttitle() {
-        return subttitle;
+    public String getSubtitule() {
+        return subtitule;
     }
 
-    public void setSubttitle(String subttitle) {
-        this.subttitle = subttitle;
+    public void setSubtitule(String subtitule) {
+        this.subtitule = subtitule;
     }
 
     public String getDescription() {

@@ -101,7 +101,7 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
         albumPresenter = new AlbumPresenter(this);
         init();
         FullScreencall();
-        loadImageInfo();
+        loadGalleryFirebase();
     }
 
     @Override
@@ -231,7 +231,7 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void loadImageInfo() {
+    private void loadGalleryFirebase() {
 
         imageArray = new ArrayList<>();
 

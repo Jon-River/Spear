@@ -2,84 +2,97 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
-    card_view:cardCornerRadius="4dp"
-    card_view:cardElevation="4dp">
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="2">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        >
-        <TextView
-            android:padding="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtSubtittle"
-            android:text="Subtittle"
-            android:textSize="20dp"
-            android:textAllCaps="false"
-            android:layout_alignParentTop="true"/>
-
-        <TextView
-            android:padding="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtTittle"
-            android:text="Tittle"
-            android:gravity="left"
-            android:textSize="25dp"
-            android:textAllCaps="false"
-            android:layout_alignParentBottom="true"/>
-
-        <ImageView
-            android:id="@+id/imageNews"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@mipmap/ic_launcher"
-            android:scaleType="fitXY"
-            android:layout_weight="1"/>
-
-    </RelativeLayout>
-
-
+    android:layout_height="350dp"
+    card_view:cardCornerRadius="5dp"
+    card_view:cardElevation="4dp"
+    card_view:cardUseCompatPadding="true">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:padding="12dp"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_weight="1">
+        android:weightSum="2">
 
-        <TextView
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.8"
-            android:id="@+id/txtDescription"
-            android:text="Descrition"
-            android:textAllCaps="false"
-            />
+            android:layout_weight="1">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:id="@+id/txtLinkUrl"
-            android:layout_weight="0.2"
-            android:text="https://url"
-            android:textAllCaps="false"
-            android:layout_height="0dp" />
+            <ImageView
+                android:id="@+id/imageNews"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:src="@mipmap/ic_launcher" />
+
+              <ImageView
+                      android:id="@+id/imageshadow"
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:scaleType="fitXY"
+                      android:src="@drawable/bg_shadow_left" />
+
+            <TextView
+                android:id="@+id/txtSubtittle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:padding="10dp"
+                android:text="Subtittle"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/txtTittle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="left"
+                android:padding="10dp"
+                android:text="Tittle"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="25dp" />
+
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/steelblue"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+
+            <TextView
+                android:id="@+id/txtDescription"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.7"
+                android:text="Descrition"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+
+
+            <Button
+                android:id="@+id/btnLinkUrl"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.3"
+                android:gravity="left|center_vertical"
+                android:paddingBottom="10dp"
+                android:text="https://url"
+                android:background="@color/steelblue85"
+                android:textAllCaps="false"
+                android:textColor="@color/Yellow85" />
+
+        </LinearLayout>
+
 
     </LinearLayout>
-
-
-
-</LinearLayout>
-
 
 
 </android.support.v7.widget.CardView>

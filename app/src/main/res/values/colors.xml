@@ -25,6 +25,7 @@
     <color name="navajowhite">#FFDEAD</color>
     <color name="peachpuff">#FFDAB9</color>
     <color name="gold">#FFD700</color>
+    <color name="gold70">#B3FFD700</color>
     <color name="pink">#FFC0CB</color>
     <color name="lightpink">#FFB6C1</color>
     <color name="greysnow">#c5c5c5</color>
@@ -34,6 +35,7 @@
     <color name="coral">#FF7F50</color>
     <color name="hotpink">#FF69B4</color>
     <color name="tomato">#FF6347</color>
+    <color name="tomato85">#D8FF6347</color>
     <color name="orangered">#FF4500</color>
     <color name="deeppink">#FF1493</color>
     <color name="fuchsia">#FF00FF</color>
@@ -123,6 +125,7 @@
     <color name="mediumturquoise">#48D1CC</color>
     <color name="darkslateblue">#483D8B</color>
     <color name="steelblue">#4682B4</color>
+    <color name="steelblue85">#D84682B4</color>
     <color name="royalblue">#4169E1</color>
     <color name="turquoise">#40E0D0</color>
     <color name="mediumseagreen">#3CB371</color>
@@ -306,6 +309,7 @@
     <color name="Harvest_Gold">#EDE275</color>
     <color name="Sun_Yellow">#FFE87C</color>
     <color name="Yellow">#FFFF00</color>
+    <color name="Yellow85">#D8FFFF00</color>
     <color name="Corn_Yellow">#FFF380</color>
     <color name="Parchment">#FFFFC2</color>
     <color name="Cream">#FFFFCC</color>
