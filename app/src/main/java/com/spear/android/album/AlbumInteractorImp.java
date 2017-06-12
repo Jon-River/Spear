@@ -49,7 +49,7 @@ public class AlbumInteractorImp implements AlbumInteractor {
     private FirebaseAuth firebaseAuth;
     private StorageReference storageReference;
     private List<GalleryCard> cardList;
-    private String url, province, name;
+    private String url, name;
     AlbumView.OnPushRatingToFirebase onPushRating;
     OnPushImage onPushImage;
 
@@ -79,7 +79,7 @@ public class AlbumInteractorImp implements AlbumInteractor {
 
 
                 UserInfo user = dataSnapshot.getValue(UserInfo.class);
-                province = user.getProvince();
+
                 name = user.getName();
 
 
@@ -143,7 +143,7 @@ public class AlbumInteractorImp implements AlbumInteractor {
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                     url = taskSnapshot.getDownloadUrl().toString();
 
-                                    ImageInfo imageInfo = new ImageInfo(firebaseAuth.getCurrentUser().getEmail(), 0, milis, comentary, url, 0, province, name);
+                                    ImageInfo imageInfo = new ImageInfo(firebaseAuth.getCurrentUser().getEmail(), 0, milis, comentary, url, 0, name);
                                     DatabaseReference dataref = databaseReference.child("/images/").child(String.valueOf(milis));
                                     String key = dataref.getKey();
                                     dataref.setValue(imageInfo);
@@ -173,7 +173,7 @@ public class AlbumInteractorImp implements AlbumInteractor {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                 url = taskSnapshot.getDownloadUrl().toString();
-                                ImageInfo imageInfo = new ImageInfo(firebaseAuth.getCurrentUser().getEmail(), 0, milis, comentary, url, 0, province, name);
+                                ImageInfo imageInfo = new ImageInfo(firebaseAuth.getCurrentUser().getEmail(), 0, milis, comentary, url, 0, name);
                                 DatabaseReference dataref = databaseReference.child("/images/").child(String.valueOf(milis));
                                 String key = dataref.getKey();
                                 dataref.setValue(imageInfo);

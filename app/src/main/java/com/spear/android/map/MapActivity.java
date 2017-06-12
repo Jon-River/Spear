@@ -24,7 +24,7 @@ import com.spear.android.map.menu.MapMenuFragment;
 import com.spear.android.map.poi.PoiFragment;
 import com.spear.android.news.NewsActivity;
 import com.spear.android.pojo.PoiInfo;
-import com.spear.android.profile.ProfileFragment;
+import com.spear.android.profile.ProfileActivity;
 import com.spear.android.weather.WeatherActivity;
 
 import java.util.Map;
@@ -38,13 +38,11 @@ public class MapActivity extends AppCompatActivity implements MapView {
     private FragmentManager fm;
     private Menu menu;
     private ActionBar actionBar;
-    private ProfileFragment profileFragment;
     private FirebaseAuth firebaseAuth;
     private MapPresenter mapPresenter;
     private boolean mapMenuOpen;
     private static final int PETICION_PERMISO_LOCALIZACION = 101;
     private static final int map = 1;
-    private static  final int profile = 2;
     private static final int mapmenu = 3;
     private static final int poi = 4;
     private static final int hideFragments = 0;
@@ -63,7 +61,6 @@ public class MapActivity extends AppCompatActivity implements MapView {
         fm = getSupportFragmentManager();
         mapFragment = (MapFragment) fm.findFragmentById(R.id.mapFragment);
         mapMenuFragment = (MapMenuFragment) fm.findFragmentById(R.id.mapMenuFragment);
-        profileFragment = (ProfileFragment) fm.findFragmentById(R.id.profileFragment);
         poiFragment = (PoiFragment) fm.findFragmentById(R.id.poiFragment);
         actionBar = getSupportActionBar();
         mapPresenter = new MapPresenter(this);
@@ -93,7 +90,7 @@ public class MapActivity extends AppCompatActivity implements MapView {
                 signOut();
                 return true;
             case R.id.profilemap:
-                openProfile();
+                startActivity( new Intent(this, ProfileActivity.class));
                 return true;
             case android.R.id.home:
 
@@ -121,12 +118,9 @@ public class MapActivity extends AppCompatActivity implements MapView {
         FragmentTransaction transaction = fm.beginTransaction();
         if (ifrg == map) {
             transaction.show(mapFragment);
-        } else if (ifrg == profile) {
-            transaction.show(profileFragment);
-        } else if (ifrg == hideFragments) {
+        }  else if (ifrg == hideFragments) {
             mapMenuOpen = false;
             transaction.hide(poiFragment);
-            transaction.hide(profileFragment);
             transaction.hide(mapMenuFragment);
         } else if (ifrg == mapmenu) {
             mapMenuOpen = true;
@@ -204,7 +198,5 @@ public class MapActivity extends AppCompatActivity implements MapView {
         }
     }
 
-    private void openProfile() {
-        cambiarFragment(profile);
-    }
+
 }

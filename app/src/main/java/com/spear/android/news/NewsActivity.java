@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -29,7 +28,7 @@ import com.spear.android.custom.CustomTypeFace;
 import com.spear.android.login.LoginActivity;
 import com.spear.android.map.MapActivity;
 import com.spear.android.pojo.NewsCard;
-import com.spear.android.profile.ProfileFragment;
+import com.spear.android.profile.ProfileActivity;
 import com.spear.android.weather.WeatherActivity;
 
 import java.util.ArrayList;
@@ -47,13 +46,10 @@ public class NewsActivity extends AppCompatActivity implements NewsView, MediaPl
     private VideoView mVV;
     private CollapsingToolbarLayout collapsingToolbar;
     private ActionBar actionBar;
-    private ProfileFragment profileFragment;
     private NewsPresenter newsPresenter;
     private ArrayList<NewsCard> newsList;
     private RecyclerView recyclerView;
     private NewsAdapter adapter;
-    final int hideFragment = 0;
-    final int profile = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +96,7 @@ public class NewsActivity extends AppCompatActivity implements NewsView, MediaPl
                 signOut();
                 return true;
             case R.id.profile:
-                openProfile();
+                startActivity( new Intent(this, ProfileActivity.class));
                 return true;
             case android.R.id.home:
                 backSignOut();
@@ -147,10 +143,8 @@ public class NewsActivity extends AppCompatActivity implements NewsView, MediaPl
         collapsingToolbar.setCollapsedTitleTypeface(typeLibel);
         collapsingToolbar.setExpandedTitleTypeface(typeLibel);
         fm = getSupportFragmentManager();
-
-        profileFragment = (ProfileFragment) fm.findFragmentById(R.id.profileFragment);
         firebaseAuth = FirebaseAuth.getInstance();
-        cambiarFragment(hideFragment);
+
     }
 
 
@@ -184,21 +178,6 @@ public class NewsActivity extends AppCompatActivity implements NewsView, MediaPl
         initLogin();
     }
 
-    private void openProfile() {
-        cambiarFragment(profile);
-
-    }
-
-    public void cambiarFragment(int ifrg) {
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.hide(profileFragment);
-
-        if (ifrg == profile) {
-            transaction.show(profileFragment);
-        }
-        transaction.commit();
-    }
 
     private boolean playFileRes(int fileRes) {
         if (fileRes == 0) {

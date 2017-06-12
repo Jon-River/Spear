@@ -4,6 +4,14 @@
 
     <!-- "Mark Favorite", should appear as action button if possible -->
 
+
+    <item
+        android:id="@+id/newsmenu"
+        android:icon="@mipmap/news_list"
+        android:title="news"
+        app:showAsAction="always" />
+
+
     <item
         android:id="@+id/gallerymenu"
         android:icon="@mipmap/ic_collections"
@@ -17,12 +25,6 @@
         android:title="map"
         app:showAsAction="always" />
 
-
-    <item
-        android:id="@+id/newsmenu"
-        android:icon="@mipmap/news_list"
-        android:title="news"
-        app:showAsAction="always" />
 
 
     <item

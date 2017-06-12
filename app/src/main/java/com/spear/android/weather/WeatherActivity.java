@@ -30,7 +30,7 @@ import com.spear.android.managers.SQLliteManager;
 import com.spear.android.map.MapActivity;
 import com.spear.android.news.NewsActivity;
 import com.spear.android.pojo.WeatherResponse;
-import com.spear.android.profile.ProfileFragment;
+import com.spear.android.profile.ProfileActivity;
 import com.spear.android.weather.search.SearchFragment;
 
 import java.text.SimpleDateFormat;
@@ -38,6 +38,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
+
+import static com.spear.android.R.id.profile;
 
 public class WeatherActivity extends AppCompatActivity implements WeatherView, View.OnClickListener {
 
@@ -48,7 +50,6 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
     private FloatingActionButton fabOpenSearchView;
     private WeatherPresenter weatherPresenter;
     private SearchFragment searchFragment;
-    private ProfileFragment profileFragment;
     private FragmentManager fm;
     private Menu menu;
     private SQLliteManager dataManager;
@@ -58,7 +59,7 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
     private FirebaseAuth firebaseAuth;
     final int hideFragment = 0;
     final int search = 1;
-    final int profile = 2;
+
 
 
     @Override
@@ -79,6 +80,7 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
             setDataResponse(data, data.getDate());
             cambiarFragment(hideFragment);
         } else {
+            fabOpenSearchView.hide();
             cambiarFragment(1);
         }
 
@@ -132,8 +134,8 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
             case R.id.signOutItem:
                 signOut();
                 return true;
-            case R.id.profile:
-                openProfile();
+            case profile:
+                startActivity( new Intent(this, ProfileActivity.class));
                 return true;
             case R.id.newsmenu:
                 startActivity(new Intent(this, NewsActivity
@@ -159,7 +161,6 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
         db = dataManager.getWritableDatabase();
         fm = getSupportFragmentManager();
         searchFragment = (SearchFragment) fm.findFragmentById(R.id.weatherSearchFrag);
-        profileFragment = (ProfileFragment) fm.findFragmentById(R.id.profileFragment);
         txtCity = (TextView) findViewById(R.id.txtCity);
         txtDate = (TextView) findViewById(R.id.txtDate);
         txtDescription = (TextView) findViewById(R.id.txtDescription);
@@ -340,10 +341,6 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
         initLogin();
     }
 
-    private void openProfile() {
-        cambiarFragment(profile);
-
-    }
 
     @Override
     public void showError(String error) {
@@ -353,12 +350,8 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
     public void cambiarFragment(int ifrg) {
         FragmentTransaction transaction = fm.beginTransaction();
         transaction.hide(searchFragment);
-        transaction.hide(profileFragment);
-
         if (ifrg == search) {
             transaction.show(searchFragment);
-        } else if (ifrg == profile) {
-            transaction.show(profileFragment);
         } else if (ifrg == hideFragment) {
             if (!fabOpenSearchView.isShown()) {
                 fabOpenSearchView.show();

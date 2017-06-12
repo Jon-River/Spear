@@ -8,16 +8,16 @@ public class UserInfo {
 
     public String name;
     public String email;
-    public String province;
+
 
     public UserInfo() {
 
     }
 
-    public UserInfo(String name, String email, String province) {
+    public UserInfo(String name, String email) {
         this.name = name;
         this.email = email;
-        this.province = province;
+
 
     }
 
@@ -37,12 +37,5 @@ public class UserInfo {
         this.email = email;
     }
 
-    public String getProvince() {
-        return province;
-    }
-
-    public void setProvince(String province) {
-        this.province = province;
-    }
 }
 

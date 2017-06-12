@@ -1,6 +1,7 @@
 package com.spear.android.map.menu;
 
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SwitchCompat;
@@ -58,6 +59,14 @@ public class MapMenuFragment extends Fragment implements CompoundButton.OnChecke
         btnSkip.setOnClickListener(this);
         swEnableManual.setOnCheckedChangeListener(this);
         swEnableManual.setChecked(false);
+
+        Typeface typeLibel = Typeface.createFromAsset(getActivity().getAssets(), "Libel_Suit.ttf");
+        etDescription.setTypeface(typeLibel);
+        etLatitude.setTypeface(typeLibel);
+        etLongitude.setTypeface(typeLibel);
+        btnPushPoint.setTypeface(typeLibel);
+        btnSkip.setTypeface(typeLibel);
+        swEnableManual.setTypeface(typeLibel);
 
 
     }

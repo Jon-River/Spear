@@ -5,7 +5,7 @@ package com.spear.android.register;
  */
 
 public interface RegisterInteractor {
-    void registerUser(final String user, final String mail, final String password, final String province);
+    void registerUser(final String user, final String mail, final String password);
 
     interface OnRegisterCallback {
         void onSuccess();

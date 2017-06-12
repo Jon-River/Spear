@@ -26,11 +26,12 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
     private List<GalleryCard> albumList;
     private Activity albumActivity;
     private AlbumView.OnImageClick onImageClick;
+    private static final int fakeImg = 946684800;
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public ImageView image;
+        public ImageView image, imageRating;
         public TextView txtRating, txtUsername;
         public GalleryCard card;
 
@@ -38,6 +39,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
         public MyViewHolder(View view) {
             super(view);
             image = (ImageView) view.findViewById(R.id.image);
+            imageRating = (ImageView) view.findViewById(R.id.imageRating);
             txtRating = (TextView) view.findViewById(R.id.txtRating);
             txtUsername = (TextView) view.findViewById(R.id.txtUsername);
             Typeface typeLibel = Typeface.createFromAsset(albumActivity.getAssets(), "Libel_Suit.ttf");
@@ -86,13 +88,23 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder
         float rating = album.getRating() / album.getVotes();
         String ratingStr;
         if (Float.isNaN(rating)) {
-            ratingStr = "N/A";
+            holder.txtUsername.setText(album.getUsername());
+            holder.imageRating.setImageResource(R.mipmap.ic_fish_no_mustard);
+            ratingStr = "";
+            holder.txtRating.setText(ratingStr);
+
+            if (album.getTimeStamp() == fakeImg){
+                holder.txtUsername.setText("");
+                holder.imageRating.setImageResource(android.R.color.transparent);
+            }
         } else {
+            holder.imageRating.setImageResource(R.mipmap.ic_fish_mustard);
             ratingStr = String.format("%.1f", rating);
+            holder.txtRating.setText(ratingStr);
+            holder.txtUsername.setText(album.getUsername());
 
         }
-        holder.txtRating.setText(ratingStr);
-        holder.txtUsername.setText(album.getUsername());
+
     }
 
 

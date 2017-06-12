@@ -14,7 +14,6 @@ public class ImageInfo {
   private long timeStamp;
   private String comentary;
   private String url;
-  private String province;
   private String name;
 
 
@@ -22,24 +21,16 @@ public class ImageInfo {
 
   }
 
-  public ImageInfo(String usermail, float rating, long timeStamp, String comentary, String url, int voted, String province, String name) {
+  public ImageInfo(String usermail, float rating, long timeStamp, String comentary, String url, int voted, String name) {
     this.usermail = usermail;
     this.rating = rating;
     this.timeStamp = timeStamp;
     this.comentary = comentary;
     this.url = url;
     this.voted = voted;
-    this.province = province;
     this.name = name;
   }
 
-  public String getProvince() {
-    return province;
-  }
-
-  public void setProvince(String province) {
-    this.province = province;
-  }
 
   public String getName() {
     return name;

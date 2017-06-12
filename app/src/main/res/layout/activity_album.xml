@@ -17,20 +17,38 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|left"
         android:id="@+id/btnOrderRating"
+        android:layout_marginLeft="70dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:layout_marginBottom="70dp"
+        android:src="@mipmap/ic_fish_filled_mustard" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"
         android:layout_marginLeft="20dp"
         android:background="?android:attr/selectableItemBackground"
         android:layout_marginBottom="70dp"
-        android:src="@mipmap/ic_top_rated" />
+        android:src="@mipmap/ic_arrow_up" />
 
     <ImageButton
         android:layout_width="wrap_content"
         android:id="@+id/btnOrderByDate"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|left"
+        android:layout_marginLeft="70dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:layout_marginBottom="20dp"
+        android:src="@mipmap/ic_timewatch" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"
         android:layout_marginLeft="20dp"
         android:background="?android:attr/selectableItemBackground"
         android:layout_marginBottom="20dp"
-        android:src="@mipmap/ic_swapper" />
+        android:src="@mipmap/ic_arrow_down" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabOpenCamera"
@@ -41,14 +59,6 @@
         android:layout_marginRight="20dp"
         android:src="@mipmap/addphoto" />
 
-
-    <fragment
-        android:id="@+id/profileFragment"
-        android:name="com.spear.android.profile.ProfileFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
 
     <fragment
         android:id="@+id/galleryOptionFragment"

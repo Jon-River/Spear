@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView , Medi
 
     private void settingsVideo() {
         int fileRes=0;
-       String resourceName = "login_spear_no_audio";
+       String resourceName = "login_spear_mero";
         if (resourceName!=null) {
             fileRes = this.getResources().getIdentifier(resourceName, "raw", getPackageName());
         }
@@ -93,6 +93,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView , Medi
         txtTittle.setTypeface(typeLibel);
 
         dialog = new ProgressDialog(this);
+        dialog.setMessage("Iniciando sesión");
 
 
         btnLogin.setOnClickListener(new View.OnClickListener() {

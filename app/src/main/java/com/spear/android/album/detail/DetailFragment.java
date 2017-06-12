@@ -30,7 +30,8 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
     public int votes;
     public float rating;
     public long timeStamp;
-    final int hideFragment = 0;
+    private static final int hideFragment = 0;
+    private static final int appImageCard = 11111111;
 
     private AlbumActivity view;
 
@@ -74,6 +75,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         if (v.getId()== R.id.btnSubmitRating){
             //Toast.makeText(this, "rating" + name.getText().toString()+  " "+ timeStamp, Toast.LENGTH_SHORT).show();
             rating = ratingBar.getRating();
+
             view.pushRatingToFirebase(timeStamp, rating);
 
         }else if (v.getId()== R.id.btnSkip){
@@ -90,6 +92,13 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         rating = model.getRating() / votes;
         ratingBar.setRating(rating);
         timeStamp = model.getTimeStamp();
+        if (timeStamp == appImageCard){
+            btnSubmitRating.setEnabled(false);
+            ratingBar.setEnabled(false);
+        }else{
+            btnSubmitRating.setEnabled(true);
+            ratingBar.setEnabled(true);
+        }
     }
 
     public void setDetailRating(float currentRating) {

@@ -45,7 +45,7 @@ import com.spear.android.map.MapActivity;
 import com.spear.android.news.NewsActivity;
 import com.spear.android.pojo.GalleryCard;
 import com.spear.android.pojo.ImageInfo;
-import com.spear.android.profile.ProfileFragment;
+import com.spear.android.profile.ProfileActivity;
 import com.spear.android.weather.WeatherActivity;
 
 import java.util.ArrayList;
@@ -54,6 +54,7 @@ import java.util.List;
 
 import static com.activeandroid.Cache.getContext;
 import static com.google.android.gms.internal.zzt.TAG;
+import static com.spear.android.R.id.profile;
 
 public class AlbumActivity extends AppCompatActivity implements View.OnClickListener, AlbumView {
 
@@ -65,30 +66,23 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
     private AlbumAdapter adapter;
     private List<GalleryCard> cardList;
     private FloatingActionButton fabOpenCamera;
-
+    private static final int appImageCard = 946684800;
     private ImageButton btnOrderByRating, btnOrderByDate;
-
-
     private ProgressDialog dialog;
-
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
-
     private Menu menu;
     private FragmentManager fm;
     private ArrayList<ImageInfo> imageArray;
     private ActionBar actionBar;
-    private ProfileFragment profileFragment;
     private GalleryOptionFragment galleryOptionFragment;
     private DetailFragment detailFragment;
-
     private ResultFragment resultFragment;
     private CameraManager cameraManager;
     private boolean isGalleryOptionShown, isDetailShown;
     private Intent galleryIntent;
     final int hideFragment = 0;
     final int galleryOption = 1;
-    final int profile = 2;
     final int result = 3;
     final int detail = 4;
 
@@ -138,8 +132,8 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
             case R.id.signOutItem:
                 signOut();
                 return true;
-            case R.id.profile:
-                openProfile();
+            case profile:
+                startActivity( new Intent(this, ProfileActivity.class));
                 return true;
             case R.id.weathermenu:
                 Intent intent = new Intent(this, WeatherActivity.class);
@@ -246,7 +240,7 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
                     imageArray.add(image);
                 }
                 while (imageArray.size() % 3 != 0) {
-                    ImageInfo image2 = new ImageInfo("spear", 0, 111111, "spear", "https://firebasestorage.googleapis.com/v0/b/spear-e5a6a.appspot.com/o/Images%2F1495440673015?alt=media&token=68462995-3c3a-4425-b0c4-9e9c8cb406c3", 0, "spear", "spear");
+                    ImageInfo image2 = new ImageInfo("Spear", 0, appImageCard, "Spear", "https://firebasestorage.googleapis.com/v0/b/spear-e5a6a.appspot.com/o/imagenews%2FCaptura%20de%20pantalla%202017-06-13%20a%20las%200.42.53.png?alt=media&token=5d6d5226-ba3c-4098-9cf0-dc15f3c73600", 0, "Spear");
                     imageArray.add(image2);
 
                 }
@@ -283,8 +277,7 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
         cardList.clear();
         GalleryCard card;
         for (ImageInfo imageInfo : imgInfo) {
-            card = new GalleryCard(imageInfo.getName(), imageInfo.getRating(), imageInfo.getUrl(),
-                    imageInfo.getProvince(), imageInfo.getTimeStamp(), imageInfo.getVoted());
+            card = new GalleryCard(imageInfo.getName(), imageInfo.getRating(), imageInfo.getUrl(), imageInfo.getTimeStamp(), imageInfo.getVoted());
             cardList.add(card);
         }
         adapter.notifyDataSetChanged();
@@ -312,10 +305,9 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         dialog = new ProgressDialog(this);
-        dialog.setMessage("Uploading newsImage");
+        dialog.setMessage("Subiendo información");
         fm = getSupportFragmentManager();
         galleryOptionFragment = (GalleryOptionFragment) fm.findFragmentById(R.id.galleryOptionFragment);
-        profileFragment = (ProfileFragment) fm.findFragmentById(R.id.profileFragment);
         resultFragment = (ResultFragment) fm.findFragmentById(R.id.resultFragment);
         detailFragment = (DetailFragment) fm.findFragmentById(R.id.detailFragment);
 
@@ -344,7 +336,7 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void showError(String s) {
-        Toast.makeText(this, "Error exception:"+ s, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Error exception:" + s, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -360,7 +352,7 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void pushTofirebase(ImageView image, int requestCode, int resultCode, String comentary) {
-        albumPresenter.pushToFirebase(galleryIntent,image, requestCode, resultCode, comentary);
+        albumPresenter.pushToFirebase(galleryIntent, image, requestCode, resultCode, comentary);
     }
 
     @Override
@@ -384,22 +376,17 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
         initLogin();
     }
 
-    private void openProfile() {
-        cambiarFragment(profile);
-    }
 
     @Override
     public void cambiarFragment(int ifrg) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
-        transaction.hide(profileFragment);
+
         transaction.hide(galleryOptionFragment);
         transaction.hide(resultFragment);
         transaction.hide(detailFragment);
 
-        if (ifrg == profile) {
-            transaction.show(profileFragment);
-        } else if (ifrg == galleryOption) {
+        if (ifrg == galleryOption) {
             isGalleryOptionShown = true;
             transaction.show(galleryOptionFragment);
         } else if (ifrg == hideFragment) {

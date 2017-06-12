@@ -28,13 +28,13 @@ public class RegisterInteractorImp implements RegisterInteractor {
     this.onRegisterCallback = onRegisterCallback;
   }
 
-  @Override public void registerUser(final String user, final String mail, final String password, final String province) {
+  @Override public void registerUser(final String user, final String mail, final String password) {
     firebaseAuth.createUserWithEmailAndPassword(mail, password)
         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
           @Override public void onComplete(@NonNull Task<AuthResult> task) {
             if (task.isSuccessful()) {
               FirebaseUser fbUser = task.getResult().getUser();
-              UserInfo userData = new UserInfo(user, mail, province);
+              UserInfo userData = new UserInfo(user, mail);
               databaseReference.child("users").child(fbUser.getUid()).setValue(userData);
               onRegisterCallback.onSuccess();
             } else {

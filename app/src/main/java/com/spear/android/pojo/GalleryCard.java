@@ -11,27 +11,23 @@ public class GalleryCard implements Serializable {
   private String username;
   private float rating;
   private String urlString;
-  private String province;
   private int imgRes;
   private long timeStamp;
   private int votes;
 
 
-  public GalleryCard(String username, float rating, String urlString, String province, long timeStamp, int votes) {
+  public GalleryCard(String username, float rating, String urlString, long timeStamp, int votes) {
     this.username = username;
     this.rating = rating;
     this.urlString = urlString;
-    this.province = province;
     this.timeStamp =  timeStamp;
     this.votes = votes;
 
   }
-  public GalleryCard(String username, float rating, int imgres, String province) {
+  public GalleryCard(String username, float rating, int imgres) {
     this.username = username;
     this.rating = rating;
     this.imgRes = imgres;
-    this.province = province;
-
   }
 
 
@@ -79,14 +75,6 @@ public class GalleryCard implements Serializable {
 
   public void setUrlString(String urlString) {
     this.urlString = urlString;
-  }
-
-  public String getProvince() {
-    return province;
-  }
-
-  public void setProvince(String province) {
-    this.province = province;
   }
 
   public int getImgRes() {

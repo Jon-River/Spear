@@ -55,8 +55,9 @@
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
+                android:id="@+id/imageRating"
                 android:paddingRight="5dp"
-                android:src="@mipmap/star" />
+                android:src="@mipmap/ic_fish_mustard" />
 
         </LinearLayout>
 

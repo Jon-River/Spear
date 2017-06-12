@@ -9,9 +9,9 @@ public class RegisterPresenter {
     this.registerInteractor = new RegisterInteractorImp(onRegisterCallback);
   }
 
-  public void registerUser(String user, String mail, String password, String province) {
+  public void registerUser(String user, String mail, String password) {
     view.showLoading();
-    registerInteractor.registerUser(user, mail, password, province);
+    registerInteractor.registerUser(user, mail, password);
   }
 
   private final RegisterInteractor.OnRegisterCallback onRegisterCallback =
