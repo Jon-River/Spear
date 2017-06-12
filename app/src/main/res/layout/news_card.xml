@@ -25,12 +25,12 @@
                 android:scaleType="fitXY"
                 android:src="@mipmap/ic_launcher" />
 
-              <ImageView
-                      android:id="@+id/imageshadow"
-                      android:layout_width="match_parent"
-                      android:layout_height="match_parent"
-                      android:scaleType="fitXY"
-                      android:src="@drawable/bg_shadow_left" />
+            <ImageView
+                android:id="@+id/imageshadow"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:src="@drawable/bg_shadow_left" />
 
             <TextView
                 android:id="@+id/txtSubtittle"
@@ -40,7 +40,7 @@
                 android:padding="10dp"
                 android:text="Subtittle"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
+                android:textColor="@color/lavender"
                 android:textSize="20dp" />
 
             <TextView
@@ -76,18 +76,35 @@
                 android:textAllCaps="false"
                 android:textColor="@color/white" />
 
-
-            <Button
-                android:id="@+id/btnLinkUrl"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.3"
-                android:gravity="left|center_vertical"
-                android:paddingBottom="10dp"
-                android:text="https://url"
-                android:background="@color/steelblue85"
-                android:textAllCaps="false"
-                android:textColor="@color/Yellow85" />
+                android:gravity="center"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Url:"
+                    android:id="@+id/txtUrl"
+                    android:textSize="20dp"
+                    android:gravity="center"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/white"/>
+
+                <ImageButton
+                    android:id="@+id/btnLinkUrl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:src="@mipmap/ic_external_link_mustard" />
+
+
+
+            </LinearLayout>
+
 
         </LinearLayout>
 

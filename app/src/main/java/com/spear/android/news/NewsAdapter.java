@@ -10,7 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,9 +31,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public ImageView newsImage;
-        public TextView txtTittle, txtSubtittle, txtDescription;
-        private Button btnLinkUrl;
+        public TextView txtTittle, txtSubtittle, txtDescription, txtUrl;
+        private ImageButton btnLinkUrl;
         public NewsCard card;
+        private String url;
 
 
         public MyViewHolder(View v) {
@@ -41,15 +42,15 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
             newsImage = (ImageView) v.findViewById(R.id.imageNews);
             txtTittle = (TextView) v.findViewById(R.id.txtTittle);
             txtSubtittle = (TextView) v.findViewById(R.id.txtSubtittle);
-            btnLinkUrl = (Button) v.findViewById(R.id.btnLinkUrl);
+            btnLinkUrl = (ImageButton) v.findViewById(R.id.btnLinkUrl);
             txtDescription = (TextView) v.findViewById(R.id.txtDescription);
+            txtUrl = (TextView) v.findViewById(R.id.txtUrl);
             Typeface typeLibel = Typeface.createFromAsset(NewsAdapter.this.view.getAssets(), "Libel_Suit.ttf");
             txtTittle.setTypeface(typeLibel);
             txtSubtittle.setTypeface(typeLibel);
-            btnLinkUrl.setTypeface(typeLibel);
             txtDescription.setTypeface(typeLibel);
+            txtUrl.setTypeface(typeLibel);
             btnLinkUrl.setOnClickListener(this);
-
 
 
             //ratingBar.setOnTouchListener(this);
@@ -58,8 +59,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
 
         @Override
         public void onClick(View v) {
-            if (v.getId() == R.id.btnLinkUrl){
-                view.openUrlIntent(btnLinkUrl.getText().toString());
+            if (v.getId() == R.id.btnLinkUrl) {
+                view.openUrlIntent(url);
             }
         }
     }
@@ -88,7 +89,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
         holder.card = news;
         Glide.with(mContext).load(news.getImageurl()).into(holder.newsImage);
         holder.txtDescription.setText(news.getDescription());
-        holder.btnLinkUrl.setText(news.getLinkurl());
+        holder.url = news.getLinkurl();
         holder.txtTittle.setText(news.getTittle());
         holder.txtSubtittle.setText(news.getSubtitule());
 
@@ -99,6 +100,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
         newsList.addAll(newslist);
         this.notifyDataSetChanged();
     }
+
     @Override
     public int getItemCount() {
         return newsList.size();
