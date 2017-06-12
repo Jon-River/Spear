@@ -195,7 +195,6 @@ public class AlbumInteractorImp implements AlbumInteractor {
 
     @Override
     public void pushRatingFirebase(final long timeStamp, final float rating) {
-        //Toast.makeText(getContext(), "" + timeStamp, Toast.LENGTH_SHORT).show();
         databaseReference.getRoot().child("images").child(String.valueOf(timeStamp)).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

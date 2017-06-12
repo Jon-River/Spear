@@ -12,7 +12,7 @@
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="@color/Blue_Koi"
+      android:background="@color/black85"
       android:orientation="vertical"
       android:paddingBottom="10dp"
       android:paddingLeft="40dp"
@@ -71,7 +71,7 @@
           android:layout_width="match_parent"
           android:layout_height="0dp"
           android:layout_weight="0.6"
-          android:background="@color/tomato"
+          android:background="@color/mustard"
           android:text="Search"
           android:textAllCaps="false"
           android:textColor="@android:color/white"

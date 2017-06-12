@@ -17,7 +17,7 @@
 
     <style name="MySwitch" parent="Theme.AppCompat.Light">
         <!-- active thumb & track color (30% transparency) -->
-        <item name="colorControlActivated">@color/tomato</item>
+        <item name="colorControlActivated">@color/mustard</item>
 
         <!-- inactive thumb color -->
         <item name="colorSwitchThumbNormal">@color/steelblue</item>
@@ -30,7 +30,7 @@
 
         <item name="colorPrimary">@color/Gunmetal</item>
         <item name="colorPrimaryDark">@color/Gunmetal</item>
-        <item name="colorAccent">@color/tomato</item>
+        <item name="colorAccent">@color/mustard</item>
         <!-- Text input Edit Text Line color -->
         <item name="colorControlNormal">@color/greysnow</item>
         <!-- Text input Edit Text Hint color -->

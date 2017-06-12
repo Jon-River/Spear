@@ -4,7 +4,7 @@
     android:id="@+id/mapMenuFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/Blue_Koi80"
+    android:background="@color/black85"
     android:gravity="center"
     android:orientation="vertical"
     android:paddingLeft="12dp"
@@ -16,6 +16,7 @@
         android:layout_height="0dp"
         android:textColor="@color/white"
         android:textSize="25dp"
+        android:id="@+id/txtTittle"
         android:layout_weight="1"
         android:text="Current Position" />
 
@@ -91,7 +92,7 @@
         android:textColor="@color/white"
         android:textSize="20dp"
         android:textAllCaps="false"
-        android:background="@color/tomato"/>
+        android:background="@color/mustard"/>
 
     <Button
         android:id="@+id/btnSkip"

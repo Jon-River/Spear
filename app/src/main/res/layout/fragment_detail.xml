@@ -66,7 +66,7 @@
             android:id="@+id/btnSubmitRating"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/tomato"
+            android:background="@color/mustard"
             android:textAllCaps="false"
             android:elevation="4dp"
             android:text="Submit"

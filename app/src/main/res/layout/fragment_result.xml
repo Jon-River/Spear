@@ -55,7 +55,7 @@
             android:id="@+id/btnPushToFirebase"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/tomato"
+            android:background="@color/mustard"
             android:text="upload"
             android:textColor="@color/white" />
 
