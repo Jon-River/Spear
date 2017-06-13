@@ -14,9 +14,9 @@ public interface MapInteractor {
     void deletePoiFirebase(String timestamp);
 
     interface OnPushPoiFirebase {
-        void OnSuccess(Map<String, Object> map);
+        void OnSuccess();
 
-        void OnError();
+        void OnError(Exception exception);
     }
 
     interface OnLoadPoiFirebase {

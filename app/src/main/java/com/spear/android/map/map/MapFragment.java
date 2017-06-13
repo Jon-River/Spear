@@ -61,7 +61,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
     private com.spear.android.map.MapView mapView;
     private GoogleMap googleMap;
     private FloatingActionButton fabAddPoi;
-
+    private boolean fixedPosition;
+    public boolean disableLocationMenuChange;
 
 
     private static final String LOGTAG = "android-localizacion";
@@ -71,11 +72,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
 
     private GoogleApiClient apiClient;
     private LocationRequest locRequest;
-    private SwitchCompat swEnableLocation;
-    private Marker marker;
+    private SwitchCompat swEnableLocation, swFixPosition;
+
     private Map<String, Object> poiListMap;
     private static final int mapmenu = 3;
     private static final int poi = 4;
+
 
 
     public MapFragment() {
@@ -98,9 +100,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
             fabAddPoi = (FloatingActionButton) view.findViewById(R.id.fabAddPoi);
 
             swEnableLocation = (SwitchCompat) view.findViewById(R.id.swEnableLocation);
+            swFixPosition = (SwitchCompat) view.findViewById(R.id.swFixedPosition);
+
             swEnableLocation.setOnCheckedChangeListener(this);
+            swFixPosition.setOnCheckedChangeListener(this);
 
             fabAddPoi.setOnClickListener(this);
+
             map.onCreate(savedInstanceState);
             map.onResume();
             map.getMapAsync(this);
@@ -124,6 +130,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
         googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
+                disableLocationMenuChange = true;
                 Projection proj = googleMap.getProjection();
                 Point coord = proj.toScreenLocation(latLng);
                 mapView.setGeoCordsMenu(String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
@@ -148,11 +155,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
                 mapView.cambiarFragment(poi);
                 PoiInfo poi = (PoiInfo) poiListMap.get(marker.getTitle());
                 mapView.setDataPoi(poi);
-                Toast.makeText(
-                        getActivity(),
-                        "Marcador pulsado:\n" +
-                                marker.getTitle(),
-                        Toast.LENGTH_SHORT).show();
 
                 return true;
             }
@@ -166,7 +168,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.fabAddPoi) {
-            mapView.cambiarFragment(mapmenu);
+            if (swEnableLocation.isChecked()) {
+                mapView.cambiarFragment(mapmenu);
+            } else {
+                Toast.makeText(getActivity(), "Enable location", Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 
@@ -179,7 +186,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
 
     @Override
     public void onLocationChanged(Location location) {
-        updateUINoMove(location);
+        if (fixedPosition) {
+            updateUI(location);
+        } else {
+            updateUINoMove(location);
+        }
+        if (!disableLocationMenuChange) {
+            mapView.setGeoCordsMenu(String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
+        }
+
+
     }
 
 
@@ -195,8 +211,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
             swEnableLocation.setChecked(true);
 
             locRequest = new LocationRequest();
-            locRequest.setInterval(2000);
-            locRequest.setFastestInterval(1000);
+            locRequest.setInterval(10000);
+            locRequest.setFastestInterval(5000);
             locRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
             LocationSettingsRequest locSettingsRequest =
@@ -242,9 +258,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
     }
 
     private void disableLocationUpdates() {
-        if (marker != null) {
-            marker.remove();
-        }
+
         LocationServices.FusedLocationApi.removeLocationUpdates(
                 apiClient, this);
 
@@ -296,29 +310,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
 
     private void updateUI(Location loc) {
         if (loc != null) {
-            if (marker != null) {
-                marker.remove();
-            }
+
             CameraUpdate camUpd1 =
                     CameraUpdateFactory
                             .newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 18);
             googleMap.moveCamera(camUpd1);
-
-            marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(loc.getLatitude(), loc.getLongitude())).title("Current position"));
-
-
             mapView.setGeoCordsMenu(String.valueOf(loc.getLatitude()), String.valueOf(loc.getLongitude()));
+            //marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(loc.getLatitude(), loc.getLongitude())).title("Current position"));
+            // mapView.setGeoCordsMenu(String.valueOf(loc.getLatitude()), String.valueOf(loc.getLongitude()));
         } else {
             mapView.setGeoCordsMenu("Unknown", "Unknown");
         }
+
     }
 
     private void updateUINoMove(Location loc) {
         if (loc != null) {
-         /*   if (marker != null) {
-                marker.remove();
-            }*/
-            // marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(loc.getLatitude(), loc.getLongitude())).title("Current position"));
             if (!mapView.checkIfMapMenuisOpen()) {
                 mapView.setGeoCordsMenu(String.valueOf(loc.getLatitude()), String.valueOf(loc.getLongitude()));
             }
@@ -348,28 +355,37 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-        if (isChecked) {
+        if (compoundButton.getId() == R.id.swEnableLocation) {
+            if (isChecked) {
 
-            enableLocationUpdates();
+                enableLocationUpdates();
 
-        } else {
+            } else {
 
-            disableLocationUpdates();
+                disableLocationUpdates();
+            }
+        } else if (compoundButton.getId() == R.id.swFixedPosition) {
+            if (isChecked) {
+
+                fixedPosition = true;
+
+            } else {
+
+                fixedPosition = false;
+            }
+
         }
+
     }
 
 
-
     private void updateMarkersMap() {
-       if (marker != null){
-           marker.remove();
-
-       }
+        googleMap.clear();
         Iterator iterator = poiListMap.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry entry = (Map.Entry) iterator.next();
             PoiInfo poiObj = (PoiInfo) entry.getValue();
-            marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(poiObj.getLatitude()), Double.parseDouble(poiObj.getLongitude()))).title(String.valueOf(poiObj.getTimestamp())));
+            googleMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(poiObj.getLatitude()), Double.parseDouble(poiObj.getLongitude()))).title(String.valueOf(poiObj.getTimestamp())));
         }
     }
 
@@ -398,23 +414,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, View.On
 
     public void addPoiListMap(Map<String, Object> poiListMa) {
         Iterator iterator = poiListMa.entrySet().iterator();
-        if (poiListMap == null){
+        if (poiListMap == null) {
             poiListMap = new HashMap<>();
+        } else {
+            poiListMap.clear();
         }
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             Map.Entry entry = (Map.Entry) iterator.next();
             String timestamp = (String) entry.getKey();
             PoiInfo poi = (PoiInfo) entry.getValue();
-            poiListMap.put(timestamp,poi);
+            poiListMap.put(timestamp, poi);
         }
-
-
         updateMarkersMap();
     }
 
 
-    public void deletePoi(String timestamp) {
-        poiListMap.remove(timestamp);
-        updateMarkersMap();
-    }
+
 }

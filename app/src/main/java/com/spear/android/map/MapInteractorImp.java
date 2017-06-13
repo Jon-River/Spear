@@ -1,7 +1,10 @@
 package com.spear.android.map;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,14 +45,12 @@ public class MapInteractorImp implements MapInteractor {
         databaseReference.getRoot().child("users").child(firebaseAuth.getCurrentUser().getUid()).child("pois").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                map.clear();
                 for (DataSnapshot imageSnapshot : dataSnapshot.getChildren()) {
                     Log.d(TAG, "onDataChange: " + imageSnapshot.getKey());
                     PoiInfo poi = imageSnapshot.getValue(PoiInfo.class);
                     map.put(String.valueOf(poi.getTimestamp()), (PoiInfo) poi);
 
                 }
-
                 onLoadPoiFirebase.OnSuccess(map);
 
             }
@@ -70,26 +71,25 @@ public class MapInteractorImp implements MapInteractor {
                 onPoiDeletedFirebase.OnSucces(timestamp);
             }
         });
+        map.remove(timestamp);
     }
 
     @Override
     public void pushGeoPointFirebase(final String latitude, final String longitude, final String description) {
-        map = new HashMap<>();
-        databaseReference.getRoot().child("users").child(firebaseAuth.getCurrentUser().getUid()).child("pois").addListenerForSingleValueEvent(new ValueEventListener() {
+        long timestamp = System.currentTimeMillis();
+        PoiInfo poi = new PoiInfo(latitude, longitude, description, timestamp);
+        map.put(String.valueOf(timestamp), poi);
+        databaseReference.child("users").child(firebaseAuth.getCurrentUser().getUid()).child("pois").updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                map.clear();
-                long timestamp = System.currentTimeMillis();
-                PoiInfo poi = new PoiInfo(latitude, longitude, description, timestamp);
-                map.put(String.valueOf(timestamp), poi);
-                databaseReference.child("users").child(firebaseAuth.getCurrentUser().getUid()).child("pois").updateChildren(map);
-                onPushPoiFirebase.OnSuccess(map);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    onPushPoiFirebase.OnSuccess();
+                }else{
+                    onPushPoiFirebase.OnError(task.getException());
+                }
 
             }
         });
+
     }
 }

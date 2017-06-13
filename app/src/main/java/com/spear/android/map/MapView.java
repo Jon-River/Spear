@@ -26,5 +26,11 @@ public interface MapView {
 
     void deletePoi(String timestamp);
 
-    void deletePoiOnMap(String timestamp);
+    void closeMenuDialog();
+
+    void showError(String s);
+
+    void notChangeCoords();
+
+    void changeCoords();
 }

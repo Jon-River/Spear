@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.spear.android.R;
 import com.spear.android.map.MapActivity;
@@ -57,7 +56,6 @@ public class PoiFragment extends Fragment implements View.OnClickListener {
         String longitude = poi.getLongitude();
         String description = poi.getDescription();
         timestamp = String.valueOf(poi.getTimestamp());
-        Toast.makeText(getActivity(), "lat " + latitude + " lon " + longitude + " desc " + description, Toast.LENGTH_SHORT).show();
         txtPoiLatitude.setText(latitude);
         txtPoiLongitude.setText(longitude);
         txtPoiDescription.setText(description);

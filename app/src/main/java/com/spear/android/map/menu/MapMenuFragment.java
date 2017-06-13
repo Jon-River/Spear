@@ -1,6 +1,7 @@
 package com.spear.android.map.menu;
 
 
+import android.app.ProgressDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -28,7 +29,7 @@ public class MapMenuFragment extends Fragment implements CompoundButton.OnChecke
     private SwitchCompat swEnableManual;
     private MapView view;
     private final int hideFragments = 0;
-
+    private ProgressDialog dialog;
 
     public MapMenuFragment() {
         // Required empty public constructor
@@ -50,6 +51,7 @@ public class MapMenuFragment extends Fragment implements CompoundButton.OnChecke
         etDescription = (EditText) v.findViewById(R.id.etDescription);
         etLatitude = (EditText) v.findViewById(R.id.etLatitude);
         etLongitude = (EditText) v.findViewById(R.id.etLongitude);
+        txtTittle =  (TextView) v.findViewById(R.id.txtTittle);
         etLatitude.setEnabled(true);
         etLongitude.setEnabled(true);
         btnPushPoint = (Button) v.findViewById(R.id.btnPushPoint);
@@ -59,6 +61,8 @@ public class MapMenuFragment extends Fragment implements CompoundButton.OnChecke
         btnSkip.setOnClickListener(this);
         swEnableManual.setOnCheckedChangeListener(this);
         swEnableManual.setChecked(false);
+        dialog = new ProgressDialog(getActivity());
+        dialog.setMessage("Introduciendo coordenada");
 
         Typeface typeLibel = Typeface.createFromAsset(getActivity().getAssets(), "Libel_Suit.ttf");
         etDescription.setTypeface(typeLibel);
@@ -67,6 +71,7 @@ public class MapMenuFragment extends Fragment implements CompoundButton.OnChecke
         btnPushPoint.setTypeface(typeLibel);
         btnSkip.setTypeface(typeLibel);
         swEnableManual.setTypeface(typeLibel);
+        txtTittle.setTypeface(typeLibel);
 
 
     }
@@ -78,10 +83,12 @@ public class MapMenuFragment extends Fragment implements CompoundButton.OnChecke
             swEnableManual.setText("Disable manual lat/long");
             etLatitude.setEnabled(true);
             etLongitude.setEnabled(getAllowEnterTransitionOverlap());
+            view.notChangeCoords();
         }else{
             swEnableManual.setText("Enable manual lat/long");
             etLatitude.setEnabled(false);
             etLongitude.setEnabled(false);
+            view.changeCoords();
         }
 
     }
@@ -91,6 +98,7 @@ public class MapMenuFragment extends Fragment implements CompoundButton.OnChecke
         if (v.getId() == R.id.btnSkip){
             view.cambiarFragment(hideFragments);
         }else if (v.getId()== R.id.btnPushPoint){
+            showDialog();
             view.pushGeoPoint(etLatitude.getText().toString(), etLongitude.getText().toString(), etDescription.getText().toString());
         }
     }
@@ -99,4 +107,14 @@ public class MapMenuFragment extends Fragment implements CompoundButton.OnChecke
         etLatitude.setText(lat);
         etLongitude.setText(lon);
     }
+
+    public void showDialog() {
+        dialog.show();
+    }
+
+
+    public void closeDialog() {
+        dialog.hide();
+    }
+
 }

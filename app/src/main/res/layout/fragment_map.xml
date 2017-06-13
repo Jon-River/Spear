@@ -26,7 +26,7 @@
         android:layout_width="wrap_content"
         android:id="@+id/swEnableLocation"
         android:layout_height="wrap_content"
-        android:textColor="@color/black85"
+        android:textColor="@color/black60"
         android:layout_gravity="top|right"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
@@ -34,5 +34,18 @@
         android:textSize="25dp"
         android:theme="@style/MySwitch"
         android:text="Location"/>
+
+    <android.support.v7.widget.SwitchCompat
+        android:layout_width="wrap_content"
+        android:id="@+id/swFixedPosition"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black60"
+        android:layout_gravity="top|left"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:gravity="center"
+        android:textSize="25dp"
+        android:theme="@style/MySwitch"
+        android:text="Fix position"/>
 
 </FrameLayout>

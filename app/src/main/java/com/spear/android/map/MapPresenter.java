@@ -25,14 +25,15 @@ public class MapPresenter {
 
     public MapInteractor.OnPushPoiFirebase onPushPoiFirebase = new MapInteractor.OnPushPoiFirebase() {
         @Override
-        public void OnSuccess(Map<String, Object> map) {
+        public void OnSuccess() {
             view.cambiarFragment(hideFragments);
-            view.setGeoCoords(map);
+            view.closeMenuDialog();
         }
 
         @Override
-        public void OnError() {
-
+        public void OnError(Exception exception) {
+            view.showError(exception.toString());
+            view.closeMenuDialog();
         }
     };
 
@@ -53,7 +54,6 @@ public class MapPresenter {
         @Override
         public void OnSucces(String timestamp) {
             view.cambiarFragment(hideFragments);
-            view.deletePoiOnMap(timestamp);
         }
 
         @Override

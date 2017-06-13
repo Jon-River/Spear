@@ -13,6 +13,7 @@ import android.text.Spanned;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.spear.android.R;
@@ -120,6 +121,7 @@ public class MapActivity extends AppCompatActivity implements MapView {
             transaction.show(mapFragment);
         }  else if (ifrg == hideFragments) {
             mapMenuOpen = false;
+            mapFragment.disableLocationMenuChange = false;
             transaction.hide(poiFragment);
             transaction.hide(mapMenuFragment);
         } else if (ifrg == mapmenu) {
@@ -162,10 +164,34 @@ public class MapActivity extends AppCompatActivity implements MapView {
         mapPresenter.deletePoi(timestamp);
     }
 
+
+
     @Override
-    public void deletePoiOnMap(String timestamp) {
-        mapFragment.deletePoi(timestamp);
+    public void closeMenuDialog() {
+        mapMenuFragment.closeDialog();
     }
+
+    @Override
+    public void showError(String s) {
+        Toast.makeText(this, "Error: "+ s, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void notChangeCoords() {
+        if (mapFragment != null){
+            mapFragment.disableLocationMenuChange = true;
+        }
+
+    }
+
+    @Override
+    public void changeCoords() {
+        if (mapFragment != null){
+            mapFragment.disableLocationMenuChange = false;
+        }
+
+    }
+
 
     @Override
     public boolean checkIfMapMenuisOpen() {
