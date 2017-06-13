@@ -68,7 +68,7 @@ public class GalleryOptionFragment extends Fragment implements View.OnClickListe
             view.openCamera();
         } else if (v.getId() == R.id.btnOpenGallery) {
             view.openGallery();
-        } else if (v.getId() == R.id.btnSkip) {
+        } else if (v.getId() == R.id.btnBack) {
             view.cambiarFragment(hideFragment);
         }
     }
