@@ -49,7 +49,7 @@
         <item name="android:textColorHint">@color/greysnow</item>
 
         <!--To change the background of options menu-->
-        <item name="android:itemBackground">@color/steelblue</item>
+        <item name="android:itemBackground">@color/Gunmetal</item>
         <!--To change the text styling of options menu items</item>-->
         <item name="android:itemTextAppearance">@style/MyActionBar.MenuTextStyle</item>
         <!--<item name="android:windowActionModeOverlay">true</item>-->

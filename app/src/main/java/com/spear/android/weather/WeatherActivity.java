@@ -10,12 +10,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -120,10 +123,23 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        this.menu = menu;
+    public boolean onCreateOptionsMenu(Menu m) {
+        this.menu = m;
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_weather, menu);
+        for (int i=0;i<menu.size();i++) {
+            MenuItem mi = menu.getItem(i);
+            SubMenu subMenu = mi.getSubMenu();
+            if (subMenu!=null && subMenu.size() >0 ) {
+                for (int j=0; j <subMenu.size();j++) {
+                    MenuItem subMenuItem = subMenu.getItem(j);
+                    applyFontToMenuItem(subMenuItem);
+                }
+            }
+
+            //the method we have create in activity
+            applyFontToMenuItem(mi);
+        }
         return true;
     }
 
@@ -373,5 +389,12 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
             fabOpenSearchView.hide();
         }
 
+    }
+
+    private void applyFontToMenuItem(MenuItem mi) {
+        Typeface typeLibel = Typeface.createFromAsset(getAssets(), "Libel_Suit.ttf");
+        SpannableString mNewTitle = new SpannableString(mi.getTitle());
+        mNewTitle.setSpan(new CustomTypeFace("" , typeLibel), 0 , mNewTitle.length(),  Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        mi.setTitle(mNewTitle);
     }
 }

@@ -16,12 +16,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -87,6 +90,7 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
     final int detail = 4;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,10 +109,24 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        this.menu = menu;
+    public boolean onCreateOptionsMenu(Menu m) {
+        this.menu = m;
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_album, menu);
+        menuInflater.inflate(R.menu.menu_album, m);
+
+        for (int i=0;i<menu.size();i++) {
+            MenuItem mi = menu.getItem(i);
+            SubMenu subMenu = mi.getSubMenu();
+            if (subMenu!=null && subMenu.size() >0 ) {
+                for (int j=0; j <subMenu.size();j++) {
+                    MenuItem subMenuItem = subMenu.getItem(j);
+                    applyFontToMenuItem(subMenuItem);
+                }
+            }
+
+            //the method we have create in activity
+            applyFontToMenuItem(mi);
+        }
         return true;
     }
 
@@ -281,6 +299,13 @@ public class AlbumActivity extends AppCompatActivity implements View.OnClickList
             cardList.add(card);
         }
         adapter.notifyDataSetChanged();
+    }
+
+    private void applyFontToMenuItem(MenuItem mi) {
+        Typeface typeLibel = Typeface.createFromAsset(getAssets(), "Libel_Suit.ttf");
+        SpannableString mNewTitle = new SpannableString(mi.getTitle());
+        mNewTitle.setSpan(new CustomTypeFace("" , typeLibel), 0 , mNewTitle.length(),  Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        mi.setTitle(mNewTitle);
     }
 
     private void init() {

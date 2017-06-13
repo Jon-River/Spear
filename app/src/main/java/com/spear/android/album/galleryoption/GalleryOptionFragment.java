@@ -48,7 +48,7 @@ public class GalleryOptionFragment extends Fragment implements View.OnClickListe
         view = (AlbumActivity) getActivity();
         btnOpenCamera = (ImageButton) v.findViewById(R.id.btnOpenCamera);
         btnOpenGallery = (ImageButton) v.findViewById(R.id.btnOpenGallery);
-        btnSkip = (Button) v.findViewById(R.id.btnSkip);
+        btnSkip = (Button) v.findViewById(R.id.btnBack);
         btnOpenCamera.setOnClickListener(this);
         btnOpenGallery.setOnClickListener(this);
         btnSkip.setOnClickListener(this);
